@@ -1,5 +1,5 @@
 ```html
-ｓｃ<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
@@ -7,27 +7,24 @@
   <title>YoRHa Slot Terminal // Gemini 3 Flash</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Identity Services (GIS) -->ｓ
+  <!-- Google Identity Services (GIS) -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Fonts -->
+  <!-- Google Fonts: Share Tech Mono & Rajdhani -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@600;700&family=Noto+Sans+TC:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
-    /* NieR: Automata Signature Palette & Layout Variables */
+    /* NieR: Automata Signature Palette */
     :root {
       --nier-bg: #d2cebe;
-      --nier-bg-tint: #c8c3b1;
-      --nier-panel: #dedacf;
+      --nier-panel: #c8c3b1;
       --nier-dark: #3e3b36;
-      --nier-dark-hover: #4e4a44;
       --nier-dim: #79746a;
       --nier-light: #f7f6f2;
       --nier-border: #8b8577;
-      --nier-border-light: #b3ad9f;
       --nier-accent: #c45e3c;
     }
 
@@ -36,6 +33,9 @@
       background-color: var(--nier-bg);
       color: var(--nier-dark);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       overflow-x: hidden;
       position: relative;
     }
@@ -44,60 +44,20 @@
       font-family: 'Share Tech Mono', monospace;
     }
 
-    /* Scanlines and Micro-Grid texture overlay typical of YoRHa OS */
+    /* Scanlines typical of YoRHa System */
     body::before {
       content: "";
       position: fixed;
       inset: 0;
       pointer-events: none;
-      background: 
-        repeating-linear-gradient(0deg, rgba(62, 59, 54, 0.03) 0px, rgba(62, 59, 54, 0.03) 1px, transparent 1px, transparent 2px);
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(62, 59, 54, 0.035) 0px,
+        rgba(62, 59, 54, 0.035) 1px,
+        transparent 1px,
+        transparent 2px
+      );
       z-index: 99;
-    }
-
-    /* NieR Menu Header Tabs */
-    .nier-nav-btn {
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;t
-      padding: 4px 18px;
-      transition: all 0.15s ease;
-      position: relative;
-    }i
-    .nier-nav-btn.active {
-      background-color: var(--nier-dark);
-      color: var(--nier-light);
-    }
-    .nier-nav-btn:hover:not(.active) {
-      background-color: rgba(62, 59, 54, 0.15);
-    }
-
-    /* NieR Inverted Selection list item */
-    .nier-list-item {
-      transition: background-color 0.1s ease, color 0.1s ease;
-      cursor: pointer;
-    }
-    .nier-list-item:hover, .nier-list-item.selected {
-      background-color: var(--nier-dark);
-      color: var(--nier-light);
-    }
-
-    /* Slot Reel Container with NieR framing */
-    .nier-reel-box {
-      background: #c2bdab;
-      position: relative;
-      overflow: hidden;
-      border: 1px solid var(--nier-border);
-      box-shadow: inset 0 10px 14px -6px rgba(45, 42, 38, 0.35), inset 0 -10px 14px -6px rgba(45, 42, 38, 0.35);
-    }
-    .reel-strip {
-      transition: transform cubic-bezier(0.12, 0.82, 0.28, 1);
-      will-change: transform;
-    }
-    .blur-spin {
-      filter: blur(1.2px);
-      opacity: 0.95;
     }
 
     /* NieR double line borders */
@@ -115,37 +75,25 @@
       background-color: var(--nier-border);
     }
 
-    .nier-double-border-t {
-      border-top: 2px solid var(--nier-dark);
-      position: relative;
-    }
-    .nier-double-border-t::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: -4px;
-      height: 1px;
-      background-color: var(--nier-border);
-    }
-
-    /* Chip sockets / Pod indicators */
-    .chip-socket {
-      width: 28px;
-      height: 28px;
+    /* NieR Reel Framed Box */
+    .nier-reel-box {
+      background: #c3beac;
       border: 1px solid var(--nier-border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(62, 59, 54, 0.05);
-    }
-    .chip-socket.filled {
-      background: var(--nier-dark);
-      color: var(--nier-light);
-      border-color: var(--nier-dark);
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 8px 12px -4px rgba(45, 42, 38, 0.3), inset 0 -8px 12px -4px rgba(45, 42, 38, 0.3);
     }
 
-    /* Custom NieR scrollbar */
+    .reel-strip {
+      will-change: transform;
+    }
+
+    .blur-spin {
+      filter: blur(1.5px);
+      opacity: 0.9;
+    }
+
+    /* Scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -158,278 +106,841 @@
     }
   </style>
 </head>
-<body class="flex flex-col justify-between selection:bg-[#3e3b36] selection:text-[#d2cebe]">
+<body class="selection:bg-[#3e3b36] selection:text-[#d2cebe]">
 
-  <!-- Top System Header Bar (NieR Primary OS Tabs) -->
-  <header class="w-full pt-4 pb-2 px-6 sm:px-12 max-w-[1560px] mx-auto select-none">
-    
-    <!-- Top System Menus -->
-    <div class="flex flex-wrap items-center justify-between gap-y-3 pb-3 border-b border-[#a39d8d]">
+  <!-- Top System Header Bar: Login, API Key and Sound -->
+  <header class="w-full pt-4 pb-3 px-6 sm:px-12 max-w-[1400px] mx-auto select-none">
+    <div class="flex flex-wrap items-center justify-between gap-4 pb-3 nier-double-border-b">
       
-      <!-- Primary Nav Bar: Streamlined to relevant operational tools -->
-      <nav class="flex items-center gap-1 sm:gap-2 flex-wrap text-sm sm:text-base font-semibold">
-        <button class="nier-nav-btn active" id="nav-items-btn" onclick="setActiveNav('main')">SLOT UNITS</button>
-        <button class="nier-nav-btn" onclick="openAddSlotModal()">+ EXPANSION</button>
-        <button class="nier-nav-btn" onclick="switchMainTab('history')">ARCHIVE LOGS</button>
-        <button class="nier-nav-btn" onclick="openSettingsModal()">SYSTEM CONFIG</button>
-      </nav>
-
-      <!-- Right Telemetry: Clock, Auth and Audio status -->
-      <div class="flex items-center gap-4 text-xs font-mono-tech text-[#5e594f]">
-        <div class="hidden md:flex items-center gap-2">
-          <span>STATUS: ONLINE</span>
-          <span class="w-1.5 h-1.5 bg-[#3e3b36] animate-pulse"></span>
+      <!-- Brand Title -->
+      <div class="flex items-center gap-3">
+        <span class="w-3 h-3 bg-[#3e3b36]"></span>
+        <div>
+          <h1 class="text-xl sm:text-2xl font-extrabold uppercase tracking-tight text-[#3e3b36]">
+            YORHA // GENERATIVE SLOT
+          </h1>
+          <div class="text-[11px] font-mono-tech text-[#6b6659]">
+            CORE ENGINE: GEMINI 3 FLASH // REAL-TIME INFERENCE
+          </div>
         </div>
-        <div id="system-clock">2026.10.02 // 23:31:06</div>
+      </div>
 
-        <!-- Sound toggle -->
-        <button id="btn-sound-toggle" class="hover:text-[#3e3b36] flex items-center gap-1 uppercase tracking-wider text-[11px] border border-[#a39d8d] px-2 py-0.5">
-          <i data-lucide="volume-2" id="sound-icon" class="w-3.5 h-3.5"></i>
-          <span id="sound-text">SFX: ON</span>
-        </button>
+      <!-- Right Controls: API Key Input, Google Login, Sound -->
+      <div class="flex flex-wrap items-center gap-3 text-xs font-mono-tech">
+        
+        <!-- API Key Input Field (常駐頂部快速填寫) -->
+        <div class="flex items-center bg-[#c5bfad] border border-[#8b8577] px-2 py-1">
+          <span class="text-[11px] font-bold text-[#5e594f] mr-1.5 uppercase">API KEY:</span>
+          <input 
+            type="password" 
+            id="input-api-key" 
+            placeholder="AIzaSy... (留空自動調用)" 
+            class="bg-transparent text-xs text-[#3e3b36] focus:outline-none w-36 sm:w-52"
+          >
+          <button id="btn-toggle-key-visibility" type="button" class="text-[#686254] hover:text-[#3e3b36] px-1" title="顯示/隱藏金鑰">
+            <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+          </button>
+          <button id="btn-save-key" class="bg-[#3e3b36] text-[#d2cebe] hover:bg-[#282623] px-1.5 py-0.5 ml-1 font-bold">
+            [SAVE]
+          </button>
+        </div>
 
         <!-- Google User Profile / Login -->
-        <div id="google-login-container" class="relative">
+        <div id="google-login-container" class="flex items-center">
           <div id="g_id_signin_wrapper"></div>
           
-          <div id="user-profile-badge" class="hidden flex items-center gap-2 bg-[#beb9a6] border border-[#3e3b36] px-2 py-0.5">
+          <div id="user-profile-badge" class="hidden flex items-center gap-2 bg-[#beb9a6] border border-[#3e3b36] px-2.5 py-1">
             <span class="w-2 h-2 bg-[#3e3b36]"></span>
-            <span id="user-name" class="font-bold text-xs uppercase tracking-wider max-w-[110px] truncate">UNIT-9S</span>
+            <span id="user-name" class="font-bold text-xs uppercase tracking-wider max-w-[120px] truncate">UNIT-9S</span>
             <button id="btn-logout" title="LOGOUT" class="hover:text-[#c45e3c] ml-1">
-              <i data-lucide="log-out" class="w-3 h-3"></i>
+              <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
             </button>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Secondary Category Row (NieR Sub-header: Restorative, Enhancement, Support, Key Items...) -->
-    <div class="flex items-center justify-between text-xs sm:text-sm font-bold uppercase tracking-wider pt-3 pb-1 text-[#787263]">
-      <div class="flex items-center gap-4 sm:gap-8 flex-wrap">
-        <span class="cursor-pointer hover:text-[#3e3b36]" onclick="filterCategory(0)">Module 01 // 塗裝顏色</span>
-        <span class="cursor-pointer hover:text-[#3e3b36]" onclick="filterCategory(1)">Module 02 // 既定形象</span>
-        <span class="cursor-pointer text-[#3e3b36] font-extrabold border-b-2 border-[#3e3b36] pb-0.5" onclick="filterCategory(2)">Module 03 // 品牌型號/實物</span>
-        <span class="cursor-pointer hover:text-[#3e3b36]" onclick="openAddSlotModal()">+ Add Custom Module</span>
+        <!-- Sound toggle -->
+        <button id="btn-sound-toggle" class="hover:text-[#3e3b36] flex items-center gap-1 uppercase tracking-wider text-[11px] border border-[#8b8577] px-2 py-1 bg-[#c5bfad]">
+          <i data-lucide="volume-2" id="sound-icon" class="w-3.5 h-3.5"></i>
+          <span id="sound-text">SFX: ON</span>
+        </button>
       </div>
-      <div class="hidden sm:block text-xs font-mono-tech text-[#5e594f]">
-        HOST: GEMINI 3 FLASH // API SYNC
-      </div>
+
     </div>
   </header>
 
-  <!-- Main Operational Screen -->
-  <main class="max-w-[1560px] mx-auto px-6 sm:px-12 py-4 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+  <!-- Main Operational Screen (純粹拉霸機) -->
+  <main class="max-w-[1400px] mx-auto px-6 sm:px-12 py-6 flex-1 w-full flex flex-col justify-center items-center">
     
-    <!-- LEFT COLUMN: Module Inventory List (3 cols) -->
-    <aside class="lg:col-span-3 flex flex-col border-r border-[#9e9787] pr-4 select-none">
-      <div class="text-xs uppercase font-mono-tech font-bold text-[#5e594f] mb-2 flex items-center justify-between border-b border-[#a39d8d] pb-1">
-        <span>ACTIVE UNIT SLOTS</span>
-        <span id="slot-counter-label" class="text-xs">COUNT: 3</span>
-      </div>
-
-      <!-- Inventory style list for each slot -->
-      <div id="module-inventory-list" class="flex flex-col text-sm font-mono-tech divide-y divide-[#beb9a7]">
-        <!-- Dynamically rendered modules matching NieR item list format (Item Name ... Qty) -->
-      </div>
-
-      <!-- Quick Action Controls -->
-      <div class="mt-6 pt-4 border-t border-[#8e8878] space-y-2">
-        <button onclick="openAddSlotModal()" class="w-full text-left px-3 py-2 text-xs font-bold font-mono-tech bg-[#c5bfad] hover:bg-[#3e3b36] hover:text-[#d2cebe] transition flex items-center justify-between border border-[#8e8878]">
-          <span>+ EXPAND NEW SLOT MODULE</span>
-          <span>[ADD]</span>
-        </button>
-        <button onclick="openSettingsModal()" class="w-full text-left px-3 py-2 text-xs font-bold font-mono-tech bg-[#c5bfad] hover:bg-[#3e3b36] hover:text-[#d2cebe] transition flex items-center justify-between border border-[#8e8878]">
-          <span>CONFIGURE API ACCESS KEY</span>
-          <span id="api-status-indicator" class="text-[10px] text-emerald-800 font-bold">[ACTIVE]</span>
-        </button>
-      </div>
-
-      <!-- Instructions in NieR manual style -->
-      <div class="mt-6 p-3 bg-[#c9c4b2] border border-[#a39d8d] text-[11px] text-[#5e594f] space-y-1.5 leading-relaxed font-mono-tech">
-        <div class="font-bold text-[#3e3b36] flex items-center gap-1.5">
-          <i data-lucide="info" class="w-3.5 h-3.5"></i> OPERATING PROTOCOL:
-        </div>
-        <p>1. 點擊 [EXECUTE SPIN] 啟動即時 API 靈感抽取。</p>
-        <p>2. 滾輪將依序定格：顏色 &rarr; 形象 &rarr; 品牌型號/實物。</p>
-        <p>3. 按下 [LOCK] 可獨立固定任一模組繼續重骰其餘槽位。</p>
-      </div>
-    </aside>
-
-    <!-- CENTER COLUMN: Primary Slot Machine Bay & Concept Terminal (6 cols) -->
-    <section class="lg:col-span-6 flex flex-col w-full">
+    <!-- Machine Enclosure Panel -->
+    <div class="w-full bg-[#cac5b3] border-2 border-[#3e3b36] p-4 sm:p-8 shadow-sm">
       
-      <!-- Center Item Title in NieR Large Sans Serif -->
-      <div class="nier-double-border-b pb-1 mb-4 flex items-end justify-between">
+      <!-- Top Subhead & Quick Add Slot Button -->
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-3 mb-4 border-b border-[#a39d8d]">
         <div>
-          <h2 id="center-unit-heading" class="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-[#3e3b36]">
-            SLOT POD SYSTEM // SPEC
+          <span class="text-xs font-mono-tech uppercase font-bold text-[#5e594f]">ACTIVE MODULES SPECIFICATION</span>
+          <h2 class="text-lg sm:text-xl font-extrabold uppercase text-[#3e3b36]">
+            REAL-TIME PHYSICAL OBJECT SLOTS
           </h2>
-          <div class="text-xs font-mono-tech text-[#6b6659] mt-0.5">
-            MODEL: YORHA RANDOM GENERATIVE CORE // REV. 2026
-          </div>
         </div>
-        <div class="text-right font-mono-tech text-xs">
-          <div class="text-[#3e3b36] font-bold">LV. 33</div>
-          <div class="text-[#787263]">KEY ITEM</div>
-        </div>
+
+        <!-- Add Slot Button (向右自訂擴充) -->
+        <button 
+          onclick="openAddSlotModal()" 
+          class="px-4 py-2 bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] text-xs font-mono-tech font-bold tracking-wider uppercase transition flex items-center gap-2 border border-[#282623]">
+          <span class="text-[#c45e3c] font-bold">+</span>
+          <span>向右新增自訂 SLOT 模組</span>
+        </button>
       </div>
 
-      <!-- NieR Slot Reel Array Rack -->
-      <div class="w-full overflow-x-auto pb-2 pt-1">
-        <div id="reels-track" class="flex items-stretch gap-3 min-w-max p-3 bg-[#c2bdab] border border-[#8b8577]">
+      <!-- NieR Slot Reel Array Rack (向右滾動容納擴充槽位) -->
+      <div class="w-full overflow-x-auto pb-4 pt-1">
+        <div id="reels-track" class="flex items-stretch gap-4 min-w-max p-4 bg-[#c0baa7] border border-[#8b8577]">
           <!-- Dynamically populated reel columns -->
         </div>
       </div>
 
-      <!-- Control Bar with NieR Action Prompts -->
-      <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 p-3 bg-[#c8c3b1] border border-[#9b9585]">
+      <!-- Action Execution Bar -->
+      <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-[#bfb9a6] border border-[#8b8577]">
         
-        <!-- Live Selected Words Telemetry -->
+        <!-- Live Selected Words Display -->
         <div class="flex flex-col gap-1 w-full sm:w-auto">
-    <!-- Secondary Category Row (NieR Sub-header) -->
-    <div class="flex items-center justify-between text-xs sm:text-sm font-bold uppercase tracking-wider pt-3 pb-1 text-[#787263]">
-      <div class="flex items-center gap-4 sm:gap-8 flex-wrap">
-        <span class="cursor-pointer text-[#3e3b36] font-extrabold border-b-2 border-[#3e3b36] pb-0.5" onclick="filterCategory(0)">Module 01 // 塗裝顏色</span>
-        <span class="cursor-pointer hover:text-[#3e3b36]" onclick="filterCategory(1)">Module 02 // 既定形象</span>
-        <span class="cursor-pointer hover:text-[#3e3b36]" onclick="filterCategory(2)">Module 03 // 品牌型號/實物</span>
-        <span class="cursor-pointer hover:text-[#3e3b36]" onclick="openAddSlotModal()">+ Add Custom Module</span>
-      </div>
-      <div class="hidden sm:block text-xs font-mono-tech text-[#5e594f]">
-        CORE: GEMINI 3 FLASH
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Operational Screen (Clean 2-Column Functional Layout) -->
-  <main class="max-w-[1560px] mx-auto px-6 sm:px-12 py-4 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-    
-    <!-- LEFT COLUMN: Module Inventory & Fast Actions (4 cols) -->
-    <aside class="lg:col-span-4 flex flex-col border-r border-[#9e9787] pr-4 sm:pr-6 select-none">
-      <div class="text-xs uppercase font-mono-tech font-bold text-[#5e594f] mb-2 flex items-center justify-between border-b border-[#a39d8d] pb-1">
-        <span>ACTIVE UNIT SLOTS</span>
-        <span id="slot-counter-label" class="text-xs">COUNT: 3</span>
-      </div>
-
-      <!-- Inventory style list for each slot -->
-      <div id="module-inventory-list" class="flex flex-col text-sm font-mono-tech divide-y divide-[#beb9a7]">
-        <!-- Dynamically rendered modules -->
-      </div>
-
-      <!-- Quick Action Controls -->
-      <div class="mt-6 pt-4 border-t border-[#8e8878] space-y-2">
-        <button onclick="openAddSlotModal()" class="w-full text-left px-3 py-2.5 text-xs font-bold font-mono-tech bg-[#c5bfad] hover:bg-[#3e3b36] hover:text-[#d2cebe] transition flex items-center justify-between border border-[#8e8878]">
-          <span>+ EXPAND NEW SLOT MODULE</span>
-          <span>[ADD]</span>
-        </button>
-        <button onclick="switchMainTab('history')" class="w-full text-left px-3 py-2.5 text-xs font-bold font-mono-tech bg-[#c5bfad] hover:bg-[#3e3b36] hover:text-[#d2cebe] transition flex items-center justify-between border border-[#8e8878]">
-          <span>VIEW SAVED RECORDS</span>
-          <span id="aside-archive-count">[LOGS: 0]</span>
-        </button>
-        <button onclick="openSettingsModal()" class="w-full text-left px-3 py-2.5 text-xs font-bold font-mono-tech bg-[#c5bfad] hover:bg-[#3e3b36] hover:text-[#d2cebe] transition flex items-center justify-between border border-[#8e8878]">
-          <span>CONFIGURE API ACCESS KEY</span>
-          <span id="api-status-indicator" class="text-[10px] text-emerald-800 font-bold">[ACTIVE]</span>
-        </button>
-      </div>
-
-      <!-- Operating Instructions -->
-      <div class="mt-6 p-3 bg-[#c9c4b2] border border-[#a39d8d] text-[11px] text-[#5e594f] space-y-1.5 leading-relaxed font-mono-tech">
-        <div class="font-bold text-[#3e3b36] flex items-center gap-1.5">
-          <i data-lucide="info" class="w-3.5 h-3.5"></i> OPERATING PROTOCOL:
-        </div>
-        <p>1. 點擊 [EXECUTE SPIN]（或按空白鍵）立即連線 Gemini 3 Flash 即時生成具象詞彙。</p>
-        <p>2. 滾輪將依序定格：顏色 &rarr; 形象 &rarr; 品牌型號/實物。</p>
-        <p>3. 點擊 [HOLD / 鎖定] 可保留心儀維度，重抽其餘槽位。</p>
-        <p>4. 點擊 [FUSION PARSE] 可讓 AI 將抽出的實物做極致跨界創意融合。</p>
-      </div>
-    </aside>
-
-    <!-- CENTER & RIGHT: Primary Slot Machine Bay & Concept Terminal (8 cols) -->
-    <section class="lg:col-span-8 flex flex-col w-full">
-      
-      <!-- Center Item Title -->
-      <div class="nier-double-border-b pb-1 mb-4 flex items-end justify-between">
-        <div>
-          <h2 id="center-unit-heading" class="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-[#3e3b36]">
-            SLOT POD SYSTEM // SPEC
-          </h2>
-          <div class="text-xs font-mono-tech text-[#6b6659] mt-0.5">
-            MODEL: YORHA RANDOM GENERATIVE CORE // REAL-TIME API SYNC
+          <div class="text-[11px] font-mono-tech font-bold text-[#5e594f] uppercase tracking-wider">
+            LOCKED RESULT // 當前組合:
           </div>
-        </div>
-        <div class="text-right font-mono-tech text-xs">
-          <div class="text-[#3e3b36] font-bold">READY</div>
-          <div class="text-[#787263]">OPERATIONAL</div>
-        </div>
-      </div>
-
-      <!-- NieR Slot Reel Array Rack -->
-      <div class="w-full overflow-x-auto pb-2 pt-1">
-        <div id="reels-track" class="flex items-stretch gap-3 min-w-max p-3 bg-[#c2bdab] border border-[#8b8577]">
-          <!-- Dynamically populated reel columns -->
-        </div>
-      </div>
-
-      <!-- Control Bar with NieR Action Prompts -->
-      <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 p-3 bg-[#c8c3b1] border border-[#9b9585]">
-        
-        <!-- Live Selected Words Telemetry -->
-        <div class="flex flex-col gap-1 w-full sm:w-auto">
-          <div class="text-[10px] font-mono-tech font-bold text-[#5e594f] uppercase tracking-wider">LOCKED COMBINATION:</div>
-          <div id="badges-container" class="flex flex-wrap items-center gap-1.5 text-xs font-bold font-mono-tech">
+          <div id="badges-container" class="flex flex-wrap items-center gap-2 text-xs font-bold font-mono-tech">
             <!-- Dynamically populated badges -->
           </div>
         </div>
 
-        <!-- Spin Action Button styled as NieR Execution -->
+        <!-- Spin Action Button -->
         <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-          <button id="btn-spin" class="w-full sm:w-auto px-7 py-2.5 bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] font-bold font-mono-tech text-sm tracking-wider uppercase transition active:scale-95 flex items-center justify-center gap-2 border border-[#2d2a26]">
+          <button 
+            id="btn-spin" 
+            class="w-full sm:w-auto px-10 py-3 bg-[#3e3b36] hover:bg-[#282623] active:scale-95 text-[#d2cebe] font-bold font-mono-tech text-sm tracking-widest uppercase transition flex items-center justify-center gap-2 border border-[#222]">
             <span class="text-[#c45e3c]">⨂</span>
-            <span id="spin-btn-text">EXECUTE SPIN</span>
+            <span id="spin-btn-text">EXECUTE SPIN (空白鍵)</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- MODAL: Add Custom Slot (Expansion) -->
+  <div id="modal-add-slot" class="fixed inset-0 bg-[#3e3b36]/60 backdrop-blur-[2px] z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[#d2cebe] border-2 border-[#3e3b36] max-w-md w-full p-6 shadow-2xl relative font-mono-tech">
+      <div class="flex items-center justify-between pb-3 border-b-2 border-[#3e3b36] mb-4">
+        <h3 class="text-base font-bold text-[#3e3b36] flex items-center gap-2">
+          <span>// 向右新增自訂 SLOT 滾輪</span>
+        </h3>
+        <button id="btn-close-add-modal" class="text-[#3e3b36] hover:bg-[#3e3b36] hover:text-[#d2cebe] p-1">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-[#5e594f] mb-3 leading-relaxed">
+        新增自訂滾輪槽位。點擊 SPIN 時，Gemini 3 Flash 會在旋轉中依照您的要求即時生成具象詞彙。
+      </p>
+
+      <!-- Preset Quick Picks -->
+      <div class="mb-4">
+        <label class="block text-xs font-bold text-[#3e3b36] mb-1.5">// 快速預設範本:</label>
+        <div class="grid grid-cols-2 gap-1.5 text-xs">
+          <button type="button" class="btn-preset-slot p-2 border border-[#8e8878] bg-[#c8c3b1] hover:bg-[#3e3b36] hover:text-[#d2cebe] text-left transition"
+                  data-name="特定真實場所/建築" 
+                  data-desc="真實世界中非常具體、有明確特徵的建築或公共場所（如：台北101觀景台、東京涉谷十字路口、冰島黑沙灘、巴黎羅浮宮玻璃金字塔）">
+            🏛️ 真實場所/建築
+          </button>
+          <button type="button" class="btn-preset-slot p-2 border border-[#8e8878] bg-[#c8c3b1] hover:bg-[#3e3b36] hover:text-[#d2cebe] text-left transition"
+                  data-name="特定瞬間動作" 
+                  data-desc="一個畫面感鮮明具體的瞬間動作（例如：倒咖啡溢出瞬間、正在高速甩尾、戴耳機打盹、精準穿針引線）">
+            ⚡ 具體動作/姿態
+          </button>
+          <button type="button" class="btn-preset-slot p-2 border border-[#8e8878] bg-[#c8c3b1] hover:bg-[#3e3b36] hover:text-[#d2cebe] text-left transition"
+                  data-name="極端天候/環境光影" 
+                  data-desc="極具視覺氛圍的真實天候或光線（例如：午後雷陣雨積水倒影、霓虹燈雨夜反光、清晨濃霧、金黃色夕陽斜射）">
+            🌦️ 天候/環境光影
+          </button>
+          <button type="button" class="btn-preset-slot p-2 border border-[#8e8878] bg-[#c8c3b1] hover:bg-[#3e3b36] hover:text-[#d2cebe] text-left transition"
+                  data-name="工業/物理材質" 
+                  data-desc="特定品牌或工業觸感的硬質或軟質物理材質（例如：碳纖維霧面編織、冷鍛不銹鋼、粗糙油畫畫布、高透光防彈玻璃）">
+            🧱 工業/物理材質
           </button>
         </div>
       </div>
 
-      <!-- Concept Synthesis Trigger Banner -->
-      <div class="mt-4 p-3 bg-[#c5bfad] border border-[#8e8878] flex items-center justify-between gap-3">
-        <div class="flex items-center gap-2.5">
-          <div class="w-6 h-6 bg-[#3e3b36] text-[#d2cebe] flex items-center justify-center font-mono-tech text-xs font-bold">
-            AI
-          </div>
-          <div>
-            <div class="text-xs font-bold uppercase text-[#3e3b36] font-mono-tech">MULTI-DIMENSIONAL FUSION PROTOCOL</div>
-            <div class="text-[11px] text-[#6b6659]">以 Gemini 3 Flash 將抽出之品牌實物與形象作深度跨界構想</div>
-          </div>
+      <!-- Inputs -->
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-[#3e3b36] mb-1">槽位名稱 (SLOT NAME):</label>
+          <input type="text" id="input-new-slot-name" placeholder="例如：特定真實場所/建築" class="w-full bg-[#c2bdab] border border-[#8e8878] px-3 py-1.5 text-xs text-[#3e3b36] focus:outline-none focus:border-[#3e3b36]">
         </div>
-
-        <button id="btn-generate-gemini" class="px-5 py-2 bg-[#3e3b36] hover:bg-[#252320] disabled:opacity-40 disabled:hover:bg-[#3e3b36] text-[#d2cebe] text-xs font-mono-tech font-bold tracking-wider uppercase transition">
-          FUSION PARSE
-        </button>
+        <div>
+          <label class="block text-xs font-bold text-[#3e3b36] mb-1">生成要求 (PROMPT DIRECTIVE):</label>
+          <textarea id="input-new-slot-desc" rows="3" placeholder="清楚指示必須生成什麼具象實物..." class="w-full bg-[#c2bdab] border border-[#8e8878] px-3 py-1.5 text-xs text-[#3e3b36] focus:outline-none focus:border-[#3e3b36] leading-relaxed"></textarea>
+        </div>
       </div>
 
-      <!-- NieR Description Box / AI Story Output Frame -->
-      <div class="mt-4 bg-[#c8c3b1] border border-[#8e8878] p-4 min-h-[220px] flex flex-col justify-between">
-        <div class="text-[10px] font-mono-tech font-bold text-[#5e594f] uppercase tracking-wider pb-1.5 border-b border-[#9e9787] flex items-center justify-between">
-          <span id="output-header-title">UNIT SUMMARY & SCHEMATICS</span>
-          <span id="ai-status-text" class="text-[#3e3b36]">AWAITING OPERATOR INPUT</span>
-        </div>
+      <div class="flex items-center justify-end gap-2 pt-4 border-t border-[#8e8878] mt-4">
+        <button id="btn-cancel-add-slot" class="px-3 py-1.5 border border-[#8e8878] hover:bg-[#beb9a7] text-xs">
+          取消
+        </button>
+        <button id="btn-confirm-add-slot" class="px-4 py-1.5 bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] text-xs font-bold">
+          [確認安裝槽位]
+        </button>
+      </div>
+    </div>
+  </div>
 
-        <!-- AI Result Presentation -->
-        <div id="ai-loading" class="hidden flex-1 flex flex-col items-center justify-center py-8 text-center font-mono-tech">
-          <div class="text-sm font-bold text-[#3e3b36] animate-pulse">PROCESSING DATA WITH GEMINI 3 FLASH...</div>
-          <div class="text-xs text-[#6b6659] mt-1">// INTERLACING SPECIFICATIONS & NARRATIVE MATRIX //</div>
-        </div>
+  <!-- Toast Notification System -->
+  <div id="toast-container" class="fixed bottom-12 right-6 z-50 flex flex-col gap-2 pointer-events-none font-mono-tech"></div>
 
-        <div id="ai-output-container" class="flex-1 text-xs leading-relaxed text-[#3e3b36] pt-3 overflow-y-auto max-h-[340px] space-y-3 font-mono-tech">
-          <div class="text-[#686254] italic text-center py-8">
-            "A high-capacity tactile randomizer used in the Pod Project. It exudes an intriguing aura of spontaneous creativity."
+  <!-- Bottom NieR Controller Prompt Bar -->
+  <footer class="w-full border-t border-[#8e8878] bg-[#c5bfad] py-2 px-6 sm:px-12 text-xs select-none">
+    <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 font-mono-tech text-[#5e594f]">
+      <div class="flex items-center gap-4 text-xs font-bold text-[#3e3b36]">
+        <span class="flex items-center gap-1.5"><span class="text-[#c45e3c]">⨂</span> CONFIRM / SPIN</span>
+        <span class="flex items-center gap-1.5"><span>SPACE</span> EXECUTE SPIN</span>
+        <span class="flex items-center gap-1.5"><span>HOLD</span> 鎖定槽位</span>
+      </div>
+
+      <div class="text-[11px] flex items-center gap-2">
+        <span class="w-1.5 h-1.5 bg-[#3e3b36]"></span>
+        <span>YORHA PROTOCOL // GEMINI 3 FLASH READY</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* Google Client ID provided by user */
+    const GOOGLE_CLIENT_ID = "865993916714-o0h883itsqd3lvgbatmkgqrqqhbrmuhf.apps.googleusercontent.com";
+
+    /* Core Slot definitions: strictly concrete, branded, and tangible */
+    let slotDefinitions = [
+      {
+        id: "slot_0",
+        key: "color",
+        title: "01 顏色 / 塗裝",
+        promptDesc: "一個真實可見、甚至帶有經典品牌或工業質感的具體顏色或塗裝（例如：法拉利賽車紅、索尼消光黑、保時捷水泥灰、蒂芙尼藍、工程螢光反光橘）。約 4~8 字。",
+        fallbackPool: ["螢光亮橘", "法拉利賽車紅", "索尼消光黑", "蒂芙尼湖水藍", "保時捷水泥灰", "警用反光鮮黃", "軍用消光迷彩綠", "電鍍鉻銀亮面"]
+      },
+      {
+        id: "slot_1",
+        key: "iconic_figure",
+        title: "02 具象既定形象/角色",
+        promptDesc: "一個大眾熟知、輪廓鮮明、有明確既定視覺外觀與標誌性特徵的經典角色、吉祥物公仔、標誌性人物或特定生物形象（例如：大同寶寶公仔、麥當勞叔叔、自由女神像、英國皇家衛兵、登月太空人、米老鼠、相撲力士、日本露天溫泉水豚）。約 4~10 字，必須有極強畫面感與既定輪廓，不可抽象。",
+        fallbackPool: ["大同寶寶公仔", "麥當勞叔叔", "英國皇家衛兵", "登月太空人", "日本溫泉水豚", "自由女神像", "奈良公園梅花鹿", "相撲力士"]
+      },
+      {
+        id: "slot_2",
+        key: "object",
+        title: "03 品牌型號/特定實物",
+        promptDesc: "極度具體的「特定品牌產品/經典型號」或「特定真實公共場所的實體硬質物件」（例如：索尼 ICF 復古收音機、紅牛2025年F1賽車、日本電車站月台黃黑發光告示牌、7-Eleven亮橘三角錐、大同經典綠電鍋）。約 6~14 字。",
+        fallbackPool: ["索尼復古收音機", "紅牛2025年F1賽車", "日本電車站月台告示牌", "7-Eleven 亮橘三角錐", "任天堂紅白機手把", "大同綠色經典電鍋", "卡西歐經典電子錶"]
+      }
+    ];
+
+    /* Runtime State */
+    const state = {
+      isSpinning: false,
+      soundEnabled: true,
+      locked: [false, false, false],
+      currentSelection: ["螢光亮橘", "大同寶寶公仔", "索尼復古收音機"],
+      userApiKey: "",
+      currentUser: null
+    };
+
+    /* Web Audio API for NieR style mechanical ticks and blips */
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playSound(type) {
+      if (!state.soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+
+        if (type === 'tick') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(800 + Math.random() * 200, now);
+          osc.frequency.exponentialRampToValueAtTime(300, now + 0.02);
+          gain.gain.setValueAtTime(0.04, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.02);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.02);
+        } else if (type === 'stop') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.setValueAtTime(880, now + 0.04);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.12);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        } else if (type === 'win') {
+          [587.33, 880, 1174.66].forEach((f, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(f, now + idx * 0.06);
+            gain.gain.setValueAtTime(0.1, now + idx * 0.06);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.25);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.06);
+            osc.stop(now + idx * 0.06 + 0.3);
+          });
+        }
+      } catch (e) {
+        console.warn('Audio feedback error:', e);
+      }
+    }
+
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'px-3 py-2 bg-[#3e3b36] text-[#d2cebe] border border-[#282623] shadow-lg flex items-center gap-2 text-xs font-mono-tech tracking-wider pointer-events-auto transition-opacity duration-200';
+      toast.innerHTML = `<span class="text-[#c45e3c] font-bold">»</span><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 250);
+      }, 3000);
+    }
+
+    const ITEM_HEIGHT = 46;
+    const REPETITIONS = 18;
+
+    /* Render Slot Reels */
+    function renderReelsTrack() {
+      const track = document.getElementById('reels-track');
+      track.innerHTML = '';
+
+      slotDefinitions.forEach((slot, index) => {
+        const isLocked = state.locked[index] || false;
+        const currentWord = state.currentSelection[index] || slot.fallbackPool[0];
+
+        const reelCol = document.createElement('div');
+        reelCol.className = 'flex flex-col items-center w-52 sm:w-60 flex-shrink-0';
+        reelCol.id = `reel-col-${index}`;
+
+        reelCol.innerHTML = `
+          <!-- Header -->
+          <div class="w-full flex items-center justify-between text-xs font-bold font-mono-tech text-[#3e3b36] mb-2 px-1 uppercase tracking-wider">
+            <div class="flex items-center gap-1.5 truncate" title="${slot.title}">
+              <span class="w-1.5 h-1.5 bg-[#3e3b36]"></span>
+              <span class="truncate">${slot.title}</span>
+            </div>
+            ${index >= 3 ? `
+              <button onclick="removeSlot(${index})" class="text-[#686254] hover:text-[#c45e3c] px-1 text-[11px]" title="刪除槽位">
+                [DEL]
+              </button>
+            ` : ''}
           </div>
-        </div>
 
-        <!-- Number Held / Footer -->
-        <div class="nier-double-border-t pt-2 mt-3 flex items-center justify-between text-[11px] font-mono-tech text-[#686254]">
-          <span id="spin-counter">SPINS EXECUTED: 0</span>
-          <div class="flex items-center gap-3">
-            <button id="btn-copy-ai" class="hover:text-[#3e3b36] flex items-center gap-1 uppercase">
-              <i data-lucide="copy" class="w-3 h-3"></i> [COPY]
-            </button>
-            <button id="btn-save-record" class="hover:tex
+          <!-- Reel Box -->
+          <div id="reel-container-${index}" class="nier-reel-box w-full h-[150px] flex items-center justify-center relative">
+            <!-- Center Win Window Marker (Inverted Dark Line) -->
+            <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[48px] border-y-2 border-[#3e3b36] bg-[#3e3b36]/15 pointer-events-none z-10"></div>
+            <!-- Strip of Text Items -->
+            <div id="reel-strip-${index}" class="reel-strip flex flex-col items-center w-full"></div>
+          </div>
+
+          <!-- Lock Toggle Button -->
+          <button onclick="toggleLock(${index})" id="btn-lock-${index}" class="mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border ${isLocked ? 'bg-[#3e3b36] text-[#d2cebe] border-[#222]' : 'bg-[#c5bfad] text-[#3e3b36] border-[#8e8878] hover:bg-[#beb9a7]'} transition">
+            ${isLocked ? '[LOCKED // 已鎖定]' : '[HOLD // 鎖定]'}
+          </button>
+        `;
+
+        track.appendChild(reelCol);
+        populateReelStrip(index, currentWord);
+      });
+
+      // Quick "+" Expand Tile
+      const addTile = document.createElement('div');
+      addTile.className = 'flex flex-col items-center justify-center w-28 sm:w-36 flex-shrink-0 border-2 border-dashed border-[#8e8878] hover:border-[#3e3b36] hover:bg-[#c8c3b1] p-3 transition cursor-pointer text-[#3e3b36] font-mono-tech';
+      addTile.onclick = () => openAddSlotModal();
+      addTile.innerHTML = `
+        <div class="text-xl font-bold mb-1 text-[#c45e3c]">+</div>
+        <span class="text-xs font-bold uppercase tracking-wider">EXPAND</span>
+        <span class="text-[10px] text-[#686254]">向右新增槽位</span>
+      `;
+      track.appendChild(addTile);
+
+      renderBadges();
+    }
+
+    function populateReelStrip(reelIndex, centerWord) {
+      const strip = document.getElementById(`reel-strip-${reelIndex}`);
+      if (!strip) return;
+      strip.innerHTML = '';
+      const slot = slotDefinitions[reelIndex];
+      const pool = [centerWord, ...slot.fallbackPool.filter(w => w !== centerWord)];
+
+      for (let r = 0; r < REPETITIONS; r++) {
+        pool.forEach((word) => {
+          const div = document.createElement('div');
+          div.className = `h-[46px] flex items-center justify-center font-bold text-xs sm:text-sm select-none text-[#3e3b36] px-2 text-center w-full font-mono-tech tracking-wide`;
+          div.innerHTML = `<span class="truncate max-w-[190px]">${word}</span>`;
+          strip.appendChild(div);
+        });
+      }
+
+      const container = document.getElementById(`reel-container-${reelIndex}`);
+      const containerH = container ? container.clientHeight : 150;
+      const centerOffset = (containerH / 2) - (ITEM_HEIGHT / 2);
+      const targetRepetition = 8;
+      const translateY = -(targetRepetition * pool.length * ITEM_HEIGHT) + centerOffset;
+      strip.style.transition = 'none';
+      strip.style.transform = `translateY(${translateY}px)`;
+    }
+
+    function renderBadges() {
+      const container = document.getElementById('badges-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      slotDefinitions.forEach((slot, index) => {
+        const word = state.currentSelection[index] || slot.fallbackPool[0];
+        const span = document.createElement('span');
+        span.id = `badge-word-${index}`;
+        span.className = `px-2.5 py-1 bg-[#3e3b36] text-[#d2cebe] border border-[#222] truncate max-w-[180px]`;
+        span.innerText = word;
+        container.appendChild(span);
+
+        if (index < slotDefinitions.length - 1) {
+          const plus = document.createElement('span');
+          plus.className = 'text-[#686254] font-bold px-0.5';
+          plus.innerText = '+';
+          container.appendChild(plus);
+        }
+      });
+    }
+
+    window.toggleLock = function(reelIndex) {
+      if (state.isSpinning) return;
+      state.locked[reelIndex] = !state.locked[reelIndex];
+      const isLocked = state.locked[reelIndex];
+      const btn = document.getElementById(`btn-lock-${reelIndex}`);
+      if (btn) {
+        if (isLocked) {
+          btn.className = 'mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border bg-[#3e3b36] text-[#d2cebe] border-[#222] transition';
+          btn.innerText = '[LOCKED // 已鎖定]';
+        } else {
+          btn.className = 'mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border bg-[#c5bfad] text-[#3e3b36] border-[#8e8878] hover:bg-[#beb9a7] transition';
+          btn.innerText = '[HOLD // 鎖定]';
+        }
+      }
+      playSound('stop');
+      showToast(isLocked ? `已鎖定: ${slotDefinitions[reelIndex].title}` : `解除鎖定: ${slotDefinitions[reelIndex].title}`);
+    };
+
+    window.removeSlot = function(index) {
+      if (state.isSpinning) return;
+      if (slotDefinitions.length <= 2) {
+        showToast('至少保留 2 個滾輪模組');
+        return;
+      }
+      const removed = slotDefinitions.splice(index, 1)[0];
+      state.locked.splice(index, 1);
+      state.currentSelection.splice(index, 1);
+      renderReelsTrack();
+      showToast(`已移除槽位: ${removed.title}`);
+    };
+
+    /* Expand New Slot Modal */
+    const modalAddSlot = document.getElementById('modal-add-slot');
+    window.openAddSlotModal = function() {
+      modalAddSlot.classList.remove('hidden');
+      document.getElementById('input-new-slot-name').value = '';
+      document.getElementById('input-new-slot-desc').value = '';
+    };
+
+    document.getElementById('btn-close-add-modal').addEventListener('click', () => modalAddSlot.classList.add('hidden'));
+    document.getElementById('btn-cancel-add-slot').addEventListener('click', () => modalAddSlot.classList.add('hidden'));
+
+    document.querySelectorAll('.btn-preset-slot').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('input-new-slot-name').value = btn.dataset.name;
+        document.getElementById('input-new-slot-desc').value = btn.dataset.desc;
+      });
+    });
+
+    document.getElementById('btn-confirm-add-slot').addEventListener('click', () => {
+      const name = document.getElementById('input-new-slot-name').value.trim();
+      const desc = document.getElementById('input-new-slot-desc').value.trim();
+      if (!name) {
+        showToast('請輸入槽位名稱');
+        return;
+      }
+
+      const newIndex = slotDefinitions.length;
+      const newSlot = {
+        id: `slot_${newIndex}`,
+        key: `custom_${newIndex}`,
+        title: `${String(newIndex + 1).padStart(2, '0')} ${name}`,
+        promptDesc: desc || `一個極度具象、畫面感極強的實體概念：${name}。`,
+        fallbackPool: [`${name} 特選實物 A`, `${name} 特選實物 B`, `${name} 特選實物 C`]
+      };
+
+      slotDefinitions.push(newSlot);
+      state.locked.push(false);
+      state.currentSelection.push(newSlot.fallbackPool[0]);
+
+      renderReelsTrack();
+      modalAddSlot.classList.add('hidden');
+      playSound('win');
+      showToast(`已向右擴充槽位: ${newSlot.title}`);
+
+      const trackContainer = document.getElementById('reels-track').parentElement;
+      trackContainer.scrollTo({ left: trackContainer.scrollWidth, behavior: 'smooth' });
+    });
+
+    /* Live Gemini API call executed during spinning */
+    async function fetchLiveWordsDuringSpin() {
+      const apiKey = state.userApiKey || "";
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+      const properties = {};
+      const required = [];
+      const descriptions = [];
+
+      slotDefinitions.forEach((slot, idx) => {
+        properties[slot.key] = {
+          type: "STRING",
+          description: `【${slot.title}】：${slot.promptDesc}`
+        };
+        required.push(slot.key);
+        descriptions.push(`${idx + 1}. ${slot.title}: ${slot.promptDesc}`);
+      });
+
+      const systemPrompt = `你是一個嚴格生成「超具象、看得見摸得著、具備真實品牌/型號或特定場所實體物」的隨機詞彙引擎。
+絕對禁止抽象名詞（嚴禁出現如「無盡記憶水晶」、「時間之鑰」等沒有現實畫面的概念）。
+請為目前拉霸機的 ${slotDefinitions.length} 個維度各生成一個最具畫面感、輪廓清晰的詞彙：
+${descriptions.join("\n")}
+所有項目必須極度具體、有細節質感，輸出符合結構的 JSON。`;
+
+      const payload = {
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: `請為當前的 ${slotDefinitions.length} 個拉霸滾輪各隨機生成一個超具象詞彙。輸出 JSON。` }]
+          }
+        ],
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "OBJECT",
+            properties: properties,
+            required: required
+          }
+        }
+      };
+
+      const response = await fetchWithRetry(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+      const rawJson = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!rawJson) throw new Error("API 未回傳結構化資料");
+      return JSON.parse(rawJson);
+    }
+
+    async function fetchWithRetry(url, options, maxRetries = 3) {
+      let delay = 1000;
+      for (let i = 0; i < maxRetries; i++) {
+        try {
+          const res = await fetch(url, options);
+          if (res.ok) return res;
+          if (res.status === 429 || res.status >= 500) {
+            await new Promise(r => setTimeout(r, delay));
+            delay *= 2;
+            continue;
+          }
+          return res;
+        } catch (e) {
+          if (i === maxRetries - 1) throw e;
+          await new Promise(r => setTimeout(r, delay));
+          delay *= 2;
+        }
+      }
+      return fetch(url, options);
+    }
+
+    /* Spin Execution with Sequential Reveal */
+    async function spinReels() {
+      if (state.isSpinning) return;
+      state.isSpinning = true;
+
+      const spinBtn = document.getElementById('btn-spin');
+      const spinBtnText = document.getElementById('spin-btn-text');
+
+      spinBtn.disabled = true;
+      spinBtn.classList.add('opacity-70');
+      spinBtnText.innerText = 'API 旋轉生成中...';
+
+      slotDefinitions.forEach((_, i) => {
+        if (!state.locked[i]) {
+          const badge = document.getElementById(`badge-word-${i}`);
+          if (badge) badge.innerText = '旋轉中...';
+        }
+      });
+
+      playSound('tick');
+      const tickInterval = setInterval(() => {
+        playSound('tick');
+      }, 90);
+
+      // Start all unlocked reels high-speed scrolling
+      const spinIntervals = [];
+      slotDefinitions.forEach((slot, i) => {
+        if (!state.locked[i]) {
+          const container = document.getElementById(`reel-container-${i}`);
+          const strip = document.getElementById(`reel-strip-${i}`);
+          if (container && strip) {
+            container.classList.add('blur-spin');
+            let currentY = parseFloat(strip.style.transform.replace(/[^\d.-]/g, '')) || 0;
+            const singleCycle = slot.fallbackPool.length * ITEM_HEIGHT;
+            const interval = setInterval(() => {
+              currentY -= 26;
+              if (Math.abs(currentY) > singleCycle * 14) {
+                currentY += singleCycle * 6;
+              }
+              strip.style.transition = 'none';
+              strip.style.transform = `translateY(${currentY}px)`;
+            }, 16);
+            spinIntervals.push(interval);
+          }
+        }
+      });
+
+      // API fetch during spin
+      let apiResults = null;
+      try {
+        apiResults = await fetchLiveWordsDuringSpin();
+      } catch (err) {
+        console.warn('API 旋轉生成錯誤，使用本地備用庫:', err);
+        apiResults = {};
+        slotDefinitions.forEach(slot => {
+          const randWord = slot.fallbackPool[Math.floor(Math.random() * slot.fallbackPool.length)];
+          apiResults[slot.key] = randWord;
+        });
+      }
+
+      spinIntervals.forEach(timer => clearInterval(timer));
+
+      const targetWords = slotDefinitions.map((slot, i) => {
+        if (state.locked[i]) {
+          return state.currentSelection[i];
+        }
+        return apiResults[slot.key] || slot.fallbackPool[0];
+      });
+
+      // Sequential Reel Stopping (1st -> 2nd -> 3rd -> ...)
+      const stopReel = (reelIdx, durationMs = 800) => {
+        return new Promise(resolve => {
+          const targetWord = targetWords[reelIdx];
+          const badge = document.getElementById(`badge-word-${reelIdx}`);
+
+          if (state.locked[reelIdx]) {
+            if (badge) badge.innerText = targetWord;
+            resolve();
+            return;
+          }
+
+          const strip = document.getElementById(`reel-strip-${reelIdx}`);
+          const container = document.getElementById(`reel-container-${reelIdx}`);
+          const slot = slotDefinitions[reelIdx];
+
+          if (!slot.fallbackPool.includes(targetWord)) {
+            slot.fallbackPool.unshift(targetWord);
+          }
+          populateReelStrip(reelIdx, targetWord);
+
+          const containerH = container ? container.clientHeight : 150;
+          const centerOffset = (containerH / 2) - (ITEM_HEIGHT / 2);
+          const landingRepetition = 8;
+          const translateY = -(landingRepetition * slot.fallbackPool.length * ITEM_HEIGHT) + centerOffset;
+
+          strip.style.transition = `transform ${durationMs}ms cubic-bezier(0.12, 0.88, 0.28, 1)`;
+          strip.style.transform = `translateY(${translateY}px)`;
+
+          setTimeout(() => {
+            if (container) {
+              container.classList.remove('blur-spin');
+            }
+            playSound('stop');
+            if (badge) badge.innerText = targetWord;
+            resolve();
+          }, durationMs);
+        });
+      };
+
+      try {
+        for (let i = 0; i < slotDefinitions.length; i++) {
+          await new Promise(r => setTimeout(r, i === 0 ? 250 : 350));
+          await stopReel(i, 750 + (i * 70));
+        }
+
+        clearInterval(tickInterval);
+        state.currentSelection = targetWords;
+        renderBadges();
+
+        playSound('win');
+        showToast(`鎖定完成: ${targetWords.join(' + ')}`);
+
+      } finally {
+        clearInterval(tickInterval);
+        state.isSpinning = false;
+        spinBtn.disabled = false;
+        spinBtn.classList.remove('opacity-70');
+        spinBtnText.innerText = 'EXECUTE SPIN (空白鍵)';
+      }
+    }
+
+    document.getElementById('btn-spin').addEventListener('click', spinReels);
+
+    /* Keyboard Shortcuts */
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        spinReels();
+      }
+    });
+
+    /* API Key Quick Input & Save */
+    const apiKeyInput = document.getElementById('input-api-key');
+    document.getElementById('btn-save-key').addEventListener('click', () => {
+      state.userApiKey = apiKeyInput.value.trim();
+      showToast(state.userApiKey ? 'API KEY 已更新' : '已恢復預設 API 設定');
+    });
+
+    document.getElementById('btn-toggle-key-visibility').addEventListener('click', () => {
+      const type = apiKeyInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      apiKeyInput.setAttribute('type', type);
+    });
+
+    /* Google GIS Authentication */
+    function initGoogleSignIn() {
+      if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
+        setTimeout(initGoogleSignIn, 300);
+        return;
+      }
+
+      try {
+        google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleGoogleCredentialResponse,
+          auto_select: false
+        });
+
+        google.accounts.id.renderButton(
+          document.getElementById('g_id_signin_wrapper'),
+          {
+            theme: 'outline',
+            size: 'small',
+            shape: 'rectangular',
+            text: 'signin_with',
+            locale: 'zh_TW'
+          }
+        );
+      } catch (err) {
+        console.warn('Google Identity error:', err);
+      }
+    }
+
+    function parseJwt(token) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+        return JSON.parse(jsonPayload);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function handleGoogleCredentialResponse(response) {
+      const userPayload = parseJwt(response.credential);
+      if (userPayload) {
+        state.currentUser = {
+          name: userPayload.name || 'YoRHa Unit',
+          email: userPayload.email,
+          picture: userPayload.picture
+        };
+        applyUserUI();
+        playSound('win');
+        showToast(`登入成功: ${state.currentUser.name}`);
+      }
+    }
+
+    function applyUserUI() {
+      const gWrapper = document.getElementById('g_id_signin_wrapper');
+      const userBadge = document.getElementById('user-profile-badge');
+      const userName = document.getElementById('user-name');
+
+      if (state.currentUser) {
+        gWrapper.classList.add('hidden');
+        userBadge.classList.remove('hidden');
+        userName.innerText = state.currentUser.name;
+      } else {
+        gWrapper.classList.remove('hidden');
+        userBadge.classList.add('hidden');
+      }
+    }
+
+    document.getElementById('btn-logout').addEventListener('click', () => {
+      state.currentUser = null;
+      applyUserUI();
+      showToast('已登出 Google 帳號');
+    });
+
+    /* SFX Toggle */
+    document.getElementById('btn-sound-toggle').addEventListener('click', () => {
+      state.soundEnabled = !state.soundEnabled;
+      const text = document.getElementById('sound-text');
+      const icon = document.getElementById('sound-icon');
+      if (state.soundEnabled) {
+        text.innerText = 'SFX: ON';
+        icon.setAttribute('data-lucide', 'volume-2');
+        showToast('音效已開啟');
+      } else {
+        text.innerText = 'SFX: OFF';
+        icon.setAttribute('data-lucide', 'volume-x');
+        showToast('音效已靜音');
+      }
+      lucide.createIcons();
+    });
+
+    /* App Initialization */
+    window.addEventListener('DOMContentLoaded', () => {
+      renderReelsTrack();
+      setTimeout(initGoogleSignIn, 500);
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
+```
