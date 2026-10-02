@@ -1,0 +1,435 @@
+```html
+ｓｃ<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YoRHa Slot Terminal // Gemini 3 Flash</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Identity Services (GIS) -->ｓ
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* NieR: Automata Signature Palette & Layout Variables */
+    :root {
+      --nier-bg: #d2cebe;
+      --nier-bg-tint: #c8c3b1;
+      --nier-panel: #dedacf;
+      --nier-dark: #3e3b36;
+      --nier-dark-hover: #4e4a44;
+      --nier-dim: #79746a;
+      --nier-light: #f7f6f2;
+      --nier-border: #8b8577;
+      --nier-border-light: #b3ad9f;
+      --nier-accent: #c45e3c;
+    }
+
+    body {
+      font-family: 'Rajdhani', 'Noto Sans TC', sans-serif;
+      background-color: var(--nier-bg);
+      color: var(--nier-dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .font-mono-tech {
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    /* Scanlines and Micro-Grid texture overlay typical of YoRHa OS */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: 
+        repeating-linear-gradient(0deg, rgba(62, 59, 54, 0.03) 0px, rgba(62, 59, 54, 0.03) 1px, transparent 1px, transparent 2px);
+      z-index: 99;
+    }
+
+    /* NieR Menu Header Tabs */
+    .nier-nav-btn {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;t
+      padding: 4px 18px;
+      transition: all 0.15s ease;
+      position: relative;
+    }i
+    .nier-nav-btn.active {
+      background-color: var(--nier-dark);
+      color: var(--nier-light);
+    }
+    .nier-nav-btn:hover:not(.active) {
+      background-color: rgba(62, 59, 54, 0.15);
+    }
+
+    /* NieR Inverted Selection list item */
+    .nier-list-item {
+      transition: background-color 0.1s ease, color 0.1s ease;
+      cursor: pointer;
+    }
+    .nier-list-item:hover, .nier-list-item.selected {
+      background-color: var(--nier-dark);
+      color: var(--nier-light);
+    }
+
+    /* Slot Reel Container with NieR framing */
+    .nier-reel-box {
+      background: #c2bdab;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--nier-border);
+      box-shadow: inset 0 10px 14px -6px rgba(45, 42, 38, 0.35), inset 0 -10px 14px -6px rgba(45, 42, 38, 0.35);
+    }
+    .reel-strip {
+      transition: transform cubic-bezier(0.12, 0.82, 0.28, 1);
+      will-change: transform;
+    }
+    .blur-spin {
+      filter: blur(1.2px);
+      opacity: 0.95;
+    }
+
+    /* NieR double line borders */
+    .nier-double-border-b {
+      border-bottom: 2px solid var(--nier-dark);
+      position: relative;
+    }
+    .nier-double-border-b::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -4px;
+      height: 1px;
+      background-color: var(--nier-border);
+    }
+
+    .nier-double-border-t {
+      border-top: 2px solid var(--nier-dark);
+      position: relative;
+    }
+    .nier-double-border-t::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -4px;
+      height: 1px;
+      background-color: var(--nier-border);
+    }
+
+    /* Chip sockets / Pod indicators */
+    .chip-socket {
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--nier-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(62, 59, 54, 0.05);
+    }
+    .chip-socket.filled {
+      background: var(--nier-dark);
+      color: var(--nier-light);
+      border-color: var(--nier-dark);
+    }
+
+    /* Custom NieR scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #c5c0af;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--nier-dark);
+    }
+  </style>
+</head>
+<body class="flex flex-col justify-between selection:bg-[#3e3b36] selection:text-[#d2cebe]">
+
+  <!-- Top System Header Bar (NieR Primary OS Tabs) -->
+  <header class="w-full pt-4 pb-2 px-6 sm:px-12 max-w-[1560px] mx-auto select-none">
+    
+    <!-- Top System Menus -->
+    <div class="flex flex-wrap items-center justify-between gap-y-3 pb-3 border-b border-[#a39d8d]">
+      
+      <!-- Primary Nav Bar: Streamlined to relevant operational tools -->
+      <nav class="flex items-center gap-1 sm:gap-2 flex-wrap text-sm sm:text-base font-semibold">
+        <button class="nier-nav-btn active" id="nav-items-btn" onclick="setActiveNav('main')">SLOT UNITS</button>
+        <button class="nier-nav-btn" onclick="openAddSlotModal()">+ EXPANSION</button>
+        <button class="nier-nav-btn" onclick="switchMainTab('history')">ARCHIVE LOGS</button>
+        <button class="nier-nav-btn" onclick="openSettingsModal()">SYSTEM CONFIG</button>
+      </nav>
+
+      <!-- Right Telemetry: Clock, Auth and Audio status -->
+      <div class="flex items-center gap-4 text-xs font-mono-tech text-[#5e594f]">
+        <div class="hidden md:flex items-center gap-2">
+          <span>STATUS: ONLINE</span>
+          <span class="w-1.5 h-1.5 bg-[#3e3b36] animate-pulse"></span>
+        </div>
+        <div id="system-clock">2026.10.02 // 23:31:06</div>
+
+        <!-- Sound toggle -->
+        <button id="btn-sound-toggle" class="hover:text-[#3e3b36] flex items-center gap-1 uppercase tracking-wider text-[11px] border border-[#a39d8d] px-2 py-0.5">
+          <i data-lucide="volume-2" id="sound-icon" class="w-3.5 h-3.5"></i>
+          <span id="sound-text">SFX: ON</span>
+        </button>
+
+        <!-- Google User Profile / Login -->
+        <div id="google-login-container" class="relative">
+          <div id="g_id_signin_wrapper"></div>
+          
+          <div id="user-profile-badge" class="hidden flex items-center gap-2 bg-[#beb9a6] border border-[#3e3b36] px-2 py-0.5">
+            <span class="w-2 h-2 bg-[#3e3b36]"></span>
+            <span id="user-name" class="font-bold text-xs uppercase tracking-wider max-w-[110px] truncate">UNIT-9S</span>
+            <button id="btn-logout" title="LOGOUT" class="hover:text-[#c45e3c] ml-1">
+              <i data-lucide="log-out" class="w-3 h-3"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Category Row (NieR Sub-header: Restorative, Enhancement, Support, Key Items...) -->
+    <div class="flex items-center justify-between text-xs sm:text-sm font-bold uppercase tracking-wider pt-3 pb-1 text-[#787263]">
+      <div class="flex items-center gap-4 sm:gap-8 flex-wrap">
+        <span class="cursor-pointer hover:text-[#3e3b36]" onclick="filterCategory(0)">Module 01 // 塗裝顏色</span>
+        <span class="cursor-pointer hover:text-[#3e3b36]" onclick="filterCategory(1)">Module 02 // 既定形象</span>
+        <span class="cursor-pointer text-[#3e3b36] font-extrabold border-b-2 border-[#3e3b36] pb-0.5" onclick="filterCategory(2)">Module 03 // 品牌型號/實物</span>
+        <span class="cursor-pointer hover:text-[#3e3b36]" onclick="openAddSlotModal()">+ Add Custom Module</span>
+      </div>
+      <div class="hidden sm:block text-xs font-mono-tech text-[#5e594f]">
+        HOST: GEMINI 3 FLASH // API SYNC
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Operational Screen -->
+  <main class="max-w-[1560px] mx-auto px-6 sm:px-12 py-4 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    
+    <!-- LEFT COLUMN: Module Inventory List (3 cols) -->
+    <aside class="lg:col-span-3 flex flex-col border-r border-[#9e9787] pr-4 select-none">
+      <div class="text-xs uppercase font-mono-tech font-bold text-[#5e594f] mb-2 flex items-center justify-between border-b border-[#a39d8d] pb-1">
+        <span>ACTIVE UNIT SLOTS</span>
+        <span id="slot-counter-label" class="text-xs">COUNT: 3</span>
+      </div>
+
+      <!-- Inventory style list for each slot -->
+      <div id="module-inventory-list" class="flex flex-col text-sm font-mono-tech divide-y divide-[#beb9a7]">
+        <!-- Dynamically rendered modules matching NieR item list format (Item Name ... Qty) -->
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="mt-6 pt-4 border-t border-[#8e8878] space-y-2">
+        <button onclick="openAddSlotModal()" class="w-full text-left px-3 py-2 text-xs font-bold font-mono-tech bg-[#c5bfad] hover:bg-[#3e3b36] hover:text-[#d2cebe] transition flex items-center justify-between border border-[#8e8878]">
+          <span>+ EXPAND NEW SLOT MODULE</span>
+          <span>[ADD]</span>
+        </button>
+        <button onclick="openSettingsModal()" class="w-full text-left px-3 py-2 text-xs font-bold font-mono-tech bg-[#c5bfad] hover:bg-[#3e3b36] hover:text-[#d2cebe] transition flex items-center justify-between border border-[#8e8878]">
+          <span>CONFIGURE API ACCESS KEY</span>
+          <span id="api-status-indicator" class="text-[10px] text-emerald-800 font-bold">[ACTIVE]</span>
+        </button>
+      </div>
+
+      <!-- Instructions in NieR manual style -->
+      <div class="mt-6 p-3 bg-[#c9c4b2] border border-[#a39d8d] text-[11px] text-[#5e594f] space-y-1.5 leading-relaxed font-mono-tech">
+        <div class="font-bold text-[#3e3b36] flex items-center gap-1.5">
+          <i data-lucide="info" class="w-3.5 h-3.5"></i> OPERATING PROTOCOL:
+        </div>
+        <p>1. 點擊 [EXECUTE SPIN] 啟動即時 API 靈感抽取。</p>
+        <p>2. 滾輪將依序定格：顏色 &rarr; 形象 &rarr; 品牌型號/實物。</p>
+        <p>3. 按下 [LOCK] 可獨立固定任一模組繼續重骰其餘槽位。</p>
+      </div>
+    </aside>
+
+    <!-- CENTER COLUMN: Primary Slot Machine Bay & Concept Terminal (6 cols) -->
+    <section class="lg:col-span-6 flex flex-col w-full">
+      
+      <!-- Center Item Title in NieR Large Sans Serif -->
+      <div class="nier-double-border-b pb-1 mb-4 flex items-end justify-between">
+        <div>
+          <h2 id="center-unit-heading" class="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-[#3e3b36]">
+            SLOT POD SYSTEM // SPEC
+          </h2>
+          <div class="text-xs font-mono-tech text-[#6b6659] mt-0.5">
+            MODEL: YORHA RANDOM GENERATIVE CORE // REV. 2026
+          </div>
+        </div>
+        <div class="text-right font-mono-tech text-xs">
+          <div class="text-[#3e3b36] font-bold">LV. 33</div>
+          <div class="text-[#787263]">KEY ITEM</div>
+        </div>
+      </div>
+
+      <!-- NieR Slot Reel Array Rack -->
+      <div class="w-full overflow-x-auto pb-2 pt-1">
+        <div id="reels-track" class="flex items-stretch gap-3 min-w-max p-3 bg-[#c2bdab] border border-[#8b8577]">
+          <!-- Dynamically populated reel columns -->
+        </div>
+      </div>
+
+      <!-- Control Bar with NieR Action Prompts -->
+      <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 p-3 bg-[#c8c3b1] border border-[#9b9585]">
+        
+        <!-- Live Selected Words Telemetry -->
+        <div class="flex flex-col gap-1 w-full sm:w-auto">
+    <!-- Secondary Category Row (NieR Sub-header) -->
+    <div class="flex items-center justify-between text-xs sm:text-sm font-bold uppercase tracking-wider pt-3 pb-1 text-[#787263]">
+      <div class="flex items-center gap-4 sm:gap-8 flex-wrap">
+        <span class="cursor-pointer text-[#3e3b36] font-extrabold border-b-2 border-[#3e3b36] pb-0.5" onclick="filterCategory(0)">Module 01 // 塗裝顏色</span>
+        <span class="cursor-pointer hover:text-[#3e3b36]" onclick="filterCategory(1)">Module 02 // 既定形象</span>
+        <span class="cursor-pointer hover:text-[#3e3b36]" onclick="filterCategory(2)">Module 03 // 品牌型號/實物</span>
+        <span class="cursor-pointer hover:text-[#3e3b36]" onclick="openAddSlotModal()">+ Add Custom Module</span>
+      </div>
+      <div class="hidden sm:block text-xs font-mono-tech text-[#5e594f]">
+        CORE: GEMINI 3 FLASH
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Operational Screen (Clean 2-Column Functional Layout) -->
+  <main class="max-w-[1560px] mx-auto px-6 sm:px-12 py-4 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    
+    <!-- LEFT COLUMN: Module Inventory & Fast Actions (4 cols) -->
+    <aside class="lg:col-span-4 flex flex-col border-r border-[#9e9787] pr-4 sm:pr-6 select-none">
+      <div class="text-xs uppercase font-mono-tech font-bold text-[#5e594f] mb-2 flex items-center justify-between border-b border-[#a39d8d] pb-1">
+        <span>ACTIVE UNIT SLOTS</span>
+        <span id="slot-counter-label" class="text-xs">COUNT: 3</span>
+      </div>
+
+      <!-- Inventory style list for each slot -->
+      <div id="module-inventory-list" class="flex flex-col text-sm font-mono-tech divide-y divide-[#beb9a7]">
+        <!-- Dynamically rendered modules -->
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="mt-6 pt-4 border-t border-[#8e8878] space-y-2">
+        <button onclick="openAddSlotModal()" class="w-full text-left px-3 py-2.5 text-xs font-bold font-mono-tech bg-[#c5bfad] hover:bg-[#3e3b36] hover:text-[#d2cebe] transition flex items-center justify-between border border-[#8e8878]">
+          <span>+ EXPAND NEW SLOT MODULE</span>
+          <span>[ADD]</span>
+        </button>
+        <button onclick="switchMainTab('history')" class="w-full text-left px-3 py-2.5 text-xs font-bold font-mono-tech bg-[#c5bfad] hover:bg-[#3e3b36] hover:text-[#d2cebe] transition flex items-center justify-between border border-[#8e8878]">
+          <span>VIEW SAVED RECORDS</span>
+          <span id="aside-archive-count">[LOGS: 0]</span>
+        </button>
+        <button onclick="openSettingsModal()" class="w-full text-left px-3 py-2.5 text-xs font-bold font-mono-tech bg-[#c5bfad] hover:bg-[#3e3b36] hover:text-[#d2cebe] transition flex items-center justify-between border border-[#8e8878]">
+          <span>CONFIGURE API ACCESS KEY</span>
+          <span id="api-status-indicator" class="text-[10px] text-emerald-800 font-bold">[ACTIVE]</span>
+        </button>
+      </div>
+
+      <!-- Operating Instructions -->
+      <div class="mt-6 p-3 bg-[#c9c4b2] border border-[#a39d8d] text-[11px] text-[#5e594f] space-y-1.5 leading-relaxed font-mono-tech">
+        <div class="font-bold text-[#3e3b36] flex items-center gap-1.5">
+          <i data-lucide="info" class="w-3.5 h-3.5"></i> OPERATING PROTOCOL:
+        </div>
+        <p>1. 點擊 [EXECUTE SPIN]（或按空白鍵）立即連線 Gemini 3 Flash 即時生成具象詞彙。</p>
+        <p>2. 滾輪將依序定格：顏色 &rarr; 形象 &rarr; 品牌型號/實物。</p>
+        <p>3. 點擊 [HOLD / 鎖定] 可保留心儀維度，重抽其餘槽位。</p>
+        <p>4. 點擊 [FUSION PARSE] 可讓 AI 將抽出的實物做極致跨界創意融合。</p>
+      </div>
+    </aside>
+
+    <!-- CENTER & RIGHT: Primary Slot Machine Bay & Concept Terminal (8 cols) -->
+    <section class="lg:col-span-8 flex flex-col w-full">
+      
+      <!-- Center Item Title -->
+      <div class="nier-double-border-b pb-1 mb-4 flex items-end justify-between">
+        <div>
+          <h2 id="center-unit-heading" class="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-[#3e3b36]">
+            SLOT POD SYSTEM // SPEC
+          </h2>
+          <div class="text-xs font-mono-tech text-[#6b6659] mt-0.5">
+            MODEL: YORHA RANDOM GENERATIVE CORE // REAL-TIME API SYNC
+          </div>
+        </div>
+        <div class="text-right font-mono-tech text-xs">
+          <div class="text-[#3e3b36] font-bold">READY</div>
+          <div class="text-[#787263]">OPERATIONAL</div>
+        </div>
+      </div>
+
+      <!-- NieR Slot Reel Array Rack -->
+      <div class="w-full overflow-x-auto pb-2 pt-1">
+        <div id="reels-track" class="flex items-stretch gap-3 min-w-max p-3 bg-[#c2bdab] border border-[#8b8577]">
+          <!-- Dynamically populated reel columns -->
+        </div>
+      </div>
+
+      <!-- Control Bar with NieR Action Prompts -->
+      <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 p-3 bg-[#c8c3b1] border border-[#9b9585]">
+        
+        <!-- Live Selected Words Telemetry -->
+        <div class="flex flex-col gap-1 w-full sm:w-auto">
+          <div class="text-[10px] font-mono-tech font-bold text-[#5e594f] uppercase tracking-wider">LOCKED COMBINATION:</div>
+          <div id="badges-container" class="flex flex-wrap items-center gap-1.5 text-xs font-bold font-mono-tech">
+            <!-- Dynamically populated badges -->
+          </div>
+        </div>
+
+        <!-- Spin Action Button styled as NieR Execution -->
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+          <button id="btn-spin" class="w-full sm:w-auto px-7 py-2.5 bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] font-bold font-mono-tech text-sm tracking-wider uppercase transition active:scale-95 flex items-center justify-center gap-2 border border-[#2d2a26]">
+            <span class="text-[#c45e3c]">⨂</span>
+            <span id="spin-btn-text">EXECUTE SPIN</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Concept Synthesis Trigger Banner -->
+      <div class="mt-4 p-3 bg-[#c5bfad] border border-[#8e8878] flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-6 h-6 bg-[#3e3b36] text-[#d2cebe] flex items-center justify-center font-mono-tech text-xs font-bold">
+            AI
+          </div>
+          <div>
+            <div class="text-xs font-bold uppercase text-[#3e3b36] font-mono-tech">MULTI-DIMENSIONAL FUSION PROTOCOL</div>
+            <div class="text-[11px] text-[#6b6659]">以 Gemini 3 Flash 將抽出之品牌實物與形象作深度跨界構想</div>
+          </div>
+        </div>
+
+        <button id="btn-generate-gemini" class="px-5 py-2 bg-[#3e3b36] hover:bg-[#252320] disabled:opacity-40 disabled:hover:bg-[#3e3b36] text-[#d2cebe] text-xs font-mono-tech font-bold tracking-wider uppercase transition">
+          FUSION PARSE
+        </button>
+      </div>
+
+      <!-- NieR Description Box / AI Story Output Frame -->
+      <div class="mt-4 bg-[#c8c3b1] border border-[#8e8878] p-4 min-h-[220px] flex flex-col justify-between">
+        <div class="text-[10px] font-mono-tech font-bold text-[#5e594f] uppercase tracking-wider pb-1.5 border-b border-[#9e9787] flex items-center justify-between">
+          <span id="output-header-title">UNIT SUMMARY & SCHEMATICS</span>
+          <span id="ai-status-text" class="text-[#3e3b36]">AWAITING OPERATOR INPUT</span>
+        </div>
+
+        <!-- AI Result Presentation -->
+        <div id="ai-loading" class="hidden flex-1 flex flex-col items-center justify-center py-8 text-center font-mono-tech">
+          <div class="text-sm font-bold text-[#3e3b36] animate-pulse">PROCESSING DATA WITH GEMINI 3 FLASH...</div>
+          <div class="text-xs text-[#6b6659] mt-1">// INTERLACING SPECIFICATIONS & NARRATIVE MATRIX //</div>
+        </div>
+
+        <div id="ai-output-container" class="flex-1 text-xs leading-relaxed text-[#3e3b36] pt-3 overflow-y-auto max-h-[340px] space-y-3 font-mono-tech">
+          <div class="text-[#686254] italic text-center py-8">
+            "A high-capacity tactile randomizer used in the Pod Project. It exudes an intriguing aura of spontaneous creativity."
+          </div>
+        </div>
+
+        <!-- Number Held / Footer -->
+        <div class="nier-double-border-t pt-2 mt-3 flex items-center justify-between text-[11px] font-mono-tech text-[#686254]">
+          <span id="spin-counter">SPINS EXECUTED: 0</span>
+          <div class="flex items-center gap-3">
+            <button id="btn-copy-ai" class="hover:text-[#3e3b36] flex items-center gap-1 uppercase">
+              <i data-lucide="copy" class="w-3 h-3"></i> [COPY]
+            </button>
+            <button id="btn-save-record" class="hover:tex
