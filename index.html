@@ -75,22 +75,17 @@
       background-color: var(--nier-border);
     }
 
-    /* NieR Reel Framed Box */
-    .nier-reel-box {
+    /* NieR Tactical Slot Display Box */
+    .nier-slot-card {
       background: #c3beac;
       border: 1px solid var(--nier-border);
       position: relative;
-      overflow: hidden;
-      box-shadow: inset 0 8px 12px -4px rgba(45, 42, 38, 0.3), inset 0 -8px 12px -4px rgba(45, 42, 38, 0.3);
+      box-shadow: inset 0 0 10px rgba(62, 59, 54, 0.15);
+      transition: border-color 0.2s, background-color 0.2s;
     }
-
-    .reel-strip {
-      will-change: transform;
-    }
-
-    .blur-spin {
-      filter: blur(1.5px);
-      opacity: 0.9;
+    .nier-slot-card.is-locked {
+      background: #b8b29f;
+      border-color: var(--nier-dark);
     }
 
     /* Scrollbar */
@@ -117,10 +112,10 @@
         <span class="w-3 h-3 bg-[#3e3b36]"></span>
         <div>
           <h1 class="text-xl sm:text-2xl font-extrabold uppercase tracking-tight text-[#3e3b36]">
-            YORHA // GENERATIVE SLOT
+            YORHA // GENERATIVE SLOTS
           </h1>
           <div class="text-[11px] font-mono-tech text-[#6b6659]">
-            CORE ENGINE: GEMINI 3 FLASH // REAL-TIME INFERENCE
+            CORE ENGINE: GEMINI 3.1 FLASH LITE // DIRECT INFERENCE (NO PRESET)
           </div>
         </div>
       </div>
@@ -195,7 +190,7 @@
       <!-- NieR Slot Reel Array Rack (向右滾動容納擴充槽位) -->
       <div class="w-full overflow-x-auto pb-4 pt-1">
         <div id="reels-track" class="flex items-stretch gap-4 min-w-max p-4 bg-[#c0baa7] border border-[#8b8577]">
-          <!-- Dynamically populated reel columns -->
+          <!-- Dynamically populated slot cards -->
         </div>
       </div>
 
@@ -212,13 +207,13 @@
           </div>
         </div>
 
-        <!-- Spin Action Button -->
+        <!-- Spin Action Button (直接生成) -->
         <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
           <button 
             id="btn-spin" 
             class="w-full sm:w-auto px-10 py-3 bg-[#3e3b36] hover:bg-[#282623] active:scale-95 text-[#d2cebe] font-bold font-mono-tech text-sm tracking-widest uppercase transition flex items-center justify-center gap-2 border border-[#222]">
             <span class="text-[#c45e3c]">⨂</span>
-            <span id="spin-btn-text">EXECUTE SPIN (空白鍵)</span>
+            <span id="spin-btn-text">GENERATE WORDS // 直接生成 (空白鍵)</span>
           </button>
         </div>
 
@@ -317,37 +312,34 @@
     /* Google Client ID provided by user */
     const GOOGLE_CLIENT_ID = "865993916714-o0h883itsqd3lvgbatmkgqrqqhbrmuhf.apps.googleusercontent.com";
 
-    /* Core Slot definitions: strictly concrete, branded, and tangible */
+    /* Core Slot definitions: Zero preset words, generated exclusively via Gemini 3.1 Flash Lite */
     let slotDefinitions = [
       {
         id: "slot_0",
         key: "color",
         title: "01 顏色 / 塗裝",
-        promptDesc: "一個真實可見、甚至帶有經典品牌或工業質感的具體顏色或塗裝（例如：法拉利賽車紅、索尼消光黑、保時捷水泥灰、蒂芙尼藍、工程螢光反光橘）。約 4~8 字。",
-        fallbackPool: ["螢光亮橘", "法拉利賽車紅", "索尼消光黑", "蒂芙尼湖水藍", "保時捷水泥灰", "警用反光鮮黃", "軍用消光迷彩綠", "電鍍鉻銀亮面"]
+        promptDesc: "一個真實可見、甚至帶有經典品牌或工業質感的具體顏色或塗裝（例如：法拉利賽車紅、索尼消光黑、保時捷水泥灰、蒂芙尼藍、工程螢光反光橘）。約 4~8 字。"
       },
       {
         id: "slot_1",
         key: "iconic_figure",
         title: "02 具象既定形象/角色",
-        promptDesc: "一個大眾熟知、輪廓鮮明、有明確既定視覺外觀與標誌性特徵的經典角色、吉祥物公仔、標誌性人物或特定生物形象（例如：大同寶寶公仔、麥當勞叔叔、自由女神像、英國皇家衛兵、登月太空人、米老鼠、相撲力士、日本露天溫泉水豚）。約 4~10 字，必須有極強畫面感與既定輪廓，不可抽象。",
-        fallbackPool: ["大同寶寶公仔", "麥當勞叔叔", "英國皇家衛兵", "登月太空人", "日本溫泉水豚", "自由女神像", "奈良公園梅花鹿", "相撲力士"]
+        promptDesc: "一個大眾熟知、輪廓鮮明、有明確既定視覺外觀與標誌性特徵的經典角色、吉祥物公仔、標誌性人物或特定生物形象（例如：大同寶寶公仔、麥當勞叔叔、自由女神像、英國皇家衛兵、登月太空人、米老鼠、相撲力士、日本露天溫泉水豚）。約 4~10 字，必須有極強畫面感與既定輪廓，不可抽象。"
       },
       {
         id: "slot_2",
         key: "object",
         title: "03 品牌型號/特定實物",
-        promptDesc: "極度具體的「特定品牌產品/經典型號」或「特定真實公共場所的實體硬質物件」（例如：索尼 ICF 復古收音機、紅牛2025年F1賽車、日本電車站月台黃黑發光告示牌、7-Eleven亮橘三角錐、大同經典綠電鍋）。約 6~14 字。",
-        fallbackPool: ["索尼復古收音機", "紅牛2025年F1賽車", "日本電車站月台告示牌", "7-Eleven 亮橘三角錐", "任天堂紅白機手把", "大同綠色經典電鍋", "卡西歐經典電子錶"]
+        promptDesc: "極度具體的「特定品牌產品/經典型號」或「特定真實公共場所的實體硬質物件」（例如：索尼 ICF 復古收音機、紅牛2025年F1賽車、日本電車站月台黃黑發光告示牌、7-Eleven亮橘三角錐、大同經典綠電鍋）。約 6~14 字。"
       }
     ];
 
-    /* Runtime State */
+    /* Runtime State: Initialized with no pre-existing words */
     const state = {
-      isSpinning: false,
+      isGenerating: false,
       soundEnabled: true,
       locked: [false, false, false],
-      currentSelection: ["螢光亮橘", "大同寶寶公仔", "索尼復古收音機"],
+      currentSelection: ["[ 待生成 ]", "[ 待生成 ]", "[ 待生成 ]"],
       userApiKey: "",
       currentUser: null
     };
@@ -374,26 +366,13 @@
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = 'square';
-          osc.frequency.setValueAtTime(800 + Math.random() * 200, now);
-          osc.frequency.exponentialRampToValueAtTime(300, now + 0.02);
+          osc.frequency.setValueAtTime(600, now);
           gain.gain.setValueAtTime(0.04, now);
-          gain.gain.linearRampToValueAtTime(0.001, now + 0.02);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.03);
           osc.connect(gain);
           gain.connect(ctx.destination);
           osc.start(now);
-          osc.stop(now + 0.02);
-        } else if (type === 'stop') {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(440, now);
-          osc.frequency.setValueAtTime(880, now + 0.04);
-          gain.gain.setValueAtTime(0.12, now);
-          gain.gain.linearRampToValueAtTime(0.001, now + 0.12);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now);
-          osc.stop(now + 0.12);
+          osc.stop(now + 0.03);
         } else if (type === 'win') {
           [587.33, 880, 1174.66].forEach((f, idx) => {
             const osc = ctx.createOscillator();
@@ -425,23 +404,20 @@
       }, 3000);
     }
 
-    const ITEM_HEIGHT = 46;
-    const REPETITIONS = 18;
-
-    /* Render Slot Reels */
+    /* Render Slot Cards (No spinning reels, direct display) */
     function renderReelsTrack() {
       const track = document.getElementById('reels-track');
       track.innerHTML = '';
 
       slotDefinitions.forEach((slot, index) => {
         const isLocked = state.locked[index] || false;
-        const currentWord = state.currentSelection[index] || slot.fallbackPool[0];
+        const currentWord = state.currentSelection[index] || "[ 待生成 ]";
 
-        const reelCol = document.createElement('div');
-        reelCol.className = 'flex flex-col items-center w-52 sm:w-60 flex-shrink-0';
-        reelCol.id = `reel-col-${index}`;
+        const slotCol = document.createElement('div');
+        slotCol.className = 'flex flex-col items-center w-56 sm:w-64 flex-shrink-0';
+        slotCol.id = `slot-col-${index}`;
 
-        reelCol.innerHTML = `
+        slotCol.innerHTML = `
           <!-- Header -->
           <div class="w-full flex items-center justify-between text-xs font-bold font-mono-tech text-[#3e3b36] mb-2 px-1 uppercase tracking-wider">
             <div class="flex items-center gap-1.5 truncate" title="${slot.title}">
@@ -455,12 +431,18 @@
             ` : ''}
           </div>
 
-          <!-- Reel Box -->
-          <div id="reel-container-${index}" class="nier-reel-box w-full h-[150px] flex items-center justify-center relative">
-            <!-- Center Win Window Marker (Inverted Dark Line) -->
-            <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[48px] border-y-2 border-[#3e3b36] bg-[#3e3b36]/15 pointer-events-none z-10"></div>
-            <!-- Strip of Text Items -->
-            <div id="reel-strip-${index}" class="reel-strip flex flex-col items-center w-full"></div>
+          <!-- Direct Word Card Box -->
+          <div id="slot-card-${index}" class="nier-slot-card w-full h-[130px] p-4 flex flex-col justify-between items-center text-center relative ${isLocked ? 'is-locked' : ''}">
+            <div class="text-[10px] font-mono-tech text-[#686254] self-start uppercase">
+              MODULE_INDEX // 0${index + 1}
+            </div>
+            <div id="slot-text-${index}" class="font-extrabold text-base sm:text-lg text-[#3e3b36] font-mono-tech break-words line-clamp-2 px-2 py-1 selection:bg-[#3e3b36]">
+              ${currentWord}
+            </div>
+            <div class="w-full border-t border-[#8b8577]/40 flex justify-between items-center pt-1.5 text-[10px] font-mono-tech text-[#686254]">
+              <span>STATUS:</span>
+              <span id="slot-status-${index}" class="${isLocked ? 'text-[#c45e3c] font-bold' : ''}">${isLocked ? 'LOCKED' : 'READY'}</span>
+            </div>
           </div>
 
           <!-- Lock Toggle Button -->
@@ -469,8 +451,7 @@
           </button>
         `;
 
-        track.appendChild(reelCol);
-        populateReelStrip(index, currentWord);
+        track.appendChild(slotCol);
       });
 
       // Quick "+" Expand Tile
@@ -480,36 +461,11 @@
       addTile.innerHTML = `
         <div class="text-xl font-bold mb-1 text-[#c45e3c]">+</div>
         <span class="text-xs font-bold uppercase tracking-wider">EXPAND</span>
-        <span class="text-[10px] text-[#686254]">向右新增槽位</span>
+        <span class="text-[10px] text-[#686254]">向右新增欄位</span>
       `;
       track.appendChild(addTile);
 
       renderBadges();
-    }
-
-    function populateReelStrip(reelIndex, centerWord) {
-      const strip = document.getElementById(`reel-strip-${reelIndex}`);
-      if (!strip) return;
-      strip.innerHTML = '';
-      const slot = slotDefinitions[reelIndex];
-      const pool = [centerWord, ...slot.fallbackPool.filter(w => w !== centerWord)];
-
-      for (let r = 0; r < REPETITIONS; r++) {
-        pool.forEach((word) => {
-          const div = document.createElement('div');
-          div.className = `h-[46px] flex items-center justify-center font-bold text-xs sm:text-sm select-none text-[#3e3b36] px-2 text-center w-full font-mono-tech tracking-wide`;
-          div.innerHTML = `<span class="truncate max-w-[190px]">${word}</span>`;
-          strip.appendChild(div);
-        });
-      }
-
-      const container = document.getElementById(`reel-container-${reelIndex}`);
-      const containerH = container ? container.clientHeight : 150;
-      const centerOffset = (containerH / 2) - (ITEM_HEIGHT / 2);
-      const targetRepetition = 8;
-      const translateY = -(targetRepetition * pool.length * ITEM_HEIGHT) + centerOffset;
-      strip.style.transition = 'none';
-      strip.style.transform = `translateY(${translateY}px)`;
     }
 
     function renderBadges() {
@@ -517,430 +473,4 @@
       if (!container) return;
       container.innerHTML = '';
 
-      slotDefinitions.forEach((slot, index) => {
-        const word = state.currentSelection[index] || slot.fallbackPool[0];
-        const span = document.createElement('span');
-        span.id = `badge-word-${index}`;
-        span.className = `px-2.5 py-1 bg-[#3e3b36] text-[#d2cebe] border border-[#222] truncate max-w-[180px]`;
-        span.innerText = word;
-        container.appendChild(span);
-
-        if (index < slotDefinitions.length - 1) {
-          const plus = document.createElement('span');
-          plus.className = 'text-[#686254] font-bold px-0.5';
-          plus.innerText = '+';
-          container.appendChild(plus);
-        }
-      });
-    }
-
-    window.toggleLock = function(reelIndex) {
-      if (state.isSpinning) return;
-      state.locked[reelIndex] = !state.locked[reelIndex];
-      const isLocked = state.locked[reelIndex];
-      const btn = document.getElementById(`btn-lock-${reelIndex}`);
-      if (btn) {
-        if (isLocked) {
-          btn.className = 'mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border bg-[#3e3b36] text-[#d2cebe] border-[#222] transition';
-          btn.innerText = '[LOCKED // 已鎖定]';
-        } else {
-          btn.className = 'mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border bg-[#c5bfad] text-[#3e3b36] border-[#8e8878] hover:bg-[#beb9a7] transition';
-          btn.innerText = '[HOLD // 鎖定]';
-        }
-      }
-      playSound('stop');
-      showToast(isLocked ? `已鎖定: ${slotDefinitions[reelIndex].title}` : `解除鎖定: ${slotDefinitions[reelIndex].title}`);
-    };
-
-    window.removeSlot = function(index) {
-      if (state.isSpinning) return;
-      if (slotDefinitions.length <= 2) {
-        showToast('至少保留 2 個滾輪模組');
-        return;
-      }
-      const removed = slotDefinitions.splice(index, 1)[0];
-      state.locked.splice(index, 1);
-      state.currentSelection.splice(index, 1);
-      renderReelsTrack();
-      showToast(`已移除槽位: ${removed.title}`);
-    };
-
-    /* Expand New Slot Modal */
-    const modalAddSlot = document.getElementById('modal-add-slot');
-    window.openAddSlotModal = function() {
-      modalAddSlot.classList.remove('hidden');
-      document.getElementById('input-new-slot-name').value = '';
-      document.getElementById('input-new-slot-desc').value = '';
-    };
-
-    document.getElementById('btn-close-add-modal').addEventListener('click', () => modalAddSlot.classList.add('hidden'));
-    document.getElementById('btn-cancel-add-slot').addEventListener('click', () => modalAddSlot.classList.add('hidden'));
-
-    document.querySelectorAll('.btn-preset-slot').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.getElementById('input-new-slot-name').value = btn.dataset.name;
-        document.getElementById('input-new-slot-desc').value = btn.dataset.desc;
-      });
-    });
-
-    document.getElementById('btn-confirm-add-slot').addEventListener('click', () => {
-      const name = document.getElementById('input-new-slot-name').value.trim();
-      const desc = document.getElementById('input-new-slot-desc').value.trim();
-      if (!name) {
-        showToast('請輸入槽位名稱');
-        return;
-      }
-
-      const newIndex = slotDefinitions.length;
-      const newSlot = {
-        id: `slot_${newIndex}`,
-        key: `custom_${newIndex}`,
-        title: `${String(newIndex + 1).padStart(2, '0')} ${name}`,
-        promptDesc: desc || `一個極度具象、畫面感極強的實體概念：${name}。`,
-        fallbackPool: [`${name} 特選實物 A`, `${name} 特選實物 B`, `${name} 特選實物 C`]
-      };
-
-      slotDefinitions.push(newSlot);
-      state.locked.push(false);
-      state.currentSelection.push(newSlot.fallbackPool[0]);
-
-      renderReelsTrack();
-      modalAddSlot.classList.add('hidden');
-      playSound('win');
-      showToast(`已向右擴充槽位: ${newSlot.title}`);
-
-      const trackContainer = document.getElementById('reels-track').parentElement;
-      trackContainer.scrollTo({ left: trackContainer.scrollWidth, behavior: 'smooth' });
-    });
-
-    /* Live Gemini API call executed during spinning */
-    async function fetchLiveWordsDuringSpin() {
-      const apiKey = state.userApiKey || "";
-      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-      const properties = {};
-      const required = [];
-      const descriptions = [];
-
-      slotDefinitions.forEach((slot, idx) => {
-        properties[slot.key] = {
-          type: "STRING",
-          description: `【${slot.title}】：${slot.promptDesc}`
-        };
-        required.push(slot.key);
-        descriptions.push(`${idx + 1}. ${slot.title}: ${slot.promptDesc}`);
-      });
-
-      const systemPrompt = `你是一個嚴格生成「超具象、看得見摸得著、具備真實品牌/型號或特定場所實體物」的隨機詞彙引擎。
-絕對禁止抽象名詞（嚴禁出現如「無盡記憶水晶」、「時間之鑰」等沒有現實畫面的概念）。
-請為目前拉霸機的 ${slotDefinitions.length} 個維度各生成一個最具畫面感、輪廓清晰的詞彙：
-${descriptions.join("\n")}
-所有項目必須極度具體、有細節質感，輸出符合結構的 JSON。`;
-
-      const payload = {
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: `請為當前的 ${slotDefinitions.length} 個拉霸滾輪各隨機生成一個超具象詞彙。輸出 JSON。` }]
-          }
-        ],
-        systemInstruction: { parts: [{ text: systemPrompt }] },
-        generationConfig: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: "OBJECT",
-            properties: properties,
-            required: required
-          }
-        }
-      };
-
-      const response = await fetchWithRetry(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      const result = await response.json();
-      const rawJson = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!rawJson) throw new Error("API 未回傳結構化資料");
-      return JSON.parse(rawJson);
-    }
-
-    async function fetchWithRetry(url, options, maxRetries = 3) {
-      let delay = 1000;
-      for (let i = 0; i < maxRetries; i++) {
-        try {
-          const res = await fetch(url, options);
-          if (res.ok) return res;
-          if (res.status === 429 || res.status >= 500) {
-            await new Promise(r => setTimeout(r, delay));
-            delay *= 2;
-            continue;
-          }
-          return res;
-        } catch (e) {
-          if (i === maxRetries - 1) throw e;
-          await new Promise(r => setTimeout(r, delay));
-          delay *= 2;
-        }
-      }
-      return fetch(url, options);
-    }
-
-    /* Spin Execution with Sequential Reveal */
-    async function spinReels() {
-      if (state.isSpinning) return;
-      state.isSpinning = true;
-
-      const spinBtn = document.getElementById('btn-spin');
-      const spinBtnText = document.getElementById('spin-btn-text');
-
-      spinBtn.disabled = true;
-      spinBtn.classList.add('opacity-70');
-      spinBtnText.innerText = 'API 旋轉生成中...';
-
-      slotDefinitions.forEach((_, i) => {
-        if (!state.locked[i]) {
-          const badge = document.getElementById(`badge-word-${i}`);
-          if (badge) badge.innerText = '旋轉中...';
-        }
-      });
-
-      playSound('tick');
-      const tickInterval = setInterval(() => {
-        playSound('tick');
-      }, 90);
-
-      // Start all unlocked reels high-speed scrolling
-      const spinIntervals = [];
-      slotDefinitions.forEach((slot, i) => {
-        if (!state.locked[i]) {
-          const container = document.getElementById(`reel-container-${i}`);
-          const strip = document.getElementById(`reel-strip-${i}`);
-          if (container && strip) {
-            container.classList.add('blur-spin');
-            let currentY = parseFloat(strip.style.transform.replace(/[^\d.-]/g, '')) || 0;
-            const singleCycle = slot.fallbackPool.length * ITEM_HEIGHT;
-            const interval = setInterval(() => {
-              currentY -= 26;
-              if (Math.abs(currentY) > singleCycle * 14) {
-                currentY += singleCycle * 6;
-              }
-              strip.style.transition = 'none';
-              strip.style.transform = `translateY(${currentY}px)`;
-            }, 16);
-            spinIntervals.push(interval);
-          }
-        }
-      });
-
-      // API fetch during spin
-      let apiResults = null;
-      try {
-        apiResults = await fetchLiveWordsDuringSpin();
-      } catch (err) {
-        console.warn('API 旋轉生成錯誤，使用本地備用庫:', err);
-        apiResults = {};
-        slotDefinitions.forEach(slot => {
-          const randWord = slot.fallbackPool[Math.floor(Math.random() * slot.fallbackPool.length)];
-          apiResults[slot.key] = randWord;
-        });
-      }
-
-      spinIntervals.forEach(timer => clearInterval(timer));
-
-      const targetWords = slotDefinitions.map((slot, i) => {
-        if (state.locked[i]) {
-          return state.currentSelection[i];
-        }
-        return apiResults[slot.key] || slot.fallbackPool[0];
-      });
-
-      // Sequential Reel Stopping (1st -> 2nd -> 3rd -> ...)
-      const stopReel = (reelIdx, durationMs = 800) => {
-        return new Promise(resolve => {
-          const targetWord = targetWords[reelIdx];
-          const badge = document.getElementById(`badge-word-${reelIdx}`);
-
-          if (state.locked[reelIdx]) {
-            if (badge) badge.innerText = targetWord;
-            resolve();
-            return;
-          }
-
-          const strip = document.getElementById(`reel-strip-${reelIdx}`);
-          const container = document.getElementById(`reel-container-${reelIdx}`);
-          const slot = slotDefinitions[reelIdx];
-
-          if (!slot.fallbackPool.includes(targetWord)) {
-            slot.fallbackPool.unshift(targetWord);
-          }
-          populateReelStrip(reelIdx, targetWord);
-
-          const containerH = container ? container.clientHeight : 150;
-          const centerOffset = (containerH / 2) - (ITEM_HEIGHT / 2);
-          const landingRepetition = 8;
-          const translateY = -(landingRepetition * slot.fallbackPool.length * ITEM_HEIGHT) + centerOffset;
-
-          strip.style.transition = `transform ${durationMs}ms cubic-bezier(0.12, 0.88, 0.28, 1)`;
-          strip.style.transform = `translateY(${translateY}px)`;
-
-          setTimeout(() => {
-            if (container) {
-              container.classList.remove('blur-spin');
-            }
-            playSound('stop');
-            if (badge) badge.innerText = targetWord;
-            resolve();
-          }, durationMs);
-        });
-      };
-
-      try {
-        for (let i = 0; i < slotDefinitions.length; i++) {
-          await new Promise(r => setTimeout(r, i === 0 ? 250 : 350));
-          await stopReel(i, 750 + (i * 70));
-        }
-
-        clearInterval(tickInterval);
-        state.currentSelection = targetWords;
-        renderBadges();
-
-        playSound('win');
-        showToast(`鎖定完成: ${targetWords.join(' + ')}`);
-
-      } finally {
-        clearInterval(tickInterval);
-        state.isSpinning = false;
-        spinBtn.disabled = false;
-        spinBtn.classList.remove('opacity-70');
-        spinBtnText.innerText = 'EXECUTE SPIN (空白鍵)';
-      }
-    }
-
-    document.getElementById('btn-spin').addEventListener('click', spinReels);
-
-    /* Keyboard Shortcuts */
-    window.addEventListener('keydown', (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-      if (e.code === 'Space') {
-        e.preventDefault();
-        spinReels();
-      }
-    });
-
-    /* API Key Quick Input & Save */
-    const apiKeyInput = document.getElementById('input-api-key');
-    document.getElementById('btn-save-key').addEventListener('click', () => {
-      state.userApiKey = apiKeyInput.value.trim();
-      showToast(state.userApiKey ? 'API KEY 已更新' : '已恢復預設 API 設定');
-    });
-
-    document.getElementById('btn-toggle-key-visibility').addEventListener('click', () => {
-      const type = apiKeyInput.getAttribute('type') === 'password' ? 'text' : 'password';
-      apiKeyInput.setAttribute('type', type);
-    });
-
-    /* Google GIS Authentication */
-    function initGoogleSignIn() {
-      if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
-        setTimeout(initGoogleSignIn, 300);
-        return;
-      }
-
-      try {
-        google.accounts.id.initialize({
-          client_id: GOOGLE_CLIENT_ID,
-          callback: handleGoogleCredentialResponse,
-          auto_select: false
-        });
-
-        google.accounts.id.renderButton(
-          document.getElementById('g_id_signin_wrapper'),
-          {
-            theme: 'outline',
-            size: 'small',
-            shape: 'rectangular',
-            text: 'signin_with',
-            locale: 'zh_TW'
-          }
-        );
-      } catch (err) {
-        console.warn('Google Identity error:', err);
-      }
-    }
-
-    function parseJwt(token) {
-      try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
-        return JSON.parse(jsonPayload);
-      } catch (e) {
-        return null;
-      }
-    }
-
-    function handleGoogleCredentialResponse(response) {
-      const userPayload = parseJwt(response.credential);
-      if (userPayload) {
-        state.currentUser = {
-          name: userPayload.name || 'YoRHa Unit',
-          email: userPayload.email,
-          picture: userPayload.picture
-        };
-        applyUserUI();
-        playSound('win');
-        showToast(`登入成功: ${state.currentUser.name}`);
-      }
-    }
-
-    function applyUserUI() {
-      const gWrapper = document.getElementById('g_id_signin_wrapper');
-      const userBadge = document.getElementById('user-profile-badge');
-      const userName = document.getElementById('user-name');
-
-      if (state.currentUser) {
-        gWrapper.classList.add('hidden');
-        userBadge.classList.remove('hidden');
-        userName.innerText = state.currentUser.name;
-      } else {
-        gWrapper.classList.remove('hidden');
-        userBadge.classList.add('hidden');
-      }
-    }
-
-    document.getElementById('btn-logout').addEventListener('click', () => {
-      state.currentUser = null;
-      applyUserUI();
-      showToast('已登出 Google 帳號');
-    });
-
-    /* SFX Toggle */
-    document.getElementById('btn-sound-toggle').addEventListener('click', () => {
-      state.soundEnabled = !state.soundEnabled;
-      const text = document.getElementById('sound-text');
-      const icon = document.getElementById('sound-icon');
-      if (state.soundEnabled) {
-        text.innerText = 'SFX: ON';
-        icon.setAttribute('data-lucide', 'volume-2');
-        showToast('音效已開啟');
-      } else {
-        text.innerText = 'SFX: OFF';
-        icon.setAttribute('data-lucide', 'volume-x');
-        showToast('音效已靜音');
-      }
-      lucide.createIcons();
-    });
-
-    /* App Initialization */
-    window.addEventListener('DOMContentLoaded', () => {
-      renderReelsTrack();
-      setTimeout(initGoogleSignIn, 500);
-      lucide.createIcons();
-    });
-  </script>
-</body>
-</html>
-```
+      
