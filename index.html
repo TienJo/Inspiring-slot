@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -207,11 +206,19 @@
           </div>
         </div>
 
-        <!-- Spin Action Button (直接生成) -->
-        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+        <!-- Spin and Save Actions -->
+        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
+          <button 
+            id="btn-save-card" 
+            class="px-4 py-3 bg-[#c5bfad] hover:bg-[#beb9a7] text-[#3e3b36] font-bold font-mono-tech text-xs tracking-wider uppercase border border-[#8e8878] transition flex items-center justify-center gap-1.5"
+            title="將當前生成的詞彙組合保存至雲端卡片庫">
+            <i data-lucide="bookmark-plus" class="w-4 h-4 text-[#c45e3c]"></i>
+            <span>SAVE CARD // 存為雲端卡片</span>
+          </button>
+
           <button 
             id="btn-spin" 
-            class="w-full sm:w-auto px-10 py-3 bg-[#3e3b36] hover:bg-[#282623] active:scale-95 text-[#d2cebe] font-bold font-mono-tech text-sm tracking-widest uppercase transition flex items-center justify-center gap-2 border border-[#222]">
+            class="w-full sm:w-auto px-8 py-3 bg-[#3e3b36] hover:bg-[#282623] active:scale-95 text-[#d2cebe] font-bold font-mono-tech text-sm tracking-widest uppercase transition flex items-center justify-center gap-2 border border-[#222]">
             <span class="text-[#c45e3c]">⨂</span>
             <span id="spin-btn-text">GENERATE WORDS // 直接生成 (空白鍵)</span>
           </button>
@@ -220,6 +227,31 @@
       </div>
 
     </div>
+
+    <!-- Saved Cards Cloud Archive -->
+    <section class="w-full mt-6 bg-[#cac5b3] border-2 border-[#3e3b36] p-4 sm:p-6 shadow-sm font-mono-tech">
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-3 mb-4 border-b border-[#a39d8d]">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 bg-[#3e3b36]"></span>
+          <h3 class="text-base sm:text-lg font-extrabold uppercase text-[#3e3b36]">
+            CLOUD CARDS ARCHIVE // 雲端已儲存結果卡片
+          </h3>
+          <span id="saved-card-counter" class="text-xs bg-[#3e3b36] text-[#d2cebe] px-2 py-0.5 font-bold">
+            0 UNITS
+          </span>
+        </div>
+        <div class="text-[11px] text-[#6b6659]">
+          AUTO-SYNCED WITH GOOGLE ACCOUNT
+        </div>
+      </div>
+
+      <!-- Cards Grid -->
+      <div id="saved-cards-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 min-h-[90px]">
+        <div class="col-span-full py-8 text-center text-xs text-[#79746a] border border-dashed border-[#8e8878] p-4">
+          // 尚無儲存卡片。點擊「SAVE CARD // 存為雲端卡片」將當前生成結果同步至雲端庫。
+        </div>
+      </div>
+    </section>
 
   </main>
 
@@ -239,9 +271,25 @@
         新增自訂滾輪槽位。點擊 SPIN 時，Gemini 3 Flash 會在旋轉中依照您的要求即時生成具象詞彙。
       </p>
 
+      <!-- My Saved Slot Templates (雲端自訂範本庫) -->
+      <div class="mb-4 bg-[#c4bfae] border border-[#8b8577] p-2.5">
+        <div class="flex items-center justify-between mb-2">
+          <label class="text-xs font-bold text-[#3e3b36] flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 bg-[#c45e3c]"></span>
+            <span>// 我的常用自訂範本 (SAVED TEMPLATES):</span>
+          </label>
+          <span id="saved-template-count" class="text-[10px] text-[#6b6659]">0 UNITS</span>
+        </div>
+        <div id="custom-presets-list" class="flex flex-col gap-1.5 max-h-36 overflow-y-auto pr-1">
+          <div class="text-[11px] text-[#79746a] py-1 text-center border border-dashed border-[#8e8878]">
+            // 尚無儲存的自訂範本。在下方填寫後勾選「保存為常用範本」即可存入雲端。
+          </div>
+        </div>
+      </div>
+
       <!-- Preset Quick Picks -->
       <div class="mb-4">
-        <label class="block text-xs font-bold text-[#3e3b36] mb-1.5">// 快速預設範本:</label>
+        <label class="block text-xs font-bold text-[#3e3b36] mb-1.5">// 系統快速預設範本:</label>
         <div class="grid grid-cols-2 gap-1.5 text-xs">
           <button type="button" class="btn-preset-slot p-2 border border-[#8e8878] bg-[#c8c3b1] hover:bg-[#3e3b36] hover:text-[#d2cebe] text-left transition"
                   data-name="特定真實場所/建築" 
@@ -276,6 +324,17 @@
           <label class="block text-xs font-bold text-[#3e3b36] mb-1">生成要求 (PROMPT DIRECTIVE):</label>
           <textarea id="input-new-slot-desc" rows="3" placeholder="清楚指示必須生成什麼具象實物..." class="w-full bg-[#c2bdab] border border-[#8e8878] px-3 py-1.5 text-xs text-[#3e3b36] focus:outline-none focus:border-[#3e3b36] leading-relaxed"></textarea>
         </div>
+        
+        <!-- Save as template checkbox -->
+        <div class="flex items-center justify-between pt-1">
+          <label class="flex items-center gap-2 cursor-pointer select-none text-xs font-bold text-[#3e3b36]">
+            <input type="checkbox" id="chk-save-as-template" class="accent-[#3e3b36] w-4 h-4 cursor-pointer" checked>
+            <span>同步保存此設定至常用範本庫 (供日後快速選用)</span>
+          </label>
+          <button type="button" id="btn-save-template-only" class="text-[11px] underline text-[#5e594f] hover:text-[#3e3b36]">
+            [僅另存範本]
+          </button>
+        </div>
       </div>
 
       <div class="flex items-center justify-end gap-2 pt-4 border-t border-[#8e8878] mt-4">
@@ -308,38 +367,69 @@
     </div>
   </footer>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, deleteDoc, onSnapshot, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    /* Cloud Storage Configuration */
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+      apiKey: "AIzaSyDummyKeyForLocalPreview",
+      authDomain: "dummy.firebaseapp.com",
+      projectId: "dummy-project"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentAuthUser = null;
+    let unsubscribeCards = null;
+    let unsubscribeTemplates = null;
+    let userCustomTemplates = [];
+
     /* Google Client ID provided by user */
     const GOOGLE_CLIENT_ID = "865993916714-o0h883itsqd3lvgbatmkgqrqqhbrmuhf.apps.googleusercontent.com";
 
-    /* Core Slot definitions: Zero preset words, generated exclusively via Gemini 3.1 Flash Lite */
+    /* Core Slot definitions: Enforcing extreme diversity across wildly contrasting human domains */
     let slotDefinitions = [
       {
         id: "slot_0",
         key: "color",
         title: "01 顏色 / 塗裝",
-        promptDesc: "一個真實可見、甚至帶有經典品牌或工業質感的具體顏色或塗裝（例如：法拉利賽車紅、索尼消光黑、保時捷水泥灰、蒂芙尼藍、工程螢光反光橘）。約 4~8 字。"
+        promptDesc: "一個真實可見、極具視覺衝擊的具體塗裝或實體成色。必須從全球極度廣泛且大相逕庭的領域抽取（例如特種施工反光、稀有礦物斷面、深海螢光、賽車碳纖消光、傳統生漆、高壓電弧淡紫等）。約 3~8 字。絕對禁止每次都出常見的賽車紅或黑色。"
       },
       {
         id: "slot_1",
         key: "iconic_figure",
         title: "02 具象既定形象/角色",
-        promptDesc: "一個大眾熟知、輪廓鮮明、有明確既定視覺外觀與標誌性特徵的經典角色、吉祥物公仔、標誌性人物或特定生物形象（例如：大同寶寶公仔、麥當勞叔叔、自由女神像、英國皇家衛兵、登月太空人、米老鼠、相撲力士、日本露天溫泉水豚）。約 4~10 字，必須有極強畫面感與既定輪廓，不可抽象。"
+        promptDesc: "大眾熟知、輪廓鮮明、有既定視覺外觀與穿著特徵的人物、吉祥物、經典職業、符號化生物或歷史角色。必須橫跨極端懸殊的年代與文化（例如古典相撲手、外太空維修員、中世紀黑死病鳥嘴醫生、小鎮加油站充氣人偶、深海潛水鐘水手、深山養蜂人）。約 4~10 字，不可抽象。"
       },
       {
         id: "slot_2",
         key: "object",
         title: "03 品牌型號/特定實物",
-        promptDesc: "極度具體的「特定品牌產品/經典型號」或「特定真實公共場所的實體硬質物件」（例如：索尼 ICF 復古收音機、紅牛2025年F1賽車、日本電車站月台黃黑發光告示牌、7-Eleven亮橘三角錐、大同經典綠電鍋）。約 6~14 字。"
+        promptDesc: "極度具體的「特定品牌產品/經典型號」或「特定真實公共場所的實體硬質物件」。領域必須極端多元隨機（例如重型鐵路道岔板手、特定年代經典拍立得、牙醫診所診療椅、極地探險鋁合金雪橇、消防高壓水砲、重機排氣管）。約 5~14 字。絕不可重複常見 3C 物品。"
       }
     ];
 
-    /* Runtime State: Initialized with no pre-existing words */
+    /* Diverse Domain Anchors to inject randomized mutations on each spin */
+    const DIVERSITY_DOMAINS = [
+      "深海探勘與海洋工程", "重工業機械與礦山怪獸", "傳統東亞民俗祭典與工藝", 
+      "80年代街頭滑板與龐克次文化", "冷戰航太與軍事硬體", "極地探險與高山救援", 
+      "分子生物實驗室與無塵室設備", "深夜24小時拉麵店廚房與庶民餐飲", "經典鐘錶工坊與精密微型機械", 
+      "道路施工與市政重型工程", "地下黑膠唱片行與類比音響", "特技馬戲團與古典魔術道具",
+      "古董拍賣會與地質礦物標本室", "現代急診室與外科手術器械", "無人荒島氣象觀測站"
+    ];
+
+    /* Runtime State: Initialized with diversity memory */
     const state = {
       isGenerating: false,
       soundEnabled: true,
       locked: [false, false, false],
       currentSelection: ["[ 待生成 ]", "[ 待生成 ]", "[ 待生成 ]"],
+      historyAvoidance: [],
       userApiKey: "",
       currentUser: null
     };
@@ -404,7 +494,7 @@
       }, 3000);
     }
 
-    /* Render Slot Cards (No spinning reels, direct display) */
+    /* Render Slot Cards (Direct display) */
     function renderReelsTrack() {
       const track = document.getElementById('reels-track');
       track.innerHTML = '';
@@ -466,6 +556,7 @@
       track.appendChild(addTile);
 
       renderBadges();
+      lucide.createIcons();
     }
 
     function renderBadges() {
@@ -473,4 +564,806 @@
       if (!container) return;
       container.innerHTML = '';
 
-      
+      slotDefinitions.forEach((slot, index) => {
+        const word = state.currentSelection[index] || "[ 待生成 ]";
+        const span = document.createElement('span');
+        span.id = `badge-word-${index}`;
+        span.className = `px-2.5 py-1 bg-[#3e3b36] text-[#d2cebe] border border-[#222] truncate max-w-[180px]`;
+        span.innerText = word;
+        container.appendChild(span);
+
+        if (index < slotDefinitions.length - 1) {
+          const plus = document.createElement('span');
+          plus.className = 'text-[#686254] font-bold px-0.5';
+          plus.innerText = '+';
+          container.appendChild(plus);
+        }
+      });
+    }
+
+    window.toggleLock = function(slotIndex) {
+      if (state.isGenerating) return;
+      state.locked[slotIndex] = !state.locked[slotIndex];
+      const isLocked = state.locked[slotIndex];
+      const btn = document.getElementById(`btn-lock-${slotIndex}`);
+      const card = document.getElementById(`slot-card-${slotIndex}`);
+      const status = document.getElementById(`slot-status-${slotIndex}`);
+
+      if (btn) {
+        if (isLocked) {
+          btn.className = 'mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border bg-[#3e3b36] text-[#d2cebe] border-[#222] transition';
+          btn.innerText = '[LOCKED // 已鎖定]';
+          if (card) card.classList.add('is-locked');
+          if (status) {
+            status.innerText = 'LOCKED';
+            status.className = 'text-[#c45e3c] font-bold';
+          }
+        } else {
+          btn.className = 'mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border bg-[#c5bfad] text-[#3e3b36] border-[#8e8878] hover:bg-[#beb9a7] transition';
+          btn.innerText = '[HOLD // 鎖定]';
+          if (card) card.classList.remove('is-locked');
+          if (status) {
+            status.innerText = 'READY';
+            status.className = '';
+          }
+        }
+      }
+      playSound('tick');
+      showToast(isLocked ? `已鎖定: ${slotDefinitions[slotIndex].title}` : `解除鎖定: ${slotDefinitions[slotIndex].title}`);
+    };
+
+    window.removeSlot = function(index) {
+      if (state.isGenerating) return;
+      if (slotDefinitions.length <= 2) {
+        showToast('至少保留 2 個欄位模組');
+        return;
+      }
+      const removed = slotDefinitions.splice(index, 1)[0];
+      state.locked.splice(index, 1);
+      state.currentSelection.splice(index, 1);
+      renderReelsTrack();
+      showToast(`已移除欄位: ${removed.title}`);
+    };
+
+    /* Expand New Slot Modal */
+    const modalAddSlot = document.getElementById('modal-add-slot');
+    window.openAddSlotModal = function() {
+      modalAddSlot.classList.remove('hidden');
+      document.getElementById('input-new-slot-name').value = '';
+      document.getElementById('input-new-slot-desc').value = '';
+      document.getElementById('chk-save-as-template').checked = true;
+      loadLocalTemplatesFallback();
+    };
+
+    document.getElementById('btn-close-add-modal').addEventListener('click', () => modalAddSlot.classList.add('hidden'));
+    document.getElementById('btn-cancel-add-slot').addEventListener('click', () => modalAddSlot.classList.add('hidden'));
+
+    document.querySelectorAll('.btn-preset-slot').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('input-new-slot-name').value = btn.dataset.name;
+        document.getElementById('input-new-slot-desc').value = btn.dataset.desc;
+      });
+    });
+
+    /* Custom Slot Templates Management (Cloud Sync & Local Fallback) */
+    async function saveCustomTemplate(name, desc) {
+      if (!name) return;
+      const templateItem = {
+        name,
+        desc: desc || '一個符合此主題、極為具體可見的真實物件或名詞。',
+        timestamp: Date.now()
+      };
+
+      // 1. Local fallback save
+      try {
+        const localList = JSON.parse(localStorage.getItem('yorha_slot_templates') || '[]');
+        const exists = localList.some(t => t.name === name);
+        if (!exists) {
+          localList.unshift(templateItem);
+          localStorage.setItem('yorha_slot_templates', JSON.stringify(localList));
+        }
+      } catch (e) {
+        console.warn('Local template save err:', e);
+      }
+
+      // 2. Cloud Firestore save (if signed in)
+      if (currentAuthUser) {
+        try {
+          const colRef = collection(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'slotTemplates');
+          await addDoc(colRef, templateItem);
+          showToast(`範本「${name}」已同步至雲端庫`);
+        } catch (e) {
+          console.warn('Cloud template sync err:', e);
+        }
+      } else {
+        renderCustomTemplatesList(JSON.parse(localStorage.getItem('yorha_slot_templates') || '[]'));
+        showToast(`範本「${name}」已保存至本機庫`);
+      }
+    }
+
+    function renderCustomTemplatesList(templates) {
+      const container = document.getElementById('custom-presets-list');
+      const counter = document.getElementById('saved-template-count');
+      if (!container) return;
+
+      userCustomTemplates = templates;
+      if (counter) counter.innerText = `${templates.length} UNITS`;
+
+      if (templates.length === 0) {
+        container.innerHTML = `
+          <div class="text-[11px] text-[#79746a] py-2 text-center border border-dashed border-[#8e8878]">
+            // 尚無儲存的自訂範本。填寫下方設定後即可保存為常用範本。
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      templates.forEach((item) => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between p-1.5 bg-[#c8c3b1] border border-[#8e8878] hover:border-[#3e3b36] transition text-xs';
+        
+        row.innerHTML = `
+          <div class="flex-1 truncate cursor-pointer pr-2 select-none" title="${item.desc}">
+            <div class="font-bold text-[#3e3b36] truncate flex items-center gap-1">
+              <span class="text-[#c45e3c]">▪</span>
+              <span>${item.name}</span>
+            </div>
+            <div class="text-[10px] text-[#6b6659] truncate">${item.desc}</div>
+          </div>
+          <div class="flex items-center gap-1">
+            <button type="button" class="btn-apply-template px-2 py-0.5 bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] text-[10px] font-bold">
+              帶入
+            </button>
+            <button type="button" class="btn-del-template px-1.5 py-0.5 hover:text-[#c45e3c] text-[#6b6659] text-[10px]">
+              <i data-lucide="trash-2" class="w-3 h-3"></i>
+            </button>
+          </div>
+        `;
+
+        // Click to apply template
+        row.querySelector('.btn-apply-template').addEventListener('click', (e) => {
+          e.stopPropagation();
+          document.getElementById('input-new-slot-name').value = item.name;
+          document.getElementById('input-new-slot-desc').value = item.desc;
+          playSound('tick');
+        });
+
+        row.querySelector('div.flex-1').addEventListener('click', () => {
+          document.getElementById('input-new-slot-name').value = item.name;
+          document.getElementById('input-new-slot-desc').value = item.desc;
+          playSound('tick');
+        });
+
+        // Click to delete template
+        row.querySelector('.btn-del-template').addEventListener('click', async (e) => {
+          e.stopPropagation();
+          await deleteCustomTemplate(item);
+        });
+
+        container.appendChild(row);
+      });
+
+      lucide.createIcons();
+    }
+
+    async function deleteCustomTemplate(item) {
+      // Remove from local storage
+      try {
+        let localList = JSON.parse(localStorage.getItem('yorha_slot_templates') || '[]');
+        localList = localList.filter(t => t.name !== item.name);
+        localStorage.setItem('yorha_slot_templates', JSON.stringify(localList));
+      } catch (e) {
+        console.warn(e);
+      }
+
+      // Remove from cloud if id exists
+      if (currentAuthUser && item.id) {
+        try {
+          const docRef = doc(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'slotTemplates', item.id);
+          await deleteDoc(docRef);
+        } catch (e) {
+          console.warn('Error deleting cloud template:', e);
+        }
+      }
+      playSound('tick');
+      showToast(`已刪除範本「${item.name}」`);
+      if (!currentAuthUser) {
+        loadLocalTemplatesFallback();
+      }
+    }
+
+    function listenToCustomTemplates() {
+      if (!currentAuthUser) {
+        loadLocalTemplatesFallback();
+        return;
+      }
+      if (unsubscribeTemplates) {
+        unsubscribeTemplates();
+      }
+
+      const colRef = collection(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'slotTemplates');
+      unsubscribeTemplates = onSnapshot(colRef, (snapshot) => {
+        const cloudTemplates = [];
+        snapshot.forEach((docSnap) => {
+          cloudTemplates.push({
+            id: docSnap.id,
+            ...docSnap.data()
+          });
+        });
+        cloudTemplates.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        renderCustomTemplatesList(cloudTemplates);
+      }, (err) => {
+        console.warn('Templates listener error:', err);
+        loadLocalTemplatesFallback();
+      });
+    }
+
+    function loadLocalTemplatesFallback() {
+      try {
+        const localList = JSON.parse(localStorage.getItem('yorha_slot_templates') || '[]');
+        renderCustomTemplatesList(localList);
+      } catch (e) {
+        renderCustomTemplatesList([]);
+      }
+    }
+
+    /* Save Template Only Button */
+    document.getElementById('btn-save-template-only').addEventListener('click', () => {
+      const name = document.getElementById('input-new-slot-name').value.trim();
+      const desc = document.getElementById('input-new-slot-desc').value.trim();
+      if (!name) {
+        showToast('請先填寫範本名稱');
+        return;
+      }
+      saveCustomTemplate(name, desc);
+    });
+
+    document.getElementById('btn-confirm-add-slot').addEventListener('click', () => {
+      const name = document.getElementById('input-new-slot-name').value.trim();
+      const desc = document.getElementById('input-new-slot-desc').value.trim();
+      const shouldSaveTemplate = document.getElementById('chk-save-as-template').checked;
+
+      if (!name) {
+        showToast('請輸入欄位名稱');
+        return;
+      }
+
+      if (shouldSaveTemplate) {
+        saveCustomTemplate(name, desc);
+      }
+
+      const newIndex = slotDefinitions.length;
+      slotDefinitions.push({
+        id: `slot_${newIndex}_${Date.now()}`,
+        key: `custom_${newIndex}_${Date.now()}`,
+        title: name,
+        promptDesc: desc || '一個符合此主題、極為具體可見的真實物件或名詞。'
+      });
+      state.locked.push(false);
+      state.currentSelection.push("[ 待生成 ]");
+
+      modalAddSlot.classList.add('hidden');
+      renderReelsTrack();
+      playSound('win');
+      showToast(`已成功安裝槽位：${name}`);
+    });
+
+    /* Live Gemini 3.1 Flash Lite API Direct Generation with Maximum Diversity */
+    async function fetchWordsFromGemini() {
+      const apiKey = state.userApiKey || "";
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${apiKey}`;
+
+      const properties = {};
+      const required = [];
+      const descriptions = [];
+
+      slotDefinitions.forEach((slot, idx) => {
+        if (!state.locked[idx]) {
+          properties[slot.key] = {
+            type: "STRING",
+            description: `【${slot.title}】：${slot.promptDesc}`
+          };
+          required.push(slot.key);
+          descriptions.push(`${idx + 1}. ${slot.title}: ${slot.promptDesc}`);
+        }
+      });
+
+      if (required.length === 0) {
+        return {};
+      }
+
+      const shuffledDomains = [...DIVERSITY_DOMAINS].sort(() => 0.5 - Math.random());
+      const activeDomainSeeds = shuffledDomains.slice(0, 2).join(" 與 ");
+
+      const avoidListStr = state.historyAvoidance.length > 0 
+        ? `\n【絕對禁止重複清單】（近期已出現過，嚴禁再次生成類似或近義詞彙）：${state.historyAvoidance.slice(-25).join("、")}` 
+        : "";
+
+      const systemPrompt = `你是一個專門生成「極限差異、跨界衝擊、超具象實體」的隨機詞彙生成核心。
+【核心準則一：極限差異化（Maximum Diversity & Contrast）】
+每次生成的詞彙之間，在「領域、歷史年代、物件體積尺度、文化背景」上必須具有極大的反差與衝擊感！絕對不准集中在同一種常見題材（如不要每次都是 3C、法拉利、大同電鍋、三角錐、宇航員）。
+本次隨機抽樣的引導偏轉維度傾向參考：【${activeDomainSeeds}】（但各欄位應各自發散，保持大相逕庭）。
+
+【核心準則二：絕對具象】
+看得見、摸得著、輪廓具體，嚴禁任何抽象概念（如水晶、能量、空間裂縫等抽象名詞一律禁止）。${avoidListStr}
+
+欄位要求：
+${descriptions.join("\n")}
+請直接輸出符合 JSON Schema 的結果。`;
+
+      const randomEntropyKey = Math.random().toString(36).substring(2, 9) + Date.now();
+
+      const payload = {
+        contents: [
+          {
+            role: "user",
+            parts: [{ 
+              text: `隨機雜湊碼 [${randomEntropyKey}]：請立即為未鎖定的 ${required.length} 個欄位隨機產出差異度極大、前所未見的極度具象詞彙。` 
+            }]
+          }
+        ],
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        generationConfig: {
+          temperature: 1.6,
+          topP: 0.95,
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "OBJECT",
+            properties: properties,
+            required: required
+          }
+        }
+      };
+
+      const response = await fetchWithRetry(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+      const rawJson = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!rawJson) throw new Error("API 未回傳資料或格式不符");
+      return JSON.parse(rawJson);
+    }
+
+    async function fetchWithRetry(url, options, maxRetries = 3) {
+      let delay = 1000;
+      for (let i = 0; i < maxRetries; i++) {
+        try {
+          const res = await fetch(url, options);
+          if (res.ok) return res;
+          if (res.status === 429 || res.status >= 500) {
+            await new Promise(r => setTimeout(r, delay));
+            delay *= 2;
+            continue;
+          }
+          return res;
+        } catch (e) {
+          if (i === maxRetries - 1) throw e;
+          await new Promise(r => setTimeout(r, delay));
+          delay *= 2;
+        }
+      }
+      return fetch(url, options);
+    }
+
+    /* Direct Generation Without Animation */
+    async function executeDirectGeneration() {
+      if (state.isGenerating) return;
+      state.isGenerating = true;
+
+      const spinBtn = document.getElementById('btn-spin');
+      const spinBtnText = document.getElementById('spin-btn-text');
+
+      spinBtn.disabled = true;
+      spinBtn.classList.add('opacity-70');
+      spinBtnText.innerText = 'GENERATING (GEMINI 3.1 FLASH LITE)...';
+
+      slotDefinitions.forEach((_, i) => {
+        if (!state.locked[i]) {
+          const textEl = document.getElementById(`slot-text-${i}`);
+          const statusEl = document.getElementById(`slot-status-${i}`);
+          if (textEl) textEl.innerHTML = `<span class="animate-pulse text-[#79746a]">// GENERATING...</span>`;
+          if (statusEl) statusEl.innerText = 'INFERRING';
+        }
+      });
+      playSound('tick');
+
+      try {
+        const apiResults = await fetchWordsFromGemini();
+
+        slotDefinitions.forEach((slot, i) => {
+          if (!state.locked[i]) {
+            if (apiResults[slot.key]) {
+              const newWord = apiResults[slot.key];
+              state.currentSelection[i] = newWord;
+              state.historyAvoidance.push(newWord);
+              if (state.historyAvoidance.length > 50) {
+                state.historyAvoidance.shift();
+              }
+            }
+          }
+          const textEl = document.getElementById(`slot-text-${i}`);
+          const statusEl = document.getElementById(`slot-status-${i}`);
+          if (textEl) textEl.innerText = state.currentSelection[i];
+          if (statusEl) statusEl.innerText = state.locked[i] ? 'LOCKED' : 'READY';
+        });
+
+        renderBadges();
+        playSound('win');
+        showToast('已由 Gemini 3.1 Flash Lite 生成全新高反差詞彙！');
+
+      } catch (err) {
+        console.error('Gemini 3.1 Flash Lite API 生成失敗:', err);
+        showToast('生成失敗，請確認 API Key 或網路狀態');
+        slotDefinitions.forEach((_, i) => {
+          if (!state.locked[i]) {
+            const textEl = document.getElementById(`slot-text-${i}`);
+            const statusEl = document.getElementById(`slot-status-${i}`);
+            if (textEl) textEl.innerText = state.currentSelection[i] || '[ 生成失敗 ]';
+            if (statusEl) statusEl.innerText = 'ERROR';
+          }
+        });
+      } finally {
+        state.isGenerating = false;
+        spinBtn.disabled = false;
+        spinBtn.classList.remove('opacity-70');
+        spinBtnText.innerText = 'GENERATE WORDS // 直接生成 (空白鍵)';
+      }
+    }
+
+    document.getElementById('btn-spin').addEventListener('click', executeDirectGeneration);
+
+    /* Keyboard Shortcuts */
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        executeDirectGeneration();
+      }
+    });
+
+    /* Cloud Sync: User API Key */
+    async function saveUserCloudApiKey(apiKeyToSave) {
+      if (!currentAuthUser) return;
+      try {
+        const userDocRef = doc(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'settings', 'apiConfig');
+        await setDoc(userDocRef, {
+          apiKey: apiKeyToSave,
+          updatedAt: Date.now(),
+          googleEmail: state.currentUser?.email || null,
+          googleName: state.currentUser?.name || null
+        }, { merge: true });
+        showToast('API Key 已安全同步至雲端帳號');
+      } catch (err) {
+        console.error('Error saving API Key to cloud:', err);
+        showToast('雲端同步失敗，請檢查網路連線');
+      }
+    }
+
+    async function loadUserCloudApiKey() {
+      if (!currentAuthUser) return;
+      try {
+        const userDocRef = doc(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'settings', 'apiConfig');
+        const docSnap = await getDoc(userDocRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data && data.apiKey) {
+            state.userApiKey = data.apiKey;
+            const input = document.getElementById('input-api-key');
+            if (input) input.value = data.apiKey;
+            showToast('已從雲端載入您的專屬 API Key');
+          }
+        }
+      } catch (err) {
+        console.warn('Error loading cloud API Key:', err);
+      }
+    }
+
+    /* API Key UI Interactions */
+    const apiKeyInput = document.getElementById('input-api-key');
+    document.getElementById('btn-save-key').addEventListener('click', () => {
+      state.userApiKey = apiKeyInput.value.trim();
+      if (currentAuthUser) {
+        saveUserCloudApiKey(state.userApiKey);
+      }
+      showToast(state.userApiKey ? 'API KEY 已更新' : '已恢復預設 API 設定');
+    });
+
+    document.getElementById('btn-toggle-key-visibility').addEventListener('click', () => {
+      const type = apiKeyInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      apiKeyInput.setAttribute('type', type);
+    });
+
+    /* Cloud Sync: Save Result Card */
+    async function saveCurrentResultCard() {
+      if (!currentAuthUser) {
+        showToast('雲端連線中，請稍候重試...');
+        return;
+      }
+
+      const isValidSelection = state.currentSelection.some(w => w && w !== "[ 待生成 ]" && !w.includes("FAIL"));
+      if (!isValidSelection) {
+        showToast('目前尚無有效詞彙，請先點擊 GENERATE 生成');
+        return;
+      }
+
+      const cardData = {
+        timestamp: Date.now(),
+        creatorName: state.currentUser?.name || 'Unit-9S',
+        creatorEmail: state.currentUser?.email || null,
+        items: slotDefinitions.map((slot, idx) => ({
+          title: slot.title,
+          word: state.currentSelection[idx] || ""
+        }))
+      };
+
+      try {
+        const cardsColRef = collection(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'savedCards');
+        await addDoc(cardsColRef, cardData);
+        playSound('win');
+        showToast('已成功上傳並保存至雲端卡片庫！');
+      } catch (err) {
+        console.error('Error saving result card:', err);
+        showToast('卡片儲存失敗，請檢查權限');
+      }
+    }
+
+    document.getElementById('btn-save-card').addEventListener('click', saveCurrentResultCard);
+
+    /* Listen and Render Cloud Saved Cards (Strict Path & In-Memory Sorting) */
+    function listenToSavedCards() {
+      if (!currentAuthUser) return;
+      if (unsubscribeCards) {
+        unsubscribeCards();
+      }
+
+      const cardsColRef = collection(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'savedCards');
+      unsubscribeCards = onSnapshot(cardsColRef, (snapshot) => {
+        const cards = [];
+        snapshot.forEach((docSnap) => {
+          cards.push({
+            id: docSnap.id,
+            ...docSnap.data()
+          });
+        });
+
+        // In-memory sort by newest first (Rule 2: No complex queries)
+        cards.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        renderSavedCardsList(cards);
+      }, (error) => {
+        console.error("Cloud cards listener error:", error);
+      });
+    }
+
+    function renderSavedCardsList(cards) {
+      const container = document.getElementById('saved-cards-list');
+      const counter = document.getElementById('saved-card-counter');
+      if (!container) return;
+
+      counter.innerText = `${cards.length} UNITS`;
+
+      if (cards.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-8 text-center text-xs text-[#79746a] border border-dashed border-[#8e8878] p-4">
+            // 尚無儲存卡片。點擊「SAVE CARD // 存為雲端卡片」將當前生成結果同步至雲端庫。
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      cards.forEach((card, idx) => {
+        const dateStr = card.timestamp 
+          ? new Date(card.timestamp).toLocaleString('zh-TW', { hour12: false }) 
+          : 'UNKNOWN';
+
+        const cardEl = document.createElement('div');
+        cardEl.className = 'bg-[#c2bdab] border border-[#8b8577] p-3 flex flex-col justify-between shadow-xs hover:border-[#3e3b36] transition';
+        
+        const fullComboText = card.items.map(it => `[${it.title}] ${it.word}`).join(" + ");
+
+        const itemsHtml = card.items.map(it => `
+          <div class="flex items-center justify-between text-xs py-1 border-b border-[#a39d8d]/50">
+            <span class="text-[11px] text-[#5e594f] truncate max-w-[100px]">${it.title}:</span>
+            <span class="font-bold text-[#3e3b36] truncate max-w-[150px]">${it.word}</span>
+          </div>
+        `).join("");
+
+        cardEl.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between text-[10px] text-[#6b6659] pb-1.5 border-b border-[#8b8577]/60 mb-2">
+              <span class="font-bold text-[#3e3b36]">ENTRY // #${String(idx + 1).padStart(2, '0')}</span>
+              <span>${dateStr}</span>
+            </div>
+            <div class="space-y-0.5">
+              ${itemsHtml}
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-2.5 mt-2 border-t border-[#8b8577]/60 text-[11px]">
+            <button onclick="copySavedCardText('${encodeURIComponent(fullComboText)}')" class="px-2 py-1 bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] font-bold flex items-center gap-1 transition">
+              <i data-lucide="copy" class="w-3 h-3"></i>
+              <span>複製</span>
+            </button>
+            <button onclick="deleteSavedCard('${card.id}')" class="px-2 py-1 bg-transparent hover:bg-[#c45e3c] hover:text-[#d2cebe] text-[#686254] font-bold flex items-center gap-1 transition">
+              <i data-lucide="trash-2" class="w-3 h-3"></i>
+              <span>刪除</span>
+            </button>
+          </div>
+        `;
+        container.appendChild(cardEl);
+      });
+
+      lucide.createIcons();
+    }
+
+    window.copySavedCardText = function(encodedText) {
+      const text = decodeURIComponent(encodedText);
+      const tempArea = document.createElement('textarea');
+      tempArea.value = text;
+      document.body.appendChild(tempArea);
+      tempArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempArea);
+      playSound('tick');
+      showToast('已複製卡片組合至剪貼簿！');
+    };
+
+    window.deleteSavedCard = async function(cardId) {
+      if (!currentAuthUser) return;
+      try {
+        const cardDocRef = doc(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'savedCards', cardId);
+        await deleteDoc(cardDocRef);
+        playSound('tick');
+        showToast('已從雲端刪除該結果卡片');
+      } catch (err) {
+        console.error('Error deleting card:', err);
+        showToast('刪除失敗，請重試');
+      }
+    };
+
+    /* Initialize Cloud Authentication */
+    async function initCloudAuth() {
+      try {
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          const cred = await signInWithCustomToken(auth, __initial_auth_token);
+          currentAuthUser = cred.user;
+        } else {
+          const cred = await signInAnonymously(auth);
+          currentAuthUser = cred.user;
+        }
+      } catch (e) {
+        console.warn('Initial custom token failed, falling back to anonymous auth:', e);
+        try {
+          const cred = await signInAnonymously(auth);
+          currentAuthUser = cred.user;
+        } catch (authErr) {
+          console.error('Anonymous auth failed:', authErr);
+        }
+      }
+
+      onAuthStateChanged(auth, async (user) => {
+        currentAuthUser = user;
+        if (user) {
+          await loadUserCloudApiKey();
+          listenToSavedCards();
+          listenToCustomTemplates();
+        } else {
+          loadLocalTemplatesFallback();
+        }
+      });
+    }
+
+    /* Google GIS Authentication */
+    function initGoogleSignIn() {
+      if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
+        setTimeout(initGoogleSignIn, 300);
+        return;
+      }
+
+      try {
+        google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleGoogleCredentialResponse,
+          auto_select: false
+        });
+
+        google.accounts.id.renderButton(
+          document.getElementById('g_id_signin_wrapper'),
+          {
+            theme: 'outline',
+            size: 'small',
+            shape: 'rectangular',
+            text: 'signin_with',
+            locale: 'zh_TW'
+          }
+        );
+      } catch (err) {
+        console.warn('Google Identity error:', err);
+      }
+    }
+
+    function parseJwt(token) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+        return JSON.parse(jsonPayload);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function handleGoogleCredentialResponse(response) {
+      const userPayload = parseJwt(response.credential);
+      if (userPayload) {
+        state.currentUser = {
+          name: userPayload.name || 'YoRHa Unit',
+          email: userPayload.email,
+          picture: userPayload.picture
+        };
+        applyUserUI();
+        playSound('win');
+        showToast(`Google 帳號登入成功: ${state.currentUser.name}`);
+        
+        // Auto-save existing API Key to cloud or reload if present
+        if (state.userApiKey && currentAuthUser) {
+          saveUserCloudApiKey(state.userApiKey);
+        } else if (currentAuthUser) {
+          loadUserCloudApiKey();
+        }
+      }
+    }
+
+    function applyUserUI() {
+      const gWrapper = document.getElementById('g_id_signin_wrapper');
+      const userBadge = document.getElementById('user-profile-badge');
+      const userName = document.getElementById('user-name');
+
+      if (state.currentUser) {
+        gWrapper.classList.add('hidden');
+        userBadge.classList.remove('hidden');
+        userName.innerText = state.currentUser.name;
+      } else {
+        gWrapper.classList.remove('hidden');
+        userBadge.classList.add('hidden');
+      }
+    }
+
+    document.getElementById('btn-logout').addEventListener('click', () => {
+      state.currentUser = null;
+      applyUserUI();
+      showToast('已登出 Google 帳號');
+    });
+
+    /* SFX Toggle */
+    document.getElementById('btn-sound-toggle').addEventListener('click', () => {
+      state.soundEnabled = !state.soundEnabled;
+      const text = document.getElementById('sound-text');
+      const icon = document.getElementById('sound-icon');
+      if (state.soundEnabled) {
+        text.innerText = 'SFX: ON';
+        icon.setAttribute('data-lucide', 'volume-2');
+        showToast('音效已開啟');
+      } else {
+        text.innerText = 'SFX: OFF';
+        icon.setAttribute('data-lucide', 'volume-x');
+        showToast('音效已靜音');
+      }
+      lucide.createIcons();
+    });
+
+    /* App Initialization */
+    window.addEventListener('DOMContentLoaded', () => {
+      renderReelsTrack();
+      loadLocalTemplatesFallback();
+      initCloudAuth();
+      setTimeout(initGoogleSignIn, 500);
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
