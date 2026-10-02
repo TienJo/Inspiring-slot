@@ -128,14 +128,15 @@
           <input 
             type="password" 
             id="input-api-key" 
-            placeholder="AIzaSy... (留空自動調用)" 
+            placeholder="AIzaSy... (填寫後點擊 SAVE)" 
             class="bg-transparent text-xs text-[#3e3b36] focus:outline-none w-36 sm:w-52"
           >
           <button id="btn-toggle-key-visibility" type="button" class="text-[#686254] hover:text-[#3e3b36] px-1" title="顯示/隱藏金鑰">
             <i data-lucide="eye" class="w-3.5 h-3.5"></i>
           </button>
-          <button id="btn-save-key" class="bg-[#3e3b36] text-[#d2cebe] hover:bg-[#282623] px-1.5 py-0.5 ml-1 font-bold">
-            [SAVE]
+          <button id="btn-save-key" class="bg-[#3e3b36] text-[#d2cebe] hover:bg-[#282623] px-2 py-0.5 ml-1 font-bold transition flex items-center gap-1">
+            <span id="save-key-spinner" class="hidden animate-spin text-[10px]">◴</span>
+            <span>[SAVE]</span>
           </button>
         </div>
 
@@ -189,7 +190,48 @@
       <!-- NieR Slot Reel Array Rack (向右滾動容納擴充槽位) -->
       <div class="w-full overflow-x-auto pb-4 pt-1">
         <div id="reels-track" class="flex items-stretch gap-4 min-w-max p-4 bg-[#c0baa7] border border-[#8b8577]">
-          <!-- Dynamically populated slot cards -->
+          <!-- Initial Slot Modules Fallback for immediate visibility -->
+          <div class="flex flex-col items-center w-56 sm:w-64 flex-shrink-0" id="slot-col-0">
+            <div class="w-full flex items-center justify-between text-xs font-bold font-mono-tech text-[#3e3b36] mb-2 px-1 uppercase tracking-wider">
+              <div class="flex items-center gap-1.5 truncate" title="01 顏色 / 塗裝"><span class="w-1.5 h-1.5 bg-[#3e3b36]"></span><span class="truncate">01 顏色 / 塗裝</span></div>
+            </div>
+            <div id="slot-card-0" class="nier-slot-card w-full h-[130px] p-4 flex flex-col justify-between items-center text-center relative">
+              <div class="text-[10px] font-mono-tech text-[#686254] self-start uppercase">MODULE_INDEX // 01</div>
+              <div id="slot-text-0" class="font-extrabold text-base sm:text-lg text-[#3e3b36] font-mono-tech break-words line-clamp-2 px-2 py-1">[ 待生成 ]</div>
+              <div class="w-full border-t border-[#8b8577]/40 flex justify-between items-center pt-1.5 text-[10px] font-mono-tech text-[#686254]"><span>STATUS:</span><span id="slot-status-0">READY</span></div>
+            </div>
+            <button onclick="toggleLock(0)" id="btn-lock-0" class="mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border bg-[#c5bfad] text-[#3e3b36] border-[#8e8878] hover:bg-[#beb9a7] transition">[HOLD // 鎖定]</button>
+          </div>
+
+          <div class="flex flex-col items-center w-56 sm:w-64 flex-shrink-0" id="slot-col-1">
+            <div class="w-full flex items-center justify-between text-xs font-bold font-mono-tech text-[#3e3b36] mb-2 px-1 uppercase tracking-wider">
+              <div class="flex items-center gap-1.5 truncate" title="02 具象既定形象/角色"><span class="w-1.5 h-1.5 bg-[#3e3b36]"></span><span class="truncate">02 具象既定形象/角色</span></div>
+            </div>
+            <div id="slot-card-1" class="nier-slot-card w-full h-[130px] p-4 flex flex-col justify-between items-center text-center relative">
+              <div class="text-[10px] font-mono-tech text-[#686254] self-start uppercase">MODULE_INDEX // 02</div>
+              <div id="slot-text-1" class="font-extrabold text-base sm:text-lg text-[#3e3b36] font-mono-tech break-words line-clamp-2 px-2 py-1">[ 待生成 ]</div>
+              <div class="w-full border-t border-[#8b8577]/40 flex justify-between items-center pt-1.5 text-[10px] font-mono-tech text-[#686254]"><span>STATUS:</span><span id="slot-status-1">READY</span></div>
+            </div>
+            <button onclick="toggleLock(1)" id="btn-lock-1" class="mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border bg-[#c5bfad] text-[#3e3b36] border-[#8e8878] hover:bg-[#beb9a7] transition">[HOLD // 鎖定]</button>
+          </div>
+
+          <div class="flex flex-col items-center w-56 sm:w-64 flex-shrink-0" id="slot-col-2">
+            <div class="w-full flex items-center justify-between text-xs font-bold font-mono-tech text-[#3e3b36] mb-2 px-1 uppercase tracking-wider">
+              <div class="flex items-center gap-1.5 truncate" title="03 品牌型號/特定實物"><span class="w-1.5 h-1.5 bg-[#3e3b36]"></span><span class="truncate">03 品牌型號/特定實物</span></div>
+            </div>
+            <div id="slot-card-2" class="nier-slot-card w-full h-[130px] p-4 flex flex-col justify-between items-center text-center relative">
+              <div class="text-[10px] font-mono-tech text-[#686254] self-start uppercase">MODULE_INDEX // 03</div>
+              <div id="slot-text-2" class="font-extrabold text-base sm:text-lg text-[#3e3b36] font-mono-tech break-words line-clamp-2 px-2 py-1">[ 待生成 ]</div>
+              <div class="w-full border-t border-[#8b8577]/40 flex justify-between items-center pt-1.5 text-[10px] font-mono-tech text-[#686254]"><span>STATUS:</span><span id="slot-status-2">READY</span></div>
+            </div>
+            <button onclick="toggleLock(2)" id="btn-lock-2" class="mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border bg-[#c5bfad] text-[#3e3b36] border-[#8e8878] hover:bg-[#beb9a7] transition">[HOLD // 鎖定]</button>
+          </div>
+
+          <div class="flex flex-col items-center justify-center w-28 sm:w-36 flex-shrink-0 border-2 border-dashed border-[#8e8878] hover:border-[#3e3b36] hover:bg-[#c8c3b1] p-3 transition cursor-pointer text-[#3e3b36] font-mono-tech" onclick="openAddSlotModal()">
+            <div class="text-xl font-bold mb-1 text-[#c45e3c]">+</div>
+            <span class="text-xs font-bold uppercase tracking-wider">EXPAND</span>
+            <span class="text-[10px] text-[#686254]">向右新增欄位</span>
+          </div>
         </div>
       </div>
 
@@ -211,9 +253,9 @@
           <button 
             id="btn-save-card" 
             class="px-4 py-3 bg-[#c5bfad] hover:bg-[#beb9a7] text-[#3e3b36] font-bold font-mono-tech text-xs tracking-wider uppercase border border-[#8e8878] transition flex items-center justify-center gap-1.5"
-            title="將當前生成的詞彙組合保存至雲端卡片庫">
+            title="將當前生成的詞彙組合保存至本機與雲端卡片庫">
             <i data-lucide="bookmark-plus" class="w-4 h-4 text-[#c45e3c]"></i>
-            <span>SAVE CARD // 存為雲端卡片</span>
+            <span>SAVE CARD // 儲存卡片</span>
           </button>
 
           <button 
@@ -228,27 +270,41 @@
 
     </div>
 
-    <!-- Saved Cards Cloud Archive -->
+    <!-- Saved Cards Archive -->
     <section class="w-full mt-6 bg-[#cac5b3] border-2 border-[#3e3b36] p-4 sm:p-6 shadow-sm font-mono-tech">
       <div class="flex flex-wrap items-center justify-between gap-3 pb-3 mb-4 border-b border-[#a39d8d]">
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 bg-[#3e3b36]"></span>
           <h3 class="text-base sm:text-lg font-extrabold uppercase text-[#3e3b36]">
-            CLOUD CARDS ARCHIVE // 雲端已儲存結果卡片
+            DATA ARCHIVE // 已儲存卡片與設定
           </h3>
           <span id="saved-card-counter" class="text-xs bg-[#3e3b36] text-[#d2cebe] px-2 py-0.5 font-bold">
             0 UNITS
           </span>
         </div>
-        <div class="text-[11px] text-[#6b6659]">
-          AUTO-SYNCED WITH GOOGLE ACCOUNT
+
+        <!-- Backup & Google Drive Sync Actions -->
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <button id="btn-export-backup" class="px-2.5 py-1 bg-[#c5bfad] hover:bg-[#beb9a7] border border-[#8e8878] text-[#3e3b36] font-bold flex items-center gap-1">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>EXPORT // 匯出本機備份</span>
+          </button>
+          <label class="px-2.5 py-1 bg-[#c5bfad] hover:bg-[#beb9a7] border border-[#8e8878] text-[#3e3b36] font-bold flex items-center gap-1 cursor-pointer">
+            <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+            <span>IMPORT // 載入備份檔</span>
+            <input type="file" id="input-import-backup" accept=".json" class="hidden">
+          </label>
+          <button id="btn-drive-sync" class="px-2.5 py-1 bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] font-bold flex items-center gap-1 border border-[#222]" title="直接將資料備份同步至您的個人 Google 雲端硬碟">
+            <i data-lucide="cloud" class="w-3.5 h-3.5 text-[#c45e3c]"></i>
+            <span>GOOGLE DRIVE SYNC // 雲端同步</span>
+          </button>
         </div>
       </div>
 
       <!-- Cards Grid -->
       <div id="saved-cards-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 min-h-[90px]">
         <div class="col-span-full py-8 text-center text-xs text-[#79746a] border border-dashed border-[#8e8878] p-4">
-          // 尚無儲存卡片。點擊「SAVE CARD // 存為雲端卡片」將當前生成結果同步至雲端庫。
+          // 尚無儲存卡片。點擊「SAVE CARD // 儲存卡片」即可將當前結果留存於本機資料庫與雲端硬碟。
         </div>
       </div>
     </section>
@@ -362,33 +418,12 @@
 
       <div class="text-[11px] flex items-center gap-2">
         <span class="w-1.5 h-1.5 bg-[#3e3b36]"></span>
-        <span>YORHA PROTOCOL // GEMINI 3 FLASH READY</span>
+        <span>YORHA STORAGE // INDEXEDDB & GOOGLE DRIVE READY</span>
       </div>
     </div>
   </footer>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, deleteDoc, onSnapshot, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    /* Cloud Storage Configuration */
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-      apiKey: "AIzaSyDummyKeyForLocalPreview",
-      authDomain: "dummy.firebaseapp.com",
-      projectId: "dummy-project"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    let currentAuthUser = null;
-    let unsubscribeCards = null;
-    let unsubscribeTemplates = null;
-    let userCustomTemplates = [];
-
+  <script>
     /* Google Client ID provided by user */
     const GOOGLE_CLIENT_ID = "865993916714-o0h883itsqd3lvgbatmkgqrqqhbrmuhf.apps.googleusercontent.com";
 
@@ -431,8 +466,110 @@
       currentSelection: ["[ 待生成 ]", "[ 待生成 ]", "[ 待生成 ]"],
       historyAvoidance: [],
       userApiKey: "",
-      currentUser: null
+      currentUser: null,
+      googleAccessToken: null
     };
+
+    let userCustomTemplates = [];
+    let localSavedCardsMemory = [];
+
+    /* =========================================================
+       Native IndexedDB Storage Engine (零依賴、純本機與雲端往返)
+       ========================================================= */
+    const DB_NAME = 'YoRHaSlotTerminalDB';
+    const DB_VERSION = 1;
+    let dbInstance = null;
+
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        if (dbInstance) return resolve(dbInstance);
+        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains('settings')) {
+            db.createObjectStore('settings', { keyPath: 'key' });
+          }
+          if (!db.objectStoreNames.contains('cards')) {
+            db.createObjectStore('cards', { keyPath: 'id' });
+          }
+          if (!db.objectStoreNames.contains('templates')) {
+            db.createObjectStore('templates', { keyPath: 'id' });
+          }
+        };
+        req.onsuccess = (e) => {
+          dbInstance = e.target.result;
+          resolve(dbInstance);
+        };
+        req.onerror = (e) => {
+          console.warn('IndexedDB open error:', e);
+          resolve(null);
+        };
+      });
+    }
+
+    async function dbSet(storeName, item) {
+      try {
+        const db = await openDatabase();
+        if (!db) return;
+        return new Promise((resolve) => {
+          const tx = db.transaction(storeName, 'readwrite');
+          const store = tx.objectStore(storeName);
+          store.put(item);
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => resolve(false);
+        });
+      } catch (err) {
+        console.warn('dbSet error:', err);
+      }
+    }
+
+    async function dbGet(storeName, key) {
+      try {
+        const db = await openDatabase();
+        if (!db) return null;
+        return new Promise((resolve) => {
+          const tx = db.transaction(storeName, 'readonly');
+          const store = tx.objectStore(storeName);
+          const req = store.get(key);
+          req.onsuccess = () => resolve(req.result || null);
+          req.onerror = () => resolve(null);
+        });
+      } catch (err) {
+        return null;
+      }
+    }
+
+    async function dbGetAll(storeName) {
+      try {
+        const db = await openDatabase();
+        if (!db) return [];
+        return new Promise((resolve) => {
+          const tx = db.transaction(storeName, 'readonly');
+          const store = tx.objectStore(storeName);
+          const req = store.getAll();
+          req.onsuccess = () => resolve(req.result || []);
+          req.onerror = () => resolve([]);
+        });
+      } catch (err) {
+        return [];
+      }
+    }
+
+    async function dbDelete(storeName, key) {
+      try {
+        const db = await openDatabase();
+        if (!db) return;
+        return new Promise((resolve) => {
+          const tx = db.transaction(storeName, 'readwrite');
+          const store = tx.objectStore(storeName);
+          store.delete(key);
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => resolve(false);
+        });
+      } catch (err) {
+        console.warn('dbDelete error:', err);
+      }
+    }
 
     /* Web Audio API for NieR style mechanical ticks and blips */
     let audioCtx = null;
@@ -494,7 +631,7 @@
       }, 3000);
     }
 
-    /* Render Slot Cards (Direct display) */
+    /* Render Slot Cards */
     function renderReelsTrack() {
       const track = document.getElementById('reels-track');
       track.innerHTML = '';
@@ -632,7 +769,7 @@
       document.getElementById('input-new-slot-name').value = '';
       document.getElementById('input-new-slot-desc').value = '';
       document.getElementById('chk-save-as-template').checked = true;
-      loadLocalTemplatesFallback();
+      loadCustomTemplates();
     };
 
     document.getElementById('btn-close-add-modal').addEventListener('click', () => modalAddSlot.classList.add('hidden'));
@@ -645,40 +782,27 @@
       });
     });
 
-    /* Custom Slot Templates Management (Cloud Sync & Local Fallback) */
+    /* Custom Slot Templates Management (IndexedDB) */
     async function saveCustomTemplate(name, desc) {
       if (!name) return;
       const templateItem = {
+        id: 'tmpl_' + Date.now(),
         name,
         desc: desc || '一個符合此主題、極為具體可見的真實物件或名詞。',
         timestamp: Date.now()
       };
 
-      // 1. Local fallback save
-      try {
-        const localList = JSON.parse(localStorage.getItem('yorha_slot_templates') || '[]');
-        const exists = localList.some(t => t.name === name);
-        if (!exists) {
-          localList.unshift(templateItem);
-          localStorage.setItem('yorha_slot_templates', JSON.stringify(localList));
-        }
-      } catch (e) {
-        console.warn('Local template save err:', e);
-      }
+      userCustomTemplates.unshift(templateItem);
+      renderCustomTemplatesList(userCustomTemplates);
+      await dbSet('templates', templateItem);
+      showToast(`範本「${name}」已儲存於本機資料庫`);
+    }
 
-      // 2. Cloud Firestore save (if signed in)
-      if (currentAuthUser) {
-        try {
-          const colRef = collection(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'slotTemplates');
-          await addDoc(colRef, templateItem);
-          showToast(`範本「${name}」已同步至雲端庫`);
-        } catch (e) {
-          console.warn('Cloud template sync err:', e);
-        }
-      } else {
-        renderCustomTemplatesList(JSON.parse(localStorage.getItem('yorha_slot_templates') || '[]'));
-        showToast(`範本「${name}」已保存至本機庫`);
-      }
+    async function loadCustomTemplates() {
+      const stored = await dbGetAll('templates');
+      stored.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+      userCustomTemplates = stored;
+      renderCustomTemplatesList(userCustomTemplates);
     }
 
     function renderCustomTemplatesList(templates) {
@@ -686,7 +810,6 @@
       const counter = document.getElementById('saved-template-count');
       if (!container) return;
 
-      userCustomTemplates = templates;
       if (counter) counter.innerText = `${templates.length} UNITS`;
 
       if (templates.length === 0) {
@@ -738,7 +861,7 @@
         // Click to delete template
         row.querySelector('.btn-del-template').addEventListener('click', async (e) => {
           e.stopPropagation();
-          await deleteCustomTemplate(item);
+          await deleteCustomTemplate(item.id, item.name);
         });
 
         container.appendChild(row);
@@ -747,65 +870,12 @@
       lucide.createIcons();
     }
 
-    async function deleteCustomTemplate(item) {
-      // Remove from local storage
-      try {
-        let localList = JSON.parse(localStorage.getItem('yorha_slot_templates') || '[]');
-        localList = localList.filter(t => t.name !== item.name);
-        localStorage.setItem('yorha_slot_templates', JSON.stringify(localList));
-      } catch (e) {
-        console.warn(e);
-      }
-
-      // Remove from cloud if id exists
-      if (currentAuthUser && item.id) {
-        try {
-          const docRef = doc(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'slotTemplates', item.id);
-          await deleteDoc(docRef);
-        } catch (e) {
-          console.warn('Error deleting cloud template:', e);
-        }
-      }
+    async function deleteCustomTemplate(templateId, name) {
+      userCustomTemplates = userCustomTemplates.filter(t => t.id !== templateId);
+      renderCustomTemplatesList(userCustomTemplates);
+      await dbDelete('templates', templateId);
       playSound('tick');
-      showToast(`已刪除範本「${item.name}」`);
-      if (!currentAuthUser) {
-        loadLocalTemplatesFallback();
-      }
-    }
-
-    function listenToCustomTemplates() {
-      if (!currentAuthUser) {
-        loadLocalTemplatesFallback();
-        return;
-      }
-      if (unsubscribeTemplates) {
-        unsubscribeTemplates();
-      }
-
-      const colRef = collection(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'slotTemplates');
-      unsubscribeTemplates = onSnapshot(colRef, (snapshot) => {
-        const cloudTemplates = [];
-        snapshot.forEach((docSnap) => {
-          cloudTemplates.push({
-            id: docSnap.id,
-            ...docSnap.data()
-          });
-        });
-        cloudTemplates.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-        renderCustomTemplatesList(cloudTemplates);
-      }, (err) => {
-        console.warn('Templates listener error:', err);
-        loadLocalTemplatesFallback();
-      });
-    }
-
-    function loadLocalTemplatesFallback() {
-      try {
-        const localList = JSON.parse(localStorage.getItem('yorha_slot_templates') || '[]');
-        renderCustomTemplatesList(localList);
-      } catch (e) {
-        renderCustomTemplatesList([]);
-      }
+      showToast(`已刪除範本「${name}」`);
     }
 
     /* Save Template Only Button */
@@ -1025,51 +1095,41 @@ ${descriptions.join("\n")}
       }
     });
 
-    /* Cloud Sync: User API Key */
-    async function saveUserCloudApiKey(apiKeyToSave) {
-      if (!currentAuthUser) return;
-      try {
-        const userDocRef = doc(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'settings', 'apiConfig');
-        await setDoc(userDocRef, {
-          apiKey: apiKeyToSave,
-          updatedAt: Date.now(),
-          googleEmail: state.currentUser?.email || null,
-          googleName: state.currentUser?.name || null
-        }, { merge: true });
-        showToast('API Key 已安全同步至雲端帳號');
-      } catch (err) {
-        console.error('Error saving API Key to cloud:', err);
-        showToast('雲端同步失敗，請檢查網路連線');
-      }
+    /* Persistent Storage: API Key in IndexedDB */
+    async function saveUserLocalApiKey(apiKeyToSave) {
+      const spinner = document.getElementById('save-key-spinner');
+      if (spinner) spinner.classList.remove('hidden');
+
+      state.userApiKey = apiKeyToSave;
+      await dbSet('settings', { key: 'geminiApiKey', value: apiKeyToSave, updatedAt: Date.now() });
+
+      if (spinner) spinner.classList.add('hidden');
+      playSound('win');
+      showToast(apiKeyToSave ? '✓ API Key 已儲存於本機資料庫與工作階段！' : 'API Key 已重設為預設模式');
     }
 
-    async function loadUserCloudApiKey() {
-      if (!currentAuthUser) return;
-      try {
-        const userDocRef = doc(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'settings', 'apiConfig');
-        const docSnap = await getDoc(userDocRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          if (data && data.apiKey) {
-            state.userApiKey = data.apiKey;
-            const input = document.getElementById('input-api-key');
-            if (input) input.value = data.apiKey;
-            showToast('已從雲端載入您的專屬 API Key');
-          }
-        }
-      } catch (err) {
-        console.warn('Error loading cloud API Key:', err);
+    async function loadUserStoredApiKey() {
+      const record = await dbGet('settings', 'geminiApiKey');
+      if (record && record.value) {
+        state.userApiKey = record.value;
+        const input = document.getElementById('input-api-key');
+        if (input) input.value = record.value;
+        showToast('已自動載入您先前儲存的 API Key');
       }
     }
 
     /* API Key UI Interactions */
     const apiKeyInput = document.getElementById('input-api-key');
-    document.getElementById('btn-save-key').addEventListener('click', () => {
-      state.userApiKey = apiKeyInput.value.trim();
-      if (currentAuthUser) {
-        saveUserCloudApiKey(state.userApiKey);
+    document.getElementById('btn-save-key').addEventListener('click', async () => {
+      const keyVal = apiKeyInput.value.trim();
+      await saveUserLocalApiKey(keyVal);
+    });
+
+    apiKeyInput.addEventListener('keydown', async (e) => {
+      if (e.key === 'Enter') {
+        const keyVal = apiKeyInput.value.trim();
+        await saveUserLocalApiKey(keyVal);
       }
-      showToast(state.userApiKey ? 'API KEY 已更新' : '已恢復預設 API 設定');
     });
 
     document.getElementById('btn-toggle-key-visibility').addEventListener('click', () => {
@@ -1077,20 +1137,18 @@ ${descriptions.join("\n")}
       apiKeyInput.setAttribute('type', type);
     });
 
-    /* Cloud Sync: Save Result Card */
+    /* Saved Cards Operations (IndexedDB) */
     async function saveCurrentResultCard() {
-      if (!currentAuthUser) {
-        showToast('雲端連線中，請稍候重試...');
-        return;
-      }
-
-      const isValidSelection = state.currentSelection.some(w => w && w !== "[ 待生成 ]" && !w.includes("FAIL"));
+      const saveBtn = document.getElementById('btn-save-card');
+      const isValidSelection = state.currentSelection.some(w => w && w !== "[ 待生成 ]" && !w.includes("FAIL") && !w.includes("失敗"));
+      
       if (!isValidSelection) {
-        showToast('目前尚無有效詞彙，請先點擊 GENERATE 生成');
+        showToast('目前尚無有效結果，請先點擊「GENERATE WORDS」生成');
         return;
       }
 
       const cardData = {
+        id: 'card_' + Date.now(),
         timestamp: Date.now(),
         creatorName: state.currentUser?.name || 'Unit-9S',
         creatorEmail: state.currentUser?.email || null,
@@ -1100,42 +1158,21 @@ ${descriptions.join("\n")}
         }))
       };
 
-      try {
-        const cardsColRef = collection(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'savedCards');
-        await addDoc(cardsColRef, cardData);
-        playSound('win');
-        showToast('已成功上傳並保存至雲端卡片庫！');
-      } catch (err) {
-        console.error('Error saving result card:', err);
-        showToast('卡片儲存失敗，請檢查權限');
-      }
+      localSavedCardsMemory.unshift(cardData);
+      renderSavedCardsList(localSavedCardsMemory);
+      await dbSet('cards', cardData);
+
+      playSound('win');
+      showToast('✓ 已成功保存結果卡片至本機資料庫！');
     }
 
     document.getElementById('btn-save-card').addEventListener('click', saveCurrentResultCard);
 
-    /* Listen and Render Cloud Saved Cards (Strict Path & In-Memory Sorting) */
-    function listenToSavedCards() {
-      if (!currentAuthUser) return;
-      if (unsubscribeCards) {
-        unsubscribeCards();
-      }
-
-      const cardsColRef = collection(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'savedCards');
-      unsubscribeCards = onSnapshot(cardsColRef, (snapshot) => {
-        const cards = [];
-        snapshot.forEach((docSnap) => {
-          cards.push({
-            id: docSnap.id,
-            ...docSnap.data()
-          });
-        });
-
-        // In-memory sort by newest first (Rule 2: No complex queries)
-        cards.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-        renderSavedCardsList(cards);
-      }, (error) => {
-        console.error("Cloud cards listener error:", error);
-      });
+    async function loadSavedCards() {
+      const cards = await dbGetAll('cards');
+      cards.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+      localSavedCardsMemory = cards;
+      renderSavedCardsList(cards);
     }
 
     function renderSavedCardsList(cards) {
@@ -1148,7 +1185,7 @@ ${descriptions.join("\n")}
       if (cards.length === 0) {
         container.innerHTML = `
           <div class="col-span-full py-8 text-center text-xs text-[#79746a] border border-dashed border-[#8e8878] p-4">
-            // 尚無儲存卡片。點擊「SAVE CARD // 存為雲端卡片」將當前生成結果同步至雲端庫。
+            // 尚無儲存卡片。點擊「SAVE CARD // 儲存卡片」即可將當前結果留存於本機資料庫與雲端硬碟。
           </div>
         `;
         return;
@@ -1213,51 +1250,164 @@ ${descriptions.join("\n")}
     };
 
     window.deleteSavedCard = async function(cardId) {
-      if (!currentAuthUser) return;
-      try {
-        const cardDocRef = doc(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'savedCards', cardId);
-        await deleteDoc(cardDocRef);
-        playSound('tick');
-        showToast('已從雲端刪除該結果卡片');
-      } catch (err) {
-        console.error('Error deleting card:', err);
-        showToast('刪除失敗，請重試');
-      }
+      localSavedCardsMemory = localSavedCardsMemory.filter(c => c.id !== cardId);
+      renderSavedCardsList(localSavedCardsMemory);
+      await dbDelete('cards', cardId);
+      playSound('tick');
+      showToast('已刪除該結果卡片');
     };
 
-    /* Initialize Cloud Authentication */
-    async function initCloudAuth() {
+    /* Backup Export & Import (JSON) */
+    document.getElementById('btn-export-backup').addEventListener('click', async () => {
+      const backupData = {
+        app: 'YoRHa-Slot-Terminal',
+        version: '1.0',
+        exportedAt: new Date().toISOString(),
+        apiKey: state.userApiKey,
+        cards: localSavedCardsMemory,
+        templates: userCustomTemplates
+      };
+
+      const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `yorha_slots_backup_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      playSound('win');
+      showToast('已成功匯出本機備份 JSON 檔');
+    });
+
+    document.getElementById('input-import-backup').addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
       try {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          const cred = await signInWithCustomToken(auth, __initial_auth_token);
-          currentAuthUser = cred.user;
-        } else {
-          const cred = await signInAnonymously(auth);
-          currentAuthUser = cred.user;
+        const text = await file.text();
+        const data = JSON.parse(text);
+
+        if (data.apiKey) {
+          state.userApiKey = data.apiKey;
+          document.getElementById('input-api-key').value = data.apiKey;
+          await dbSet('settings', { key: 'geminiApiKey', value: data.apiKey, updatedAt: Date.now() });
         }
-      } catch (e) {
-        console.warn('Initial custom token failed, falling back to anonymous auth:', e);
-        try {
-          const cred = await signInAnonymously(auth);
-          currentAuthUser = cred.user;
-        } catch (authErr) {
-          console.error('Anonymous auth failed:', authErr);
+
+        if (Array.isArray(data.cards)) {
+          for (const card of data.cards) {
+            await dbSet('cards', card);
+          }
+          await loadSavedCards();
         }
+
+        if (Array.isArray(data.templates)) {
+          for (const tmpl of data.templates) {
+            await dbSet('templates', tmpl);
+          }
+          await loadCustomTemplates();
+        }
+
+        playSound('win');
+        showToast('✓ 備份檔案已成功還原！');
+      } catch (err) {
+        console.error('Import err:', err);
+        showToast('檔案格式錯誤，無法解析 JSON');
+      } finally {
+        e.target.value = '';
+      }
+    });
+
+    /* =========================================================
+       Google Drive API Direct Sync (直接在用戶個人雲端硬碟建立檔案)
+       ========================================================= */
+    let tokenClient = null;
+
+    function initGoogleDriveClient() {
+      if (typeof google === 'undefined' || !google.accounts || !google.accounts.oauth2) {
+        setTimeout(initGoogleDriveClient, 400);
+        return;
       }
 
-      onAuthStateChanged(auth, async (user) => {
-        currentAuthUser = user;
-        if (user) {
-          await loadUserCloudApiKey();
-          listenToSavedCards();
-          listenToCustomTemplates();
-        } else {
-          loadLocalTemplatesFallback();
+      tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: 'https://www.googleapis.com/auth/drive.file',
+        callback: async (tokenResponse) => {
+          if (tokenResponse && tokenResponse.access_token) {
+            state.googleAccessToken = tokenResponse.access_token;
+            await syncToGoogleDrive(tokenResponse.access_token);
+          }
         }
       });
     }
 
-    /* Google GIS Authentication */
+    async function syncToGoogleDrive(accessToken) {
+      showToast('正在與 Google 雲端硬碟同步中...');
+
+      const payload = {
+        app: 'YoRHa-Slot-Terminal',
+        syncedAt: new Date().toISOString(),
+        apiKey: state.userApiKey,
+        cards: localSavedCardsMemory,
+        templates: userCustomTemplates
+      };
+
+      try {
+        // 1. Search if yorha_slots_archive.json already exists in user's Google Drive
+        const query = encodeURIComponent("name = 'yorha_slots_archive.json' and trashed = false");
+        const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?q=${query}&fields=files(id,name)`, {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        const searchData = await searchRes.json();
+        const existingFile = searchData.files?.[0];
+
+        const fileContent = JSON.stringify(payload, null, 2);
+
+        if (existingFile && existingFile.id) {
+          // Update existing file
+          await fetch(`https://www.googleapis.com/upload/drive/v3/files/${existingFile.id}?uploadType=media`, {
+            method: 'PATCH',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json'
+            },
+            body: fileContent
+          });
+        } else {
+          // Create new file
+          const metadata = {
+            name: 'yorha_slots_archive.json',
+            mimeType: 'application/json'
+          };
+          const form = new FormData();
+          form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+          form.append('file', new Blob([fileContent], { type: 'application/json' }));
+
+          await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${accessToken}` },
+            body: form
+          });
+        }
+
+        playSound('win');
+        showToast('✓ 已成功同步至您的個人 Google 雲端硬碟！');
+      } catch (err) {
+        console.warn('Google Drive Sync error:', err);
+        showToast('Google 雲端硬碟同步失敗，請確認授權權限');
+      }
+    }
+
+    document.getElementById('btn-drive-sync').addEventListener('click', () => {
+      if (!tokenClient) {
+        showToast('Google 驗證服務載入中，請稍候重試');
+        return;
+      }
+      tokenClient.requestAccessToken({ prompt: '' });
+    });
+
+    /* Google GIS Sign-In (User Identity Only) */
     function initGoogleSignIn() {
       if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
         setTimeout(initGoogleSignIn, 300);
@@ -1297,10 +1447,11 @@ ${descriptions.join("\n")}
       }
     }
 
-    function handleGoogleCredentialResponse(response) {
+    async function handleGoogleCredentialResponse(response) {
       const userPayload = parseJwt(response.credential);
       if (userPayload) {
         state.currentUser = {
+          sub: userPayload.sub,
           name: userPayload.name || 'YoRHa Unit',
           email: userPayload.email,
           picture: userPayload.picture
@@ -1308,13 +1459,6 @@ ${descriptions.join("\n")}
         applyUserUI();
         playSound('win');
         showToast(`Google 帳號登入成功: ${state.currentUser.name}`);
-        
-        // Auto-save existing API Key to cloud or reload if present
-        if (state.userApiKey && currentAuthUser) {
-          saveUserCloudApiKey(state.userApiKey);
-        } else if (currentAuthUser) {
-          loadUserCloudApiKey();
-        }
       }
     }
 
@@ -1335,6 +1479,7 @@ ${descriptions.join("\n")}
 
     document.getElementById('btn-logout').addEventListener('click', () => {
       state.currentUser = null;
+      state.googleAccessToken = null;
       applyUserUI();
       showToast('已登出 Google 帳號');
     });
@@ -1357,13 +1502,23 @@ ${descriptions.join("\n")}
     });
 
     /* App Initialization */
-    window.addEventListener('DOMContentLoaded', () => {
+    async function initApp() {
       renderReelsTrack();
-      loadLocalTemplatesFallback();
-      initCloudAuth();
-      setTimeout(initGoogleSignIn, 500);
+      await openDatabase();
+      await loadUserStoredApiKey();
+      await loadSavedCards();
+      await loadCustomTemplates();
+
+      setTimeout(initGoogleSignIn, 300);
+      setTimeout(initGoogleDriveClient, 400);
       lucide.createIcons();
-    });
+    }
+
+    if (document.readyState === 'loading') {
+      window.addEventListener('DOMContentLoaded', initApp);
+    } else {
+      initApp();
+    }
   </script>
 </body>
 </html>
