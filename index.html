@@ -141,12 +141,20 @@
         </div>
 
         <!-- Google User Profile / Login -->
-        <div id="google-login-container" class="flex items-center">
+        <div id="google-login-container" class="flex items-center gap-2">
           <div id="g_id_signin_wrapper"></div>
           
+          <button id="btn-google-auth-sync" class="bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] px-2.5 py-1 text-xs font-mono-tech font-bold flex items-center gap-1.5 transition border border-[#282623]">
+            <i data-lucide="cloud" class="w-3.5 h-3.5 text-[#c45e3c]"></i>
+            <span id="google-sync-btn-label">GOOGLE 雲端同步登入</span>
+          </button>
+
           <div id="user-profile-badge" class="hidden flex items-center gap-2 bg-[#beb9a6] border border-[#3e3b36] px-2.5 py-1">
             <span class="w-2 h-2 bg-[#3e3b36]"></span>
             <span id="user-name" class="font-bold text-xs uppercase tracking-wider max-w-[120px] truncate">UNIT-9S</span>
+            <button id="btn-refresh-cloud" title="立即從 Google 雲端重新載入存檔" class="hover:text-[#3e3b36] text-[#5e594f] px-1 hover:scale-110 transition">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+            </button>
             <button id="btn-logout" title="LOGOUT" class="hover:text-[#c45e3c] ml-1">
               <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
             </button>
@@ -285,6 +293,14 @@
 
         <!-- Backup & Google Drive Sync Actions -->
         <div class="flex flex-wrap items-center gap-2 text-xs">
+          <button id="btn-drive-pull" class="px-2.5 py-1 bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] font-bold flex items-center gap-1 border border-[#222]" title="直接從您的 Google 雲端硬碟載入已存的 API Key 與卡片">
+            <i data-lucide="cloud-download" class="w-3.5 h-3.5 text-[#c45e3c]"></i>
+            <span>從 GOOGLE 雲端載入存檔</span>
+          </button>
+          <button id="btn-drive-sync" class="px-2.5 py-1 bg-[#c5bfad] hover:bg-[#beb9a7] text-[#3e3b36] font-bold flex items-center gap-1 border border-[#8e8878]" title="將當前內容立即上傳備份至 Google 雲端硬碟">
+            <i data-lucide="cloud-upload" class="w-3.5 h-3.5"></i>
+            <span>上傳備份至雲端</span>
+          </button>
           <button id="btn-export-backup" class="px-2.5 py-1 bg-[#c5bfad] hover:bg-[#beb9a7] border border-[#8e8878] text-[#3e3b36] font-bold flex items-center gap-1">
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
             <span>EXPORT // 匯出本機備份</span>
@@ -294,10 +310,6 @@
             <span>IMPORT // 載入備份檔</span>
             <input type="file" id="input-import-backup" accept=".json" class="hidden">
           </label>
-          <button id="btn-drive-sync" class="px-2.5 py-1 bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] font-bold flex items-center gap-1 border border-[#222]" title="直接將資料備份同步至您的個人 Google 雲端硬碟">
-            <i data-lucide="cloud" class="w-3.5 h-3.5 text-[#c45e3c]"></i>
-            <span>GOOGLE DRIVE SYNC // 雲端同步</span>
-          </button>
         </div>
       </div>
 
@@ -474,14 +486,14 @@
     let localSavedCardsMemory = [];
 
     /* =========================================================
-       Native IndexedDB Storage Engine (零依賴、純本機與雲端往返)
+       Native IndexedDB Storage Engine (版本升級至 v3 確保資料槽位健全)
        ========================================================= */
     const DB_NAME = 'YoRHaSlotTerminalDB';
-    const DB_VERSION = 1;
+    const DB_VERSION = 3;
     let dbInstance = null;
 
     function openDatabase() {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         if (dbInstance) return resolve(dbInstance);
         const req = indexedDB.open(DB_NAME, DB_VERSION);
         req.onupgradeneeded = (e) => {
@@ -506,20 +518,30 @@
         };
       });
     }
+    /* Persistent Storage: API Key in IndexedDB & Auto-Push to Cloud */
+    async function saveUserLocalApiKey(apiKeyToSave) {
+      const spinner = document.getElementById('save-key-spinner');
+      if (spinner) spinner.classList.remove('hidden');
 
-    async function dbSet(storeName, item) {
-      try {
-        const db = await openDatabase();
-        if (!db) return;
-        return new Promise((resolve) => {
-          const tx = db.transaction(storeName, 'readwrite');
-          const store = tx.objectStore(storeName);
-          store.put(item);
-          tx.oncomplete = () => resolve(true);
-          tx.onerror = () => resolve(false);
-        });
-      } catch (err) {
-        console.warn('dbSet error:', err);
+      state.userApiKey = apiKeyToSave;
+      await dbSet('settings', { key: 'geminiApiKey', value: apiKeyToSave, updatedAt: Date.now() });
+
+      if (spinner) spinner.classList.add('hidden');
+      playSound('win');
+      showToast(apiKeyToSave ? '✓ API Key 已儲存於本機資料庫與工作階段！' : 'API Key 已重設');
+
+      // 若已登入 Google 雲端，背景自動同步存入 Google Drive
+      if (state.googleAccessToken) {
+        syncToGoogleDrive(state.googleAccessToken, true);
+      }
+    }
+
+    async function loadUserStoredApiKey() {
+      const record = await dbGet('settings', 'geminiApiKey');
+      if (record && record.value) {
+        state.userApiKey = record.value;
+        const input = document.getElementById('input-api-key');
+        if (input) input.value = record.value;
       }
     }
 
@@ -1164,6 +1186,11 @@ ${descriptions.join("\n")}
 
       playSound('win');
       showToast('✓ 已成功保存結果卡片至本機資料庫！');
+
+      // 若已連接 Google 雲端，背景自動同步存入 Google Drive
+      if (state.googleAccessToken) {
+        syncToGoogleDrive(state.googleAccessToken, true);
+      }
     }
 
     document.getElementById('btn-save-card').addEventListener('click', saveCurrentResultCard);
@@ -1320,7 +1347,7 @@ ${descriptions.join("\n")}
     });
 
     /* =========================================================
-       Google Drive API Direct Sync (直接在用戶個人雲端硬碟建立檔案)
+       Google Drive API Direct Sync (自動載入與背景同步)
        ========================================================= */
     let tokenClient = null;
 
@@ -1332,18 +1359,100 @@ ${descriptions.join("\n")}
 
       tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: GOOGLE_CLIENT_ID,
-        scope: 'https://www.googleapis.com/auth/drive.file',
+        scope: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
         callback: async (tokenResponse) => {
           if (tokenResponse && tokenResponse.access_token) {
             state.googleAccessToken = tokenResponse.access_token;
-            await syncToGoogleDrive(tokenResponse.access_token);
+            // 嘗試獲取使用者名稱與頭像
+            fetchGoogleUserInfo(tokenResponse.access_token);
+            // 登入後第一件事：立即從雲端拉取歷史存檔
+            await loadFromGoogleDrive(tokenResponse.access_token);
           }
         }
       });
     }
 
-    async function syncToGoogleDrive(accessToken) {
-      showToast('正在與 Google 雲端硬碟同步中...');
+    async function fetchGoogleUserInfo(accessToken) {
+      try {
+        const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        if (res.ok) {
+          const info = await res.json();
+          state.currentUser = {
+            name: info.name || info.email || 'YoRHa Unit',
+            email: info.email
+          };
+          applyUserUI();
+        }
+      } catch (e) {
+        console.warn('Userinfo fetch failed:', e);
+      }
+    }
+
+    /* 從 Google Drive 讀取 yorha_slots_archive.json 並還原至畫面 */
+    async function loadFromGoogleDrive(accessToken) {
+      showToast('正在從 Google 雲端硬碟讀取您的歷史存檔...');
+      try {
+        const query = encodeURIComponent("name = 'yorha_slots_archive.json' and trashed = false");
+        const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?q=${query}&fields=files(id,name,modifiedTime)`, {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        const searchData = await searchRes.json();
+        const existingFile = searchData.files?.[0];
+
+        if (!existingFile) {
+          showToast('雲端尚無存檔，若本機有資料將為您建立首次雲端同步');
+          // 首次雲端為空，若當前有 API Key 或卡片則建立新存檔
+          if (state.userApiKey || localSavedCardsMemory.length > 0) {
+            await syncToGoogleDrive(accessToken, true);
+          }
+          return false;
+        }
+
+        // 下載檔案內容
+        const fileRes = await fetch(`https://www.googleapis.com/drive/v3/files/${existingFile.id}?alt=media`, {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        const cloudData = await fileRes.json();
+
+        // 1. 還原 API Key
+        if (cloudData.apiKey) {
+          state.userApiKey = cloudData.apiKey;
+          const input = document.getElementById('input-api-key');
+          if (input) input.value = cloudData.apiKey;
+          await dbSet('settings', { key: 'geminiApiKey', value: cloudData.apiKey, updatedAt: Date.now() });
+        }
+
+        // 2. 還原卡片
+        if (Array.isArray(cloudData.cards) && cloudData.cards.length > 0) {
+          for (const card of cloudData.cards) {
+            await dbSet('cards', card);
+          }
+          await loadSavedCards();
+        }
+
+        // 3. 還原範本
+        if (Array.isArray(cloudData.templates) && cloudData.templates.length > 0) {
+          for (const tmpl of cloudData.templates) {
+            await dbSet('templates', tmpl);
+          }
+          await loadCustomTemplates();
+        }
+
+        playSound('win');
+        showToast(`✓ 已成功載入 Google 雲端存檔！(API Key 與 ${cloudData.cards?.length || 0} 張卡片)`);
+        return true;
+      } catch (err) {
+        console.error('Google Drive Load error:', err);
+        showToast('讀取 Google 雲端存檔失敗，請確認網路與授權');
+        return false;
+      }
+    }
+
+    /* 上傳同步至 Google Drive */
+    async function syncToGoogleDrive(accessToken, silent = false) {
+      if (!silent) showToast('正在備份至 Google 雲端硬碟...');
 
       const payload = {
         app: 'YoRHa-Slot-Terminal',
@@ -1354,7 +1463,6 @@ ${descriptions.join("\n")}
       };
 
       try {
-        // 1. Search if yorha_slots_archive.json already exists in user's Google Drive
         const query = encodeURIComponent("name = 'yorha_slots_archive.json' and trashed = false");
         const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?q=${query}&fields=files(id,name)`, {
           headers: { Authorization: `Bearer ${accessToken}` }
@@ -1365,7 +1473,6 @@ ${descriptions.join("\n")}
         const fileContent = JSON.stringify(payload, null, 2);
 
         if (existingFile && existingFile.id) {
-          // Update existing file
           await fetch(`https://www.googleapis.com/upload/drive/v3/files/${existingFile.id}?uploadType=media`, {
             method: 'PATCH',
             headers: {
@@ -1375,7 +1482,6 @@ ${descriptions.join("\n")}
             body: fileContent
           });
         } else {
-          // Create new file
           const metadata = {
             name: 'yorha_slots_archive.json',
             mimeType: 'application/json'
@@ -1391,15 +1497,18 @@ ${descriptions.join("\n")}
           });
         }
 
-        playSound('win');
-        showToast('✓ 已成功同步至您的個人 Google 雲端硬碟！');
+        if (!silent) {
+          playSound('win');
+          showToast('✓ 已成功備份至您的個人 Google 雲端硬碟！');
+        }
       } catch (err) {
         console.warn('Google Drive Sync error:', err);
-        showToast('Google 雲端硬碟同步失敗，請確認授權權限');
+        if (!silent) showToast('Google 雲端硬碟備份失敗，請確認授權權限');
       }
     }
 
-    document.getElementById('btn-drive-sync').addEventListener('click', () => {
+    /* 雲端手動控制綁定 */
+    document.getElementById('btn-google-auth-sync').addEventListener('click', () => {
       if (!tokenClient) {
         showToast('Google 驗證服務載入中，請稍候重試');
         return;
@@ -1407,7 +1516,31 @@ ${descriptions.join("\n")}
       tokenClient.requestAccessToken({ prompt: '' });
     });
 
-    /* Google GIS Sign-In (User Identity Only) */
+    document.getElementById('btn-drive-pull').addEventListener('click', () => {
+      if (!state.googleAccessToken) {
+        if (tokenClient) tokenClient.requestAccessToken({ prompt: '' });
+        return;
+      }
+      loadFromGoogleDrive(state.googleAccessToken);
+    });
+
+    document.getElementById('btn-refresh-cloud').addEventListener('click', () => {
+      if (state.googleAccessToken) {
+        loadFromGoogleDrive(state.googleAccessToken);
+      } else if (tokenClient) {
+        tokenClient.requestAccessToken({ prompt: '' });
+      }
+    });
+
+    document.getElementById('btn-drive-sync').addEventListener('click', () => {
+      if (!state.googleAccessToken) {
+        if (tokenClient) tokenClient.requestAccessToken({ prompt: '' });
+        return;
+      }
+      syncToGoogleDrive(state.googleAccessToken, false);
+    });
+
+    /* Google GIS Sign-In */
     function initGoogleSignIn() {
       if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
         setTimeout(initGoogleSignIn, 300);
@@ -1458,21 +1591,29 @@ ${descriptions.join("\n")}
         };
         applyUserUI();
         playSound('win');
-        showToast(`Google 帳號登入成功: ${state.currentUser.name}`);
+        showToast(`Google 帳號認證成功: ${state.currentUser.name}，正在連線雲端存檔...`);
+
+        // 登入身分確立後，立即觸發 Drive 存取權限並抓取存檔
+        if (tokenClient) {
+          tokenClient.requestAccessToken({ prompt: '' });
+        }
       }
     }
 
     function applyUserUI() {
       const gWrapper = document.getElementById('g_id_signin_wrapper');
+      const authSyncBtn = document.getElementById('btn-google-auth-sync');
       const userBadge = document.getElementById('user-profile-badge');
       const userName = document.getElementById('user-name');
 
       if (state.currentUser) {
-        gWrapper.classList.add('hidden');
+        if (gWrapper) gWrapper.classList.add('hidden');
+        if (authSyncBtn) authSyncBtn.classList.add('hidden');
         userBadge.classList.remove('hidden');
         userName.innerText = state.currentUser.name;
       } else {
-        gWrapper.classList.remove('hidden');
+        if (gWrapper) gWrapper.classList.remove('hidden');
+        if (authSyncBtn) authSyncBtn.classList.remove('hidden');
         userBadge.classList.add('hidden');
       }
     }
