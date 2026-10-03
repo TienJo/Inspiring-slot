@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YoRHa Slot Terminal // Gemini 3 Flash</title>
+  <title>YoRHa Slot Terminal // Gemini 3.1 Flash Lite</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Identity Services (GIS) -->
@@ -13,10 +13,10 @@
   <!-- Google Fonts: Share Tech Mono & Rajdhani -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@600;700&family=Noto+Sans+TC:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* NieR: Automata Signature Palette */
+    /* NieR: Automata Signature Terminal Palette */
     :root {
       --nier-bg: #d2cebe;
       --nier-panel: #c8c3b1;
@@ -28,7 +28,7 @@
     }
 
     body {
-      font-family: 'Rajdhani', 'Noto Sans TC', sans-serif;
+      font-family: 'Rajdhani', sans-serif;
       background-color: var(--nier-bg);
       color: var(--nier-dark);
       min-height: 100vh;
@@ -43,7 +43,7 @@
       font-family: 'Share Tech Mono', monospace;
     }
 
-    /* Scanlines typical of YoRHa System */
+    /* Tactical CRT Scanlines */
     body::before {
       content: "";
       position: fixed;
@@ -59,7 +59,7 @@
       z-index: 99;
     }
 
-    /* NieR double line borders */
+    /* NieR Double Underline */
     .nier-double-border-b {
       border-bottom: 2px solid var(--nier-dark);
       position: relative;
@@ -74,7 +74,7 @@
       background-color: var(--nier-border);
     }
 
-    /* NieR Tactical Slot Display Box */
+    /* Tactical Slot Reel Enclosure */
     .nier-slot-card {
       background: #c3beac;
       border: 1px solid var(--nier-border);
@@ -87,7 +87,7 @@
       border-color: var(--nier-dark);
     }
 
-    /* Scrollbar */
+    /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -114,7 +114,7 @@
             YORHA // GENERATIVE SLOTS
           </h1>
           <div class="text-[11px] font-mono-tech text-[#6b6659]">
-            CORE ENGINE: GEMINI 3.1 FLASH LITE // DIRECT INFERENCE (NO PRESET)
+            CORE ENGINE: GEMINI 3.1 FLASH LITE // DIRECT INFERENCE (ZERO PRESETS)
           </div>
         </div>
       </div>
@@ -122,16 +122,16 @@
       <!-- Right Controls: API Key Input, Google Login, Sound -->
       <div class="flex flex-wrap items-center gap-3 text-xs font-mono-tech">
         
-        <!-- API Key Input Field (常駐頂部快速填寫) -->
+        <!-- API Key Input Field -->
         <div class="flex items-center bg-[#c5bfad] border border-[#8b8577] px-2 py-1">
           <span class="text-[11px] font-bold text-[#5e594f] mr-1.5 uppercase">API KEY:</span>
           <input 
             type="password" 
             id="input-api-key" 
-            placeholder="AIzaSy... (填寫後點擊 SAVE)" 
+            placeholder="AIzaSy... (ENTER & CLICK SAVE)" 
             class="bg-transparent text-xs text-[#3e3b36] focus:outline-none w-36 sm:w-52"
           >
-          <button id="btn-toggle-key-visibility" type="button" class="text-[#686254] hover:text-[#3e3b36] px-1" title="顯示/隱藏金鑰">
+          <button id="btn-toggle-key-visibility" type="button" class="text-[#686254] hover:text-[#3e3b36] px-1" title="Toggle visibility">
             <i data-lucide="eye" class="w-3.5 h-3.5"></i>
           </button>
           <button id="btn-save-key" class="bg-[#3e3b36] text-[#d2cebe] hover:bg-[#282623] px-2 py-0.5 ml-1 font-bold transition flex items-center gap-1">
@@ -146,13 +146,13 @@
           
           <button id="btn-google-auth-sync" class="bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] px-2.5 py-1 text-xs font-mono-tech font-bold flex items-center gap-1.5 transition border border-[#282623]">
             <i data-lucide="cloud" class="w-3.5 h-3.5 text-[#c45e3c]"></i>
-            <span id="google-sync-btn-label">GOOGLE 雲端同步登入</span>
+            <span id="google-sync-btn-label">GOOGLE CLOUD SYNC</span>
           </button>
 
           <div id="user-profile-badge" class="hidden flex items-center gap-2 bg-[#beb9a6] border border-[#3e3b36] px-2.5 py-1">
             <span class="w-2 h-2 bg-[#3e3b36]"></span>
             <span id="user-name" class="font-bold text-xs uppercase tracking-wider max-w-[120px] truncate">UNIT-9S</span>
-            <button id="btn-refresh-cloud" title="立即從 Google 雲端重新載入存檔" class="hover:text-[#3e3b36] text-[#5e594f] px-1 hover:scale-110 transition">
+            <button id="btn-refresh-cloud" title="Reload saved data from Google Drive" class="hover:text-[#3e3b36] text-[#5e594f] px-1 hover:scale-110 transition">
               <i data-lucide="refresh-cw" class="w-3 h-3"></i>
             </button>
             <button id="btn-logout" title="LOGOUT" class="hover:text-[#c45e3c] ml-1">
@@ -171,13 +171,13 @@
     </div>
   </header>
 
-  <!-- Main Operational Screen (純粹拉霸機) -->
+  <!-- Main Operational Screen -->
   <main class="max-w-[1400px] mx-auto px-6 sm:px-12 py-6 flex-1 w-full flex flex-col justify-center items-center">
     
     <!-- Machine Enclosure Panel -->
     <div class="w-full bg-[#cac5b3] border-2 border-[#3e3b36] p-4 sm:p-8 shadow-sm">
       
-      <!-- Top Subhead & Quick Add Slot Button -->
+      <!-- Top Subhead & Expand Slot Button -->
       <div class="flex flex-wrap items-center justify-between gap-4 pb-3 mb-4 border-b border-[#a39d8d]">
         <div>
           <span class="text-xs font-mono-tech uppercase font-bold text-[#5e594f]">ACTIVE MODULES SPECIFICATION</span>
@@ -186,60 +186,19 @@
           </h2>
         </div>
 
-        <!-- Add Slot Button (向右自訂擴充) -->
+        <!-- Add Slot Button -->
         <button 
           onclick="openAddSlotModal()" 
           class="px-4 py-2 bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] text-xs font-mono-tech font-bold tracking-wider uppercase transition flex items-center gap-2 border border-[#282623]">
           <span class="text-[#c45e3c] font-bold">+</span>
-          <span>向右新增自訂 SLOT 模組</span>
+          <span>EXPAND CUSTOM SLOT MODULE</span>
         </button>
       </div>
 
-      <!-- NieR Slot Reel Array Rack (向右滾動容納擴充槽位) -->
+      <!-- NieR Slot Reel Array Rack -->
       <div class="w-full overflow-x-auto pb-4 pt-1">
         <div id="reels-track" class="flex items-stretch gap-4 min-w-max p-4 bg-[#c0baa7] border border-[#8b8577]">
-          <!-- Initial Slot Modules Fallback for immediate visibility -->
-          <div class="flex flex-col items-center w-56 sm:w-64 flex-shrink-0" id="slot-col-0">
-            <div class="w-full flex items-center justify-between text-xs font-bold font-mono-tech text-[#3e3b36] mb-2 px-1 uppercase tracking-wider">
-              <div class="flex items-center gap-1.5 truncate" title="01 顏色 / 塗裝"><span class="w-1.5 h-1.5 bg-[#3e3b36]"></span><span class="truncate">01 顏色 / 塗裝</span></div>
-            </div>
-            <div id="slot-card-0" class="nier-slot-card w-full h-[130px] p-4 flex flex-col justify-between items-center text-center relative">
-              <div class="text-[10px] font-mono-tech text-[#686254] self-start uppercase">MODULE_INDEX // 01</div>
-              <div id="slot-text-0" class="font-extrabold text-base sm:text-lg text-[#3e3b36] font-mono-tech break-words line-clamp-2 px-2 py-1">[ 待生成 ]</div>
-              <div class="w-full border-t border-[#8b8577]/40 flex justify-between items-center pt-1.5 text-[10px] font-mono-tech text-[#686254]"><span>STATUS:</span><span id="slot-status-0">READY</span></div>
-            </div>
-            <button onclick="toggleLock(0)" id="btn-lock-0" class="mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border bg-[#c5bfad] text-[#3e3b36] border-[#8e8878] hover:bg-[#beb9a7] transition">[HOLD // 鎖定]</button>
-          </div>
-
-          <div class="flex flex-col items-center w-56 sm:w-64 flex-shrink-0" id="slot-col-1">
-            <div class="w-full flex items-center justify-between text-xs font-bold font-mono-tech text-[#3e3b36] mb-2 px-1 uppercase tracking-wider">
-              <div class="flex items-center gap-1.5 truncate" title="02 具象既定形象/角色"><span class="w-1.5 h-1.5 bg-[#3e3b36]"></span><span class="truncate">02 具象既定形象/角色</span></div>
-            </div>
-            <div id="slot-card-1" class="nier-slot-card w-full h-[130px] p-4 flex flex-col justify-between items-center text-center relative">
-              <div class="text-[10px] font-mono-tech text-[#686254] self-start uppercase">MODULE_INDEX // 02</div>
-              <div id="slot-text-1" class="font-extrabold text-base sm:text-lg text-[#3e3b36] font-mono-tech break-words line-clamp-2 px-2 py-1">[ 待生成 ]</div>
-              <div class="w-full border-t border-[#8b8577]/40 flex justify-between items-center pt-1.5 text-[10px] font-mono-tech text-[#686254]"><span>STATUS:</span><span id="slot-status-1">READY</span></div>
-            </div>
-            <button onclick="toggleLock(1)" id="btn-lock-1" class="mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border bg-[#c5bfad] text-[#3e3b36] border-[#8e8878] hover:bg-[#beb9a7] transition">[HOLD // 鎖定]</button>
-          </div>
-
-          <div class="flex flex-col items-center w-56 sm:w-64 flex-shrink-0" id="slot-col-2">
-            <div class="w-full flex items-center justify-between text-xs font-bold font-mono-tech text-[#3e3b36] mb-2 px-1 uppercase tracking-wider">
-              <div class="flex items-center gap-1.5 truncate" title="03 品牌型號/特定實物"><span class="w-1.5 h-1.5 bg-[#3e3b36]"></span><span class="truncate">03 品牌型號/特定實物</span></div>
-            </div>
-            <div id="slot-card-2" class="nier-slot-card w-full h-[130px] p-4 flex flex-col justify-between items-center text-center relative">
-              <div class="text-[10px] font-mono-tech text-[#686254] self-start uppercase">MODULE_INDEX // 03</div>
-              <div id="slot-text-2" class="font-extrabold text-base sm:text-lg text-[#3e3b36] font-mono-tech break-words line-clamp-2 px-2 py-1">[ 待生成 ]</div>
-              <div class="w-full border-t border-[#8b8577]/40 flex justify-between items-center pt-1.5 text-[10px] font-mono-tech text-[#686254]"><span>STATUS:</span><span id="slot-status-2">READY</span></div>
-            </div>
-            <button onclick="toggleLock(2)" id="btn-lock-2" class="mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border bg-[#c5bfad] text-[#3e3b36] border-[#8e8878] hover:bg-[#beb9a7] transition">[HOLD // 鎖定]</button>
-          </div>
-
-          <div class="flex flex-col items-center justify-center w-28 sm:w-36 flex-shrink-0 border-2 border-dashed border-[#8e8878] hover:border-[#3e3b36] hover:bg-[#c8c3b1] p-3 transition cursor-pointer text-[#3e3b36] font-mono-tech" onclick="openAddSlotModal()">
-            <div class="text-xl font-bold mb-1 text-[#c45e3c]">+</div>
-            <span class="text-xs font-bold uppercase tracking-wider">EXPAND</span>
-            <span class="text-[10px] text-[#686254]">向右新增欄位</span>
-          </div>
+          <!-- Slots rendered dynamically via JS -->
         </div>
       </div>
 
@@ -249,7 +208,7 @@
         <!-- Live Selected Words Display -->
         <div class="flex flex-col gap-1 w-full sm:w-auto">
           <div class="text-[11px] font-mono-tech font-bold text-[#5e594f] uppercase tracking-wider">
-            LOCKED RESULT // 當前組合:
+            LOCKED COMBINATION // INFERRED OUTPUT:
           </div>
           <div id="badges-container" class="flex flex-wrap items-center gap-2 text-xs font-bold font-mono-tech">
             <!-- Dynamically populated badges -->
@@ -261,16 +220,16 @@
           <button 
             id="btn-save-card" 
             class="px-4 py-3 bg-[#c5bfad] hover:bg-[#beb9a7] text-[#3e3b36] font-bold font-mono-tech text-xs tracking-wider uppercase border border-[#8e8878] transition flex items-center justify-center gap-1.5"
-            title="將當前生成的詞彙組合保存至本機與雲端卡片庫">
+            title="Archive current generated combination to local storage and Google Drive">
             <i data-lucide="bookmark-plus" class="w-4 h-4 text-[#c45e3c]"></i>
-            <span>SAVE CARD // 儲存卡片</span>
+            <span>SAVE CARD // ARCHIVE RESULT</span>
           </button>
 
           <button 
             id="btn-spin" 
             class="w-full sm:w-auto px-8 py-3 bg-[#3e3b36] hover:bg-[#282623] active:scale-95 text-[#d2cebe] font-bold font-mono-tech text-sm tracking-widest uppercase transition flex items-center justify-center gap-2 border border-[#222]">
             <span class="text-[#c45e3c]">⨂</span>
-            <span id="spin-btn-text">GENERATE WORDS // 直接生成 (空白鍵)</span>
+            <span id="spin-btn-text">GENERATE WORDS // DIRECT INFERENCE (SPACEBAR)</span>
           </button>
         </div>
 
@@ -278,13 +237,13 @@
 
     </div>
 
-    <!-- Saved Cards Archive -->
+    <!-- Saved Cards Archive Section -->
     <section class="w-full mt-6 bg-[#cac5b3] border-2 border-[#3e3b36] p-4 sm:p-6 shadow-sm font-mono-tech">
       <div class="flex flex-wrap items-center justify-between gap-3 pb-3 mb-4 border-b border-[#a39d8d]">
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 bg-[#3e3b36]"></span>
           <h3 class="text-base sm:text-lg font-extrabold uppercase text-[#3e3b36]">
-            DATA ARCHIVE // 已儲存卡片與設定
+            DATA ARCHIVE // SAVED CARDS & CONFIGURATIONS
           </h3>
           <span id="saved-card-counter" class="text-xs bg-[#3e3b36] text-[#d2cebe] px-2 py-0.5 font-bold">
             0 UNITS
@@ -293,21 +252,21 @@
 
         <!-- Backup & Google Drive Sync Actions -->
         <div class="flex flex-wrap items-center gap-2 text-xs">
-          <button id="btn-drive-pull" class="px-2.5 py-1 bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] font-bold flex items-center gap-1 border border-[#222]" title="直接從您的 Google 雲端硬碟載入已存的 API Key 與卡片">
+          <button id="btn-drive-pull" class="px-2.5 py-1 bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] font-bold flex items-center gap-1 border border-[#222]" title="Load saved API key and cards from your Google Drive">
             <i data-lucide="cloud-download" class="w-3.5 h-3.5 text-[#c45e3c]"></i>
-            <span>從 GOOGLE 雲端載入存檔</span>
+            <span>LOAD FROM GOOGLE DRIVE</span>
           </button>
-          <button id="btn-drive-sync" class="px-2.5 py-1 bg-[#c5bfad] hover:bg-[#beb9a7] text-[#3e3b36] font-bold flex items-center gap-1 border border-[#8e8878]" title="將當前內容立即上傳備份至 Google 雲端硬碟">
+          <button id="btn-drive-sync" class="px-2.5 py-1 bg-[#c5bfad] hover:bg-[#beb9a7] text-[#3e3b36] font-bold flex items-center gap-1 border border-[#8e8878]" title="Upload and backup current data to Google Drive">
             <i data-lucide="cloud-upload" class="w-3.5 h-3.5"></i>
-            <span>上傳備份至雲端</span>
+            <span>BACKUP TO GOOGLE DRIVE</span>
           </button>
           <button id="btn-export-backup" class="px-2.5 py-1 bg-[#c5bfad] hover:bg-[#beb9a7] border border-[#8e8878] text-[#3e3b36] font-bold flex items-center gap-1">
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
-            <span>EXPORT // 匯出本機備份</span>
+            <span>EXPORT JSON</span>
           </button>
           <label class="px-2.5 py-1 bg-[#c5bfad] hover:bg-[#beb9a7] border border-[#8e8878] text-[#3e3b36] font-bold flex items-center gap-1 cursor-pointer">
             <i data-lucide="upload" class="w-3.5 h-3.5"></i>
-            <span>IMPORT // 載入備份檔</span>
+            <span>IMPORT JSON</span>
             <input type="file" id="input-import-backup" accept=".json" class="hidden">
           </label>
         </div>
@@ -316,7 +275,7 @@
       <!-- Cards Grid -->
       <div id="saved-cards-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 min-h-[90px]">
         <div class="col-span-full py-8 text-center text-xs text-[#79746a] border border-dashed border-[#8e8878] p-4">
-          // 尚無儲存卡片。點擊「SAVE CARD // 儲存卡片」即可將當前結果留存於本機資料庫與雲端硬碟。
+          // No saved cards found. Click "SAVE CARD" to archive the current combination locally and to Google Drive.
         </div>
       </div>
     </section>
@@ -328,7 +287,7 @@
     <div class="bg-[#d2cebe] border-2 border-[#3e3b36] max-w-md w-full p-6 shadow-2xl relative font-mono-tech">
       <div class="flex items-center justify-between pb-3 border-b-2 border-[#3e3b36] mb-4">
         <h3 class="text-base font-bold text-[#3e3b36] flex items-center gap-2">
-          <span>// 向右新增自訂 SLOT 滾輪</span>
+          <span>// EXPAND CUSTOM SLOT MODULE</span>
         </h3>
         <button id="btn-close-add-modal" class="text-[#3e3b36] hover:bg-[#3e3b36] hover:text-[#d2cebe] p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -336,48 +295,48 @@
       </div>
 
       <p class="text-xs text-[#5e594f] mb-3 leading-relaxed">
-        新增自訂滾輪槽位。點擊 SPIN 時，Gemini 3 Flash 會在旋轉中依照您的要求即時生成具象詞彙。
+        Install a custom slot module. When GENERATE is triggered, Gemini 3.1 Flash Lite will dynamically generate ultra-concrete items according to your directive.
       </p>
 
-      <!-- My Saved Slot Templates (雲端自訂範本庫) -->
+      <!-- Saved Slot Templates -->
       <div class="mb-4 bg-[#c4bfae] border border-[#8b8577] p-2.5">
         <div class="flex items-center justify-between mb-2">
           <label class="text-xs font-bold text-[#3e3b36] flex items-center gap-1.5">
             <span class="w-1.5 h-1.5 bg-[#c45e3c]"></span>
-            <span>// 我的常用自訂範本 (SAVED TEMPLATES):</span>
+            <span>// MY SAVED TEMPLATES:</span>
           </label>
           <span id="saved-template-count" class="text-[10px] text-[#6b6659]">0 UNITS</span>
         </div>
         <div id="custom-presets-list" class="flex flex-col gap-1.5 max-h-36 overflow-y-auto pr-1">
           <div class="text-[11px] text-[#79746a] py-1 text-center border border-dashed border-[#8e8878]">
-            // 尚無儲存的自訂範本。在下方填寫後勾選「保存為常用範本」即可存入雲端。
+            // No custom templates saved. Fill in fields below and check "Save as template" to store.
           </div>
         </div>
       </div>
 
-      <!-- Preset Quick Picks -->
+      <!-- Quick Preset Picks -->
       <div class="mb-4">
-        <label class="block text-xs font-bold text-[#3e3b36] mb-1.5">// 系統快速預設範本:</label>
+        <label class="block text-xs font-bold text-[#3e3b36] mb-1.5">// SYSTEM PRESET TEMPLATES:</label>
         <div class="grid grid-cols-2 gap-1.5 text-xs">
           <button type="button" class="btn-preset-slot p-2 border border-[#8e8878] bg-[#c8c3b1] hover:bg-[#3e3b36] hover:text-[#d2cebe] text-left transition"
-                  data-name="特定真實場所/建築" 
-                  data-desc="真實世界中非常具體、有明確特徵的建築或公共場所（如：台北101觀景台、東京涉谷十字路口、冰島黑沙灘、巴黎羅浮宮玻璃金字塔）">
-            🏛️ 真實場所/建築
+                  data-name="Real-World Venue / Landmark" 
+                  data-desc="A highly specific, unmistakable real-world architectural structure or public location (e.g. Shibuya crossing scramble, Louvre glass pyramid, Iceland black sand beach basalt columns, vintage stainless diner booth).">
+            🏛️ Venue / Architecture
           </button>
           <button type="button" class="btn-preset-slot p-2 border border-[#8e8878] bg-[#c8c3b1] hover:bg-[#3e3b36] hover:text-[#d2cebe] text-left transition"
-                  data-name="特定瞬間動作" 
-                  data-desc="一個畫面感鮮明具體的瞬間動作（例如：倒咖啡溢出瞬間、正在高速甩尾、戴耳機打盹、精準穿針引線）">
-            ⚡ 具體動作/姿態
+                  data-name="Instant Physical Action / Pose" 
+                  data-desc="A vivid, momentary physical action (e.g. espresso overflowing cup on sudden impact, high-speed asphalt tire drift, thread passing through needle eye).">
+            ⚡ Instant Physical Action
           </button>
           <button type="button" class="btn-preset-slot p-2 border border-[#8e8878] bg-[#c8c3b1] hover:bg-[#3e3b36] hover:text-[#d2cebe] text-left transition"
-                  data-name="極端天候/環境光影" 
-                  data-desc="極具視覺氛圍的真實天候或光線（例如：午後雷陣雨積水倒影、霓虹燈雨夜反光、清晨濃霧、金黃色夕陽斜射）">
-            🌦️ 天候/環境光影
+                  data-name="Atmospheric Weather / Lighting" 
+                  data-desc="A tangible visual weather state or dramatic lighting (e.g. rain-slicked asphalt neon reflection, pre-dawn dense alpine fog, golden hour harsh sunset rim-light).">
+            🌦️ Weather / Ambient Light
           </button>
           <button type="button" class="btn-preset-slot p-2 border border-[#8e8878] bg-[#c8c3b1] hover:bg-[#3e3b36] hover:text-[#d2cebe] text-left transition"
-                  data-name="工業/物理材質" 
-                  data-desc="特定品牌或工業觸感的硬質或軟質物理材質（例如：碳纖維霧面編織、冷鍛不銹鋼、粗糙油畫畫布、高透光防彈玻璃）">
-            🧱 工業/物理材質
+                  data-name="Industrial / Physical Material" 
+                  data-desc="A tangible physical material or specialized industrial surface (e.g. matte twill carbon fiber weave, cold-forged brushed stainless steel, rough gesso canvas, ballistics polycarbonate).">
+            🧱 Industrial Material
           </button>
         </div>
       </div>
@@ -385,32 +344,32 @@
       <!-- Inputs -->
       <div class="space-y-3">
         <div>
-          <label class="block text-xs font-bold text-[#3e3b36] mb-1">槽位名稱 (SLOT NAME):</label>
-          <input type="text" id="input-new-slot-name" placeholder="例如：特定真實場所/建築" class="w-full bg-[#c2bdab] border border-[#8e8878] px-3 py-1.5 text-xs text-[#3e3b36] focus:outline-none focus:border-[#3e3b36]">
+          <label class="block text-xs font-bold text-[#3e3b36] mb-1">SLOT NAME:</label>
+          <input type="text" id="input-new-slot-name" placeholder="e.g., Real-World Venue / Landmark" class="w-full bg-[#c2bdab] border border-[#8e8878] px-3 py-1.5 text-xs text-[#3e3b36] focus:outline-none focus:border-[#3e3b36]">
         </div>
         <div>
-          <label class="block text-xs font-bold text-[#3e3b36] mb-1">生成要求 (PROMPT DIRECTIVE):</label>
-          <textarea id="input-new-slot-desc" rows="3" placeholder="清楚指示必須生成什麼具象實物..." class="w-full bg-[#c2bdab] border border-[#8e8878] px-3 py-1.5 text-xs text-[#3e3b36] focus:outline-none focus:border-[#3e3b36] leading-relaxed"></textarea>
+          <label class="block text-xs font-bold text-[#3e3b36] mb-1">PROMPT DIRECTIVE:</label>
+          <textarea id="input-new-slot-desc" rows="3" placeholder="Specify concrete physical requirements..." class="w-full bg-[#c2bdab] border border-[#8e8878] px-3 py-1.5 text-xs text-[#3e3b36] focus:outline-none focus:border-[#3e3b36] leading-relaxed"></textarea>
         </div>
         
         <!-- Save as template checkbox -->
         <div class="flex items-center justify-between pt-1">
           <label class="flex items-center gap-2 cursor-pointer select-none text-xs font-bold text-[#3e3b36]">
             <input type="checkbox" id="chk-save-as-template" class="accent-[#3e3b36] w-4 h-4 cursor-pointer" checked>
-            <span>同步保存此設定至常用範本庫 (供日後快速選用)</span>
+            <span>Save to template library for quick reuse</span>
           </label>
           <button type="button" id="btn-save-template-only" class="text-[11px] underline text-[#5e594f] hover:text-[#3e3b36]">
-            [僅另存範本]
+            [Save Template Only]
           </button>
         </div>
       </div>
 
       <div class="flex items-center justify-end gap-2 pt-4 border-t border-[#8e8878] mt-4">
         <button id="btn-cancel-add-slot" class="px-3 py-1.5 border border-[#8e8878] hover:bg-[#beb9a7] text-xs">
-          取消
+          CANCEL
         </button>
         <button id="btn-confirm-add-slot" class="px-4 py-1.5 bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] text-xs font-bold">
-          [確認安裝槽位]
+          [INSTALL MODULE]
         </button>
       </div>
     </div>
@@ -424,8 +383,8 @@
     <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 font-mono-tech text-[#5e594f]">
       <div class="flex items-center gap-4 text-xs font-bold text-[#3e3b36]">
         <span class="flex items-center gap-1.5"><span class="text-[#c45e3c]">⨂</span> CONFIRM / SPIN</span>
-        <span class="flex items-center gap-1.5"><span>SPACE</span> EXECUTE SPIN</span>
-        <span class="flex items-center gap-1.5"><span>HOLD</span> 鎖定槽位</span>
+        <span class="flex items-center gap-1.5"><span>SPACE</span> EXECUTE INFERENCE</span>
+        <span class="flex items-center gap-1.5"><span>HOLD</span> TOGGLE LOCK</span>
       </div>
 
       <div class="text-[11px] flex items-center gap-2">
@@ -436,47 +395,56 @@
   </footer>
 
   <script>
-    /* Google Client ID provided by user */
+    /* Google Client ID */
     const GOOGLE_CLIENT_ID = "865993916714-o0h883itsqd3lvgbatmkgqrqqhbrmuhf.apps.googleusercontent.com";
 
-    /* Core Slot definitions: Enforcing extreme diversity across wildly contrasting human domains */
+    /* Core Slot definitions: Enforcing English, concrete physical objects, creatures/organisms/figures, and extreme non-repetition */
     let slotDefinitions = [
       {
         id: "slot_0",
-        key: "color",
-        title: "01 顏色 / 塗裝",
-        promptDesc: "一個真實可見、極具視覺衝擊的具體塗裝或實體成色。必須從全球極度廣泛且大相逕庭的領域抽取（例如特種施工反光、稀有礦物斷面、深海螢光、賽車碳纖消光、傳統生漆、高壓電弧淡紫等）。約 3~8 字。絕對禁止每次都出常見的賽車紅或黑色。"
+        key: "color_finish",
+        title: "01 COLOR / FINISH",
+        promptDesc: "A tangible, visually arresting color, material coating, or industrial surface finish (e.g., high-visibility safety hazard yellow, oxidized copper verdigris patina, matte forged carbon weave, iridescent bismuth crystal fracture, deep-sea bioluminescent cyan, heat-blued titanium gradient, raw cast-iron lacquer). 2 to 5 words in English. No abstract poetry."
       },
       {
         id: "slot_1",
-        key: "iconic_figure",
-        title: "02 具象既定形象/角色",
-        promptDesc: "大眾熟知、輪廓鮮明、有既定視覺外觀與穿著特徵的人物、吉祥物、經典職業、符號化生物或歷史角色。必須橫跨極端懸殊的年代與文化（例如古典相撲手、外太空維修員、中世紀黑死病鳥嘴醫生、小鎮加油站充氣人偶、深海潛水鐘水手、深山養蜂人）。約 4~10 字，不可抽象。"
+        key: "creature_organism_figure",
+        title: "02 CREATURE / ORGANISM / FIGURE",
+        promptDesc: "A concrete living creature, animal, marine beast, bird, insect, distinct biological organism, iconic mascot, or historic figure with an unmistakable visual silhouette (e.g., giant Pacific octopus, Japanese snow macaque, deep-sea anglerfish, barn owl, poison dart frog, Antarctic leopard seal, hot-spring capybara, Victorian brass helmet diver, beaked plague doctor, blacksmith in leather apron). 2 to 6 words in English. Concrete living organisms, diverse animals, or distinct figures."
       },
       {
         id: "slot_2",
-        key: "object",
-        title: "03 品牌型號/特定實物",
-        promptDesc: "極度具體的「特定品牌產品/經典型號」或「特定真實公共場所的實體硬質物件」。領域必須極端多元隨機（例如重型鐵路道岔板手、特定年代經典拍立得、牙醫診所診療椅、極地探險鋁合金雪橇、消防高壓水砲、重機排氣管）。約 5~14 字。絕不可重複常見 3C 物品。"
+        key: "branded_object",
+        title: "03 BRANDED / SPECIFIC HARDWARE",
+        promptDesc: "An ultra-specific tangible product, branded model, specialized industrial tool, or physical urban infrastructure fixture (e.g., vintage Sony ICF-5900W multi-band radio, Red Bull 2025 F1 aerodynamic rear wing, Japanese train platform glowing LED departure display, heavy steel railroad track switch lever, bright orange traffic cone, vintage Nintendo Game Boy pocket console, cast-iron dental examination chair). 3 to 7 words in English. Must be an unmistakable physical object."
       }
     ];
 
-    /* Diverse Domain Anchors to inject randomized mutations on each spin */
+    /* Dynamic Domain Rotations to inject maximum contrast and prevent convergence */
     const DIVERSITY_DOMAINS = [
-      "深海探勘與海洋工程", "重工業機械與礦山怪獸", "傳統東亞民俗祭典與工藝", 
-      "80年代街頭滑板與龐克次文化", "冷戰航太與軍事硬體", "極地探險與高山救援", 
-      "分子生物實驗室與無塵室設備", "深夜24小時拉麵店廚房與庶民餐飲", "經典鐘錶工坊與精密微型機械", 
-      "道路施工與市政重型工程", "地下黑膠唱片行與類比音響", "特技馬戲團與古典魔術道具",
-      "古董拍賣會與地質礦物標本室", "現代急診室與外科手術器械", "無人荒島氣象觀測站"
+      "Deep-sea marine biology & abyssal oceanic organisms",
+      "Heavy industrial excavation & open-pit mining machinery",
+      "Paleontology, fossil excavations & prehistoric fauna",
+      "Cold-War aerospace technology & radio astronomy observatories",
+      "Alpine mountaineering & polar wilderness survival gear",
+      "Entomology, arachnology & tropical rainforest bio-specimens",
+      "Traditional woodworking, blacksmithing & lutherie craftsmanship",
+      "High-speed motorsport aerodynamics & rally racing components",
+      "Microbiology laboratory optics & sterilized cleanroom instruments",
+      "1980s analog audio synthesis & vintage magnetic tape hardware",
+      "Vintage horology, tourbillons & precision mechanical timepieces",
+      "Municipal infrastructure, high-voltage substations & railway switches",
+      "Nocturnal wildlife photography & remote field expedition fixtures",
+      "Maritime lighthouse optics & offshore meteorological beacons"
     ];
 
-    /* Runtime State: Initialized with diversity memory */
+    /* Runtime State with Strict Exclusion Memory */
     const state = {
       isGenerating: false,
       soundEnabled: true,
       locked: [false, false, false],
-      currentSelection: ["[ 待生成 ]", "[ 待生成 ]", "[ 待生成 ]"],
-      historyAvoidance: [],
+      currentSelection: ["[ AWAITING INFERENCE ]", "[ AWAITING INFERENCE ]", "[ AWAITING INFERENCE ]"],
+      historyAvoidance: [], // Track previous terms to strictly prevent repetition
       userApiKey: "",
       currentUser: null,
       googleAccessToken: null
@@ -486,7 +454,7 @@
     let localSavedCardsMemory = [];
 
     /* =========================================================
-       Native IndexedDB Storage Engine (版本升級至 v3 確保資料槽位健全)
+       Native IndexedDB Storage Engine (v3)
        ========================================================= */
     const DB_NAME = 'YoRHaSlotTerminalDB';
     const DB_VERSION = 3;
@@ -518,30 +486,20 @@
         };
       });
     }
-    /* Persistent Storage: API Key in IndexedDB & Auto-Push to Cloud */
-    async function saveUserLocalApiKey(apiKeyToSave) {
-      const spinner = document.getElementById('save-key-spinner');
-      if (spinner) spinner.classList.remove('hidden');
 
-      state.userApiKey = apiKeyToSave;
-      await dbSet('settings', { key: 'geminiApiKey', value: apiKeyToSave, updatedAt: Date.now() });
-
-      if (spinner) spinner.classList.add('hidden');
-      playSound('win');
-      showToast(apiKeyToSave ? '✓ API Key 已儲存於本機資料庫與工作階段！' : 'API Key 已重設');
-
-      // 若已登入 Google 雲端，背景自動同步存入 Google Drive
-      if (state.googleAccessToken) {
-        syncToGoogleDrive(state.googleAccessToken, true);
-      }
-    }
-
-    async function loadUserStoredApiKey() {
-      const record = await dbGet('settings', 'geminiApiKey');
-      if (record && record.value) {
-        state.userApiKey = record.value;
-        const input = document.getElementById('input-api-key');
-        if (input) input.value = record.value;
+    async function dbSet(storeName, value) {
+      try {
+        const db = await openDatabase();
+        if (!db) return false;
+        return new Promise((resolve) => {
+          const tx = db.transaction(storeName, 'readwrite');
+          const store = tx.objectStore(storeName);
+          store.put(value);
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => resolve(false);
+        });
+      } catch (e) {
+        return false;
       }
     }
 
@@ -580,7 +538,7 @@
     async function dbDelete(storeName, key) {
       try {
         const db = await openDatabase();
-        if (!db) return;
+        if (!db) return false;
         return new Promise((resolve) => {
           const tx = db.transaction(storeName, 'readwrite');
           const store = tx.objectStore(storeName);
@@ -589,11 +547,11 @@
           tx.onerror = () => resolve(false);
         });
       } catch (err) {
-        console.warn('dbDelete error:', err);
+        return false;
       }
     }
 
-    /* Web Audio API for NieR style mechanical ticks and blips */
+    /* Web Audio API for YoRHa style mechanical ticks and blips */
     let audioCtx = null;
     function getAudioContext() {
       if (!audioCtx) {
@@ -615,7 +573,7 @@
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = 'square';
-          osc.frequency.setValueAtTime(600, now);
+          osc.frequency.setValueAtTime(640, now);
           gain.gain.setValueAtTime(0.04, now);
           gain.gain.linearRampToValueAtTime(0.001, now + 0.03);
           osc.connect(gain);
@@ -628,7 +586,7 @@
             const gain = ctx.createGain();
             osc.type = 'sine';
             osc.frequency.setValueAtTime(f, now + idx * 0.06);
-            gain.gain.setValueAtTime(0.1, now + idx * 0.06);
+            gain.gain.setValueAtTime(0.09, now + idx * 0.06);
             gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.25);
             osc.connect(gain);
             gain.connect(ctx.destination);
@@ -650,17 +608,18 @@
       setTimeout(() => {
         toast.style.opacity = '0';
         setTimeout(() => toast.remove(), 250);
-      }, 3000);
+      }, 3200);
     }
 
     /* Render Slot Cards */
     function renderReelsTrack() {
       const track = document.getElementById('reels-track');
+      if (!track) return;
       track.innerHTML = '';
 
       slotDefinitions.forEach((slot, index) => {
         const isLocked = state.locked[index] || false;
-        const currentWord = state.currentSelection[index] || "[ 待生成 ]";
+        const currentWord = state.currentSelection[index] || "[ AWAITING INFERENCE ]";
 
         const slotCol = document.createElement('div');
         slotCol.className = 'flex flex-col items-center w-56 sm:w-64 flex-shrink-0';
@@ -674,7 +633,7 @@
               <span class="truncate">${slot.title}</span>
             </div>
             ${index >= 3 ? `
-              <button onclick="removeSlot(${index})" class="text-[#686254] hover:text-[#c45e3c] px-1 text-[11px]" title="刪除槽位">
+              <button onclick="removeSlot(${index})" class="text-[#686254] hover:text-[#c45e3c] px-1 text-[11px]" title="Remove slot module">
                 [DEL]
               </button>
             ` : ''}
@@ -696,7 +655,7 @@
 
           <!-- Lock Toggle Button -->
           <button onclick="toggleLock(${index})" id="btn-lock-${index}" class="mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border ${isLocked ? 'bg-[#3e3b36] text-[#d2cebe] border-[#222]' : 'bg-[#c5bfad] text-[#3e3b36] border-[#8e8878] hover:bg-[#beb9a7]'} transition">
-            ${isLocked ? '[LOCKED // 已鎖定]' : '[HOLD // 鎖定]'}
+            ${isLocked ? '[LOCKED // HOLDING]' : '[HOLD // LOCK]'}
           </button>
         `;
 
@@ -710,7 +669,7 @@
       addTile.innerHTML = `
         <div class="text-xl font-bold mb-1 text-[#c45e3c]">+</div>
         <span class="text-xs font-bold uppercase tracking-wider">EXPAND</span>
-        <span class="text-[10px] text-[#686254]">向右新增欄位</span>
+        <span class="text-[10px] text-[#686254]">ADD SLOT TO RIGHT</span>
       `;
       track.appendChild(addTile);
 
@@ -724,10 +683,10 @@
       container.innerHTML = '';
 
       slotDefinitions.forEach((slot, index) => {
-        const word = state.currentSelection[index] || "[ 待生成 ]";
+        const word = state.currentSelection[index] || "[ AWAITING INFERENCE ]";
         const span = document.createElement('span');
         span.id = `badge-word-${index}`;
-        span.className = `px-2.5 py-1 bg-[#3e3b36] text-[#d2cebe] border border-[#222] truncate max-w-[180px]`;
+        span.className = `px-2.5 py-1 bg-[#3e3b36] text-[#d2cebe] border border-[#222] truncate max-w-[200px]`;
         span.innerText = word;
         container.appendChild(span);
 
@@ -751,7 +710,7 @@
       if (btn) {
         if (isLocked) {
           btn.className = 'mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border bg-[#3e3b36] text-[#d2cebe] border-[#222] transition';
-          btn.innerText = '[LOCKED // 已鎖定]';
+          btn.innerText = '[LOCKED // HOLDING]';
           if (card) card.classList.add('is-locked');
           if (status) {
             status.innerText = 'LOCKED';
@@ -759,7 +718,7 @@
           }
         } else {
           btn.className = 'mt-2.5 w-full py-1.5 text-xs font-mono-tech font-bold uppercase tracking-wider border bg-[#c5bfad] text-[#3e3b36] border-[#8e8878] hover:bg-[#beb9a7] transition';
-          btn.innerText = '[HOLD // 鎖定]';
+          btn.innerText = '[HOLD // LOCK]';
           if (card) card.classList.remove('is-locked');
           if (status) {
             status.innerText = 'READY';
@@ -768,20 +727,20 @@
         }
       }
       playSound('tick');
-      showToast(isLocked ? `已鎖定: ${slotDefinitions[slotIndex].title}` : `解除鎖定: ${slotDefinitions[slotIndex].title}`);
+      showToast(isLocked ? `Locked: ${slotDefinitions[slotIndex].title}` : `Unlocked: ${slotDefinitions[slotIndex].title}`);
     };
 
     window.removeSlot = function(index) {
       if (state.isGenerating) return;
       if (slotDefinitions.length <= 2) {
-        showToast('至少保留 2 個欄位模組');
+        showToast('Minimum 2 slot modules required');
         return;
       }
       const removed = slotDefinitions.splice(index, 1)[0];
       state.locked.splice(index, 1);
       state.currentSelection.splice(index, 1);
       renderReelsTrack();
-      showToast(`已移除欄位: ${removed.title}`);
+      showToast(`Removed module: ${removed.title}`);
     };
 
     /* Expand New Slot Modal */
@@ -810,14 +769,14 @@
       const templateItem = {
         id: 'tmpl_' + Date.now(),
         name,
-        desc: desc || '一個符合此主題、極為具體可見的真實物件或名詞。',
+        desc: desc || 'A specific, concrete real-world object or item conforming to this category.',
         timestamp: Date.now()
       };
 
       userCustomTemplates.unshift(templateItem);
       renderCustomTemplatesList(userCustomTemplates);
       await dbSet('templates', templateItem);
-      showToast(`範本「${name}」已儲存於本機資料庫`);
+      showToast(`Template "${name}" saved to library`);
     }
 
     async function loadCustomTemplates() {
@@ -837,7 +796,7 @@
       if (templates.length === 0) {
         container.innerHTML = `
           <div class="text-[11px] text-[#79746a] py-2 text-center border border-dashed border-[#8e8878]">
-            // 尚無儲存的自訂範本。填寫下方設定後即可保存為常用範本。
+            // No custom templates saved yet. Configure below to archive.
           </div>
         `;
         return;
@@ -858,7 +817,7 @@
           </div>
           <div class="flex items-center gap-1">
             <button type="button" class="btn-apply-template px-2 py-0.5 bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] text-[10px] font-bold">
-              帶入
+              APPLY
             </button>
             <button type="button" class="btn-del-template px-1.5 py-0.5 hover:text-[#c45e3c] text-[#6b6659] text-[10px]">
               <i data-lucide="trash-2" class="w-3 h-3"></i>
@@ -866,7 +825,6 @@
           </div>
         `;
 
-        // Click to apply template
         row.querySelector('.btn-apply-template').addEventListener('click', (e) => {
           e.stopPropagation();
           document.getElementById('input-new-slot-name').value = item.name;
@@ -880,7 +838,6 @@
           playSound('tick');
         });
 
-        // Click to delete template
         row.querySelector('.btn-del-template').addEventListener('click', async (e) => {
           e.stopPropagation();
           await deleteCustomTemplate(item.id, item.name);
@@ -897,15 +854,14 @@
       renderCustomTemplatesList(userCustomTemplates);
       await dbDelete('templates', templateId);
       playSound('tick');
-      showToast(`已刪除範本「${name}」`);
+      showToast(`Deleted template "${name}"`);
     }
 
-    /* Save Template Only Button */
     document.getElementById('btn-save-template-only').addEventListener('click', () => {
       const name = document.getElementById('input-new-slot-name').value.trim();
       const desc = document.getElementById('input-new-slot-desc').value.trim();
       if (!name) {
-        showToast('請先填寫範本名稱');
+        showToast('Please specify a slot template name first');
         return;
       }
       saveCustomTemplate(name, desc);
@@ -917,7 +873,7 @@
       const shouldSaveTemplate = document.getElementById('chk-save-as-template').checked;
 
       if (!name) {
-        showToast('請輸入欄位名稱');
+        showToast('Please enter a slot module name');
         return;
       }
 
@@ -929,19 +885,19 @@
       slotDefinitions.push({
         id: `slot_${newIndex}_${Date.now()}`,
         key: `custom_${newIndex}_${Date.now()}`,
-        title: name,
-        promptDesc: desc || '一個符合此主題、極為具體可見的真實物件或名詞。'
+        title: name.toUpperCase(),
+        promptDesc: desc || 'A specific, concrete, visually tangible physical entity or item.'
       });
       state.locked.push(false);
-      state.currentSelection.push("[ 待生成 ]");
+      state.currentSelection.push("[ AWAITING INFERENCE ]");
 
       modalAddSlot.classList.add('hidden');
       renderReelsTrack();
       playSound('win');
-      showToast(`已成功安裝槽位：${name}`);
+      showToast(`Module installed: ${name}`);
     });
 
-    /* Live Gemini 3.1 Flash Lite API Direct Generation with Maximum Diversity */
+    /* Live Gemini 3.1 Flash Lite API Call (All English, Zero Repetition, Maximum Domain Entropy) */
     async function fetchWordsFromGemini() {
       const apiKey = state.userApiKey || "";
       const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${apiKey}`;
@@ -954,7 +910,7 @@
         if (!state.locked[idx]) {
           properties[slot.key] = {
             type: "STRING",
-            description: `【${slot.title}】：${slot.promptDesc}`
+            description: `[${slot.title}]: ${slot.promptDesc}. In English only.`
           };
           required.push(slot.key);
           descriptions.push(`${idx + 1}. ${slot.title}: ${slot.promptDesc}`);
@@ -965,39 +921,46 @@
         return {};
       }
 
+      // Shuffle randomized domain vectors to force creative diversity
       const shuffledDomains = [...DIVERSITY_DOMAINS].sort(() => 0.5 - Math.random());
-      const activeDomainSeeds = shuffledDomains.slice(0, 2).join(" 與 ");
+      const activeDomainSeeds = shuffledDomains.slice(0, 3).join("; ");
 
-      const avoidListStr = state.historyAvoidance.length > 0 
-        ? `\n【絕對禁止重複清單】（近期已出現過，嚴禁再次生成類似或近義詞彙）：${state.historyAvoidance.slice(-25).join("、")}` 
+      // History avoidance list for strict non-repetition across rounds
+      const recentHistoryList = state.historyAvoidance.slice(-60);
+      const avoidListStr = recentHistoryList.length > 0 
+        ? `\n[STRICT HISTORICAL NON-REPETITION MANDATE - DO NOT REPEAT ANY OF THESE PREVIOUSLY GENERATED TERMS OR THEIR DIRECT SYNONYMS]:\n${recentHistoryList.join(", ")}` 
         : "";
 
-      const systemPrompt = `你是一個專門生成「極限差異、跨界衝擊、超具象實體」的隨機詞彙生成核心。
-【核心準則一：極限差異化（Maximum Diversity & Contrast）】
-每次生成的詞彙之間，在「領域、歷史年代、物件體積尺度、文化背景」上必須具有極大的反差與衝擊感！絕對不准集中在同一種常見題材（如不要每次都是 3C、法拉利、大同電鍋、三角錐、宇航員）。
-本次隨機抽樣的引導偏轉維度傾向參考：【${activeDomainSeeds}】（但各欄位應各自發散，保持大相逕庭）。
+      const systemPrompt = `You are a high-entropy creative intelligence core specialized in generating EXTREMELY DIVERSE, PHYSICAL, UNREPEATED, and CONCRETE entities in ENGLISH.
 
-【核心準則二：絕對具象】
-看得見、摸得著、輪廓具體，嚴禁任何抽象概念（如水晶、能量、空間裂縫等抽象名詞一律禁止）。${avoidListStr}
+STRICT MANDATES:
+1. OUTPUT LANGUAGE: ALL OUTPUT MUST BE IN ENGLISH ONLY. NO OTHER LANGUAGE.
+2. CONCRETE & TANGIBLE ONLY: Every generated item must be tangible and visually recognizable in the physical world (no abstract concepts like "infinite energy", "memory crystal", "ethereal aura").
+3. SECOND SLOT SPECIFICATION (CREATURE / ORGANISM / FIGURE): It does NOT have to be human. It can be ANY living creature, animal, marine organism, deep-sea beast, bird, reptile, amphibian, insect, extinct organism, or iconic archetype/mascot. Prioritize vivid, unexpected fauna and living organisms as well as figures.
+4. ABSOLUTE ZERO REPETITION:
+   - Within this generation: Each slot must draw from wildly contrasting human, biological, and physical domains. Never output synonymous or themed duplicates in the same round.
+   - Across generations: STRICTLY AVOID repeating any words from the negative exclusion list below.${avoidListStr}
+5. DIVERSITY VECTOR REFERENCE: Use these contrasting domain seeds as creative impetus to break clichés: [${activeDomainSeeds}].
 
-欄位要求：
+Target slot requirements:
 ${descriptions.join("\n")}
-請直接輸出符合 JSON Schema 的結果。`;
 
-      const randomEntropyKey = Math.random().toString(36).substring(2, 9) + Date.now();
+Respond strictly according to the provided JSON schema.`;
+
+      const entropyNonce = Math.random().toString(36).substring(2, 9) + "_" + Date.now();
 
       const payload = {
         contents: [
           {
             role: "user",
             parts: [{ 
-              text: `隨機雜湊碼 [${randomEntropyKey}]：請立即為未鎖定的 ${required.length} 個欄位隨機產出差異度極大、前所未見的極度具象詞彙。` 
+              text: `Entropy Nonce [${entropyNonce}]: Generate fresh, distinct, non-repeating concrete terms in English for the ${required.length} unlocked slot modules.` 
             }]
           }
         ],
         systemInstruction: { parts: [{ text: systemPrompt }] },
         generationConfig: {
-          temperature: 1.6,
+          temperature: 1.65,
           topP: 0.95,
           responseMimeType: "application/json",
           responseSchema: {
@@ -1016,7 +979,7 @@ ${descriptions.join("\n")}
 
       const result = await response.json();
       const rawJson = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!rawJson) throw new Error("API 未回傳資料或格式不符");
+      if (!rawJson) throw new Error("API returned unexpected or empty response payload.");
       return JSON.parse(rawJson);
     }
 
@@ -1041,7 +1004,7 @@ ${descriptions.join("\n")}
       return fetch(url, options);
     }
 
-    /* Direct Generation Without Animation */
+    /* Direct Generation Without Lag */
     async function executeDirectGeneration() {
       if (state.isGenerating) return;
       state.isGenerating = true;
@@ -1051,14 +1014,14 @@ ${descriptions.join("\n")}
 
       spinBtn.disabled = true;
       spinBtn.classList.add('opacity-70');
-      spinBtnText.innerText = 'GENERATING (GEMINI 3.1 FLASH LITE)...';
+      spinBtnText.innerText = 'INFERRING (GEMINI 3.1 FLASH LITE)...';
 
       slotDefinitions.forEach((_, i) => {
         if (!state.locked[i]) {
           const textEl = document.getElementById(`slot-text-${i}`);
           const statusEl = document.getElementById(`slot-status-${i}`);
-          if (textEl) textEl.innerHTML = `<span class="animate-pulse text-[#79746a]">// GENERATING...</span>`;
-          if (statusEl) statusEl.innerText = 'INFERRING';
+          if (textEl) textEl.innerHTML = `<span class="animate-pulse text-[#79746a]">// INFERRING...</span>`;
+          if (statusEl) statusEl.innerText = 'PROCESSING';
         }
       });
       playSound('tick');
@@ -1069,10 +1032,10 @@ ${descriptions.join("\n")}
         slotDefinitions.forEach((slot, i) => {
           if (!state.locked[i]) {
             if (apiResults[slot.key]) {
-              const newWord = apiResults[slot.key];
+              const newWord = String(apiResults[slot.key]).trim();
               state.currentSelection[i] = newWord;
-              state.historyAvoidance.push(newWord);
-              if (state.historyAvoidance.length > 50) {
+              state.historyAvoidance.push(newWord.toLowerCase());
+              if (state.historyAvoidance.length > 120) {
                 state.historyAvoidance.shift();
               }
             }
@@ -1083,18 +1046,21 @@ ${descriptions.join("\n")}
           if (statusEl) statusEl.innerText = state.locked[i] ? 'LOCKED' : 'READY';
         });
 
+        // Persist history avoidance queue to IndexedDB
+        dbSet('settings', { key: 'historyAvoidance', value: state.historyAvoidance, updatedAt: Date.now() });
+
         renderBadges();
         playSound('win');
-        showToast('已由 Gemini 3.1 Flash Lite 生成全新高反差詞彙！');
+        showToast('Fresh unrepeated items generated via Gemini 3.1 Flash Lite!');
 
       } catch (err) {
-        console.error('Gemini 3.1 Flash Lite API 生成失敗:', err);
-        showToast('生成失敗，請確認 API Key 或網路狀態');
+        console.error('Inference error:', err);
+        showToast('Generation failed. Please verify API Key or network connection.');
         slotDefinitions.forEach((_, i) => {
           if (!state.locked[i]) {
             const textEl = document.getElementById(`slot-text-${i}`);
             const statusEl = document.getElementById(`slot-status-${i}`);
-            if (textEl) textEl.innerText = state.currentSelection[i] || '[ 生成失敗 ]';
+            if (textEl) textEl.innerText = state.currentSelection[i] || '[ INFERENCE ERROR ]';
             if (statusEl) statusEl.innerText = 'ERROR';
           }
         });
@@ -1102,13 +1068,13 @@ ${descriptions.join("\n")}
         state.isGenerating = false;
         spinBtn.disabled = false;
         spinBtn.classList.remove('opacity-70');
-        spinBtnText.innerText = 'GENERATE WORDS // 直接生成 (空白鍵)';
+        spinBtnText.innerText = 'GENERATE WORDS // DIRECT INFERENCE (SPACEBAR)';
       }
     }
 
     document.getElementById('btn-spin').addEventListener('click', executeDirectGeneration);
 
-    /* Keyboard Shortcuts */
+    /* Keyboard Spacebar Shortcut */
     window.addEventListener('keydown', (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       if (e.code === 'Space') {
@@ -1117,7 +1083,7 @@ ${descriptions.join("\n")}
       }
     });
 
-    /* Persistent Storage: API Key in IndexedDB */
+    /* Persistent Storage: API Key in IndexedDB & Auto-Push to Cloud */
     async function saveUserLocalApiKey(apiKeyToSave) {
       const spinner = document.getElementById('save-key-spinner');
       if (spinner) spinner.classList.remove('hidden');
@@ -1127,7 +1093,11 @@ ${descriptions.join("\n")}
 
       if (spinner) spinner.classList.add('hidden');
       playSound('win');
-      showToast(apiKeyToSave ? '✓ API Key 已儲存於本機資料庫與工作階段！' : 'API Key 已重設為預設模式');
+      showToast(apiKeyToSave ? '✓ API Key stored in local database & active session!' : 'API Key reset to default.');
+
+      if (state.googleAccessToken) {
+        syncToGoogleDrive(state.googleAccessToken, true);
+      }
     }
 
     async function loadUserStoredApiKey() {
@@ -1136,7 +1106,6 @@ ${descriptions.join("\n")}
         state.userApiKey = record.value;
         const input = document.getElementById('input-api-key');
         if (input) input.value = record.value;
-        showToast('已自動載入您先前儲存的 API Key');
       }
     }
 
@@ -1161,11 +1130,12 @@ ${descriptions.join("\n")}
 
     /* Saved Cards Operations (IndexedDB) */
     async function saveCurrentResultCard() {
-      const saveBtn = document.getElementById('btn-save-card');
-      const isValidSelection = state.currentSelection.some(w => w && w !== "[ 待生成 ]" && !w.includes("FAIL") && !w.includes("失敗"));
+      const isValidSelection = state.currentSelection.some(w => 
+        w && w !== "[ AWAITING INFERENCE ]" && !w.includes("ERROR") && !w.includes("FAIL")
+      );
       
       if (!isValidSelection) {
-        showToast('目前尚無有效結果，請先點擊「GENERATE WORDS」生成');
+        showToast('No valid inferred result yet. Click "GENERATE WORDS" first.');
         return;
       }
 
@@ -1185,9 +1155,8 @@ ${descriptions.join("\n")}
       await dbSet('cards', cardData);
 
       playSound('win');
-      showToast('✓ 已成功保存結果卡片至本機資料庫！');
+      showToast('✓ Result card archived to local archive database!');
 
-      // 若已連接 Google 雲端，背景自動同步存入 Google Drive
       if (state.googleAccessToken) {
         syncToGoogleDrive(state.googleAccessToken, true);
       }
@@ -1202,6 +1171,13 @@ ${descriptions.join("\n")}
       renderSavedCardsList(cards);
     }
 
+    async function loadAvoidanceHistory() {
+      const stored = await dbGet('settings', 'historyAvoidance');
+      if (stored && Array.isArray(stored.value)) {
+        state.historyAvoidance = stored.value;
+      }
+    }
+
     function renderSavedCardsList(cards) {
       const container = document.getElementById('saved-cards-list');
       const counter = document.getElementById('saved-card-counter');
@@ -1212,7 +1188,7 @@ ${descriptions.join("\n")}
       if (cards.length === 0) {
         container.innerHTML = `
           <div class="col-span-full py-8 text-center text-xs text-[#79746a] border border-dashed border-[#8e8878] p-4">
-            // 尚無儲存卡片。點擊「SAVE CARD // 儲存卡片」即可將當前結果留存於本機資料庫與雲端硬碟。
+            // No saved cards. Click "SAVE CARD" to archive the current combination locally and to Google Drive.
           </div>
         `;
         return;
@@ -1221,7 +1197,7 @@ ${descriptions.join("\n")}
       container.innerHTML = '';
       cards.forEach((card, idx) => {
         const dateStr = card.timestamp 
-          ? new Date(card.timestamp).toLocaleString('zh-TW', { hour12: false }) 
+          ? new Date(card.timestamp).toLocaleString('en-US', { hour12: false }) 
           : 'UNKNOWN';
 
         const cardEl = document.createElement('div');
@@ -1231,7 +1207,7 @@ ${descriptions.join("\n")}
 
         const itemsHtml = card.items.map(it => `
           <div class="flex items-center justify-between text-xs py-1 border-b border-[#a39d8d]/50">
-            <span class="text-[11px] text-[#5e594f] truncate max-w-[100px]">${it.title}:</span>
+            <span class="text-[11px] text-[#5e594f] truncate max-w-[110px]">${it.title}:</span>
             <span class="font-bold text-[#3e3b36] truncate max-w-[150px]">${it.word}</span>
           </div>
         `).join("");
@@ -1250,11 +1226,11 @@ ${descriptions.join("\n")}
           <div class="flex items-center justify-between pt-2.5 mt-2 border-t border-[#8b8577]/60 text-[11px]">
             <button onclick="copySavedCardText('${encodeURIComponent(fullComboText)}')" class="px-2 py-1 bg-[#3e3b36] hover:bg-[#282623] text-[#d2cebe] font-bold flex items-center gap-1 transition">
               <i data-lucide="copy" class="w-3 h-3"></i>
-              <span>複製</span>
+              <span>COPY</span>
             </button>
             <button onclick="deleteSavedCard('${card.id}')" class="px-2 py-1 bg-transparent hover:bg-[#c45e3c] hover:text-[#d2cebe] text-[#686254] font-bold flex items-center gap-1 transition">
               <i data-lucide="trash-2" class="w-3 h-3"></i>
-              <span>刪除</span>
+              <span>DELETE</span>
             </button>
           </div>
         `;
@@ -1273,7 +1249,7 @@ ${descriptions.join("\n")}
       document.execCommand('copy');
       document.body.removeChild(tempArea);
       playSound('tick');
-      showToast('已複製卡片組合至剪貼簿！');
+      showToast('Combination copied to clipboard!');
     };
 
     window.deleteSavedCard = async function(cardId) {
@@ -1281,14 +1257,14 @@ ${descriptions.join("\n")}
       renderSavedCardsList(localSavedCardsMemory);
       await dbDelete('cards', cardId);
       playSound('tick');
-      showToast('已刪除該結果卡片');
+      showToast('Card deleted from archive');
     };
 
     /* Backup Export & Import (JSON) */
     document.getElementById('btn-export-backup').addEventListener('click', async () => {
       const backupData = {
         app: 'YoRHa-Slot-Terminal',
-        version: '1.0',
+        version: '2.0-EN',
         exportedAt: new Date().toISOString(),
         apiKey: state.userApiKey,
         cards: localSavedCardsMemory,
@@ -1305,7 +1281,7 @@ ${descriptions.join("\n")}
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       playSound('win');
-      showToast('已成功匯出本機備份 JSON 檔');
+      showToast('Backup JSON exported successfully');
     });
 
     document.getElementById('input-import-backup').addEventListener('change', async (e) => {
@@ -1337,17 +1313,17 @@ ${descriptions.join("\n")}
         }
 
         playSound('win');
-        showToast('✓ 備份檔案已成功還原！');
+        showToast('✓ Backup file restored successfully!');
       } catch (err) {
         console.error('Import err:', err);
-        showToast('檔案格式錯誤，無法解析 JSON');
+        showToast('File format invalid, unable to parse JSON');
       } finally {
         e.target.value = '';
       }
     });
 
     /* =========================================================
-       Google Drive API Direct Sync (自動載入與背景同步)
+       Google Drive API Direct Sync
        ========================================================= */
     let tokenClient = null;
 
@@ -1363,9 +1339,7 @@ ${descriptions.join("\n")}
         callback: async (tokenResponse) => {
           if (tokenResponse && tokenResponse.access_token) {
             state.googleAccessToken = tokenResponse.access_token;
-            // 嘗試獲取使用者名稱與頭像
             fetchGoogleUserInfo(tokenResponse.access_token);
-            // 登入後第一件事：立即從雲端拉取歷史存檔
             await loadFromGoogleDrive(tokenResponse.access_token);
           }
         }
@@ -1390,9 +1364,8 @@ ${descriptions.join("\n")}
       }
     }
 
-    /* 從 Google Drive 讀取 yorha_slots_archive.json 並還原至畫面 */
     async function loadFromGoogleDrive(accessToken) {
-      showToast('正在從 Google 雲端硬碟讀取您的歷史存檔...');
+      showToast('Reading archive from Google Drive...');
       try {
         const query = encodeURIComponent("name = 'yorha_slots_archive.json' and trashed = false");
         const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?q=${query}&fields=files(id,name,modifiedTime)`, {
@@ -1402,21 +1375,18 @@ ${descriptions.join("\n")}
         const existingFile = searchData.files?.[0];
 
         if (!existingFile) {
-          showToast('雲端尚無存檔，若本機有資料將為您建立首次雲端同步');
-          // 首次雲端為空，若當前有 API Key 或卡片則建立新存檔
+          showToast('No cloud archive found. Creating initial sync if data exists...');
           if (state.userApiKey || localSavedCardsMemory.length > 0) {
             await syncToGoogleDrive(accessToken, true);
           }
           return false;
         }
 
-        // 下載檔案內容
         const fileRes = await fetch(`https://www.googleapis.com/drive/v3/files/${existingFile.id}?alt=media`, {
           headers: { Authorization: `Bearer ${accessToken}` }
         });
         const cloudData = await fileRes.json();
 
-        // 1. 還原 API Key
         if (cloudData.apiKey) {
           state.userApiKey = cloudData.apiKey;
           const input = document.getElementById('input-api-key');
@@ -1424,7 +1394,6 @@ ${descriptions.join("\n")}
           await dbSet('settings', { key: 'geminiApiKey', value: cloudData.apiKey, updatedAt: Date.now() });
         }
 
-        // 2. 還原卡片
         if (Array.isArray(cloudData.cards) && cloudData.cards.length > 0) {
           for (const card of cloudData.cards) {
             await dbSet('cards', card);
@@ -1432,7 +1401,6 @@ ${descriptions.join("\n")}
           await loadSavedCards();
         }
 
-        // 3. 還原範本
         if (Array.isArray(cloudData.templates) && cloudData.templates.length > 0) {
           for (const tmpl of cloudData.templates) {
             await dbSet('templates', tmpl);
@@ -1441,18 +1409,17 @@ ${descriptions.join("\n")}
         }
 
         playSound('win');
-        showToast(`✓ 已成功載入 Google 雲端存檔！(API Key 與 ${cloudData.cards?.length || 0} 張卡片)`);
+        showToast(`✓ Google Drive archive loaded! (API Key & ${cloudData.cards?.length || 0} cards)`);
         return true;
       } catch (err) {
         console.error('Google Drive Load error:', err);
-        showToast('讀取 Google 雲端存檔失敗，請確認網路與授權');
+        showToast('Failed to load Google Drive archive.');
         return false;
       }
     }
 
-    /* 上傳同步至 Google Drive */
     async function syncToGoogleDrive(accessToken, silent = false) {
-      if (!silent) showToast('正在備份至 Google 雲端硬碟...');
+      if (!silent) showToast('Backing up to Google Drive...');
 
       const payload = {
         app: 'YoRHa-Slot-Terminal',
@@ -1499,18 +1466,18 @@ ${descriptions.join("\n")}
 
         if (!silent) {
           playSound('win');
-          showToast('✓ 已成功備份至您的個人 Google 雲端硬碟！');
+          showToast('✓ Successfully backed up to your Google Drive!');
         }
       } catch (err) {
         console.warn('Google Drive Sync error:', err);
-        if (!silent) showToast('Google 雲端硬碟備份失敗，請確認授權權限');
+        if (!silent) showToast('Drive backup failed. Verify authorization permissions.');
       }
     }
 
-    /* 雲端手動控制綁定 */
+    /* Cloud Sync Button Events */
     document.getElementById('btn-google-auth-sync').addEventListener('click', () => {
       if (!tokenClient) {
-        showToast('Google 驗證服務載入中，請稍候重試');
+        showToast('Google Auth client initializing. Please retry in a moment.');
         return;
       }
       tokenClient.requestAccessToken({ prompt: '' });
@@ -1561,7 +1528,7 @@ ${descriptions.join("\n")}
             size: 'small',
             shape: 'rectangular',
             text: 'signin_with',
-            locale: 'zh_TW'
+            locale: 'en'
           }
         );
       } catch (err) {
@@ -1591,9 +1558,8 @@ ${descriptions.join("\n")}
         };
         applyUserUI();
         playSound('win');
-        showToast(`Google 帳號認證成功: ${state.currentUser.name}，正在連線雲端存檔...`);
+        showToast(`Google authenticated: ${state.currentUser.name}. Linking Drive...`);
 
-        // 登入身分確立後，立即觸發 Drive 存取權限並抓取存檔
         if (tokenClient) {
           tokenClient.requestAccessToken({ prompt: '' });
         }
@@ -1622,7 +1588,7 @@ ${descriptions.join("\n")}
       state.currentUser = null;
       state.googleAccessToken = null;
       applyUserUI();
-      showToast('已登出 Google 帳號');
+      showToast('Logged out of Google account');
     });
 
     /* SFX Toggle */
@@ -1633,11 +1599,11 @@ ${descriptions.join("\n")}
       if (state.soundEnabled) {
         text.innerText = 'SFX: ON';
         icon.setAttribute('data-lucide', 'volume-2');
-        showToast('音效已開啟');
+        showToast('Sound effects enabled');
       } else {
         text.innerText = 'SFX: OFF';
         icon.setAttribute('data-lucide', 'volume-x');
-        showToast('音效已靜音');
+        showToast('Sound muted');
       }
       lucide.createIcons();
     });
@@ -1647,6 +1613,7 @@ ${descriptions.join("\n")}
       renderReelsTrack();
       await openDatabase();
       await loadUserStoredApiKey();
+      await loadAvoidanceHistory();
       await loadSavedCards();
       await loadCustomTemplates();
 
