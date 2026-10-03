@@ -414,14 +414,15 @@
       },
       {
         id: "slot_2",
-        key: "branded_object",
-        title: "03 BRANDED / SPECIFIC HARDWARE",
-        promptDesc: "An ultra-specific tangible product, branded model, specialized industrial tool, or physical urban infrastructure fixture (e.g., vintage Sony ICF-5900W multi-band radio, Red Bull 2025 F1 aerodynamic rear wing, Japanese train platform glowing LED departure display, heavy steel railroad track switch lever, bright orange traffic cone, vintage Nintendo Game Boy pocket console, cast-iron dental examination chair). 3 to 7 words in English. Must be an unmistakable physical object."
+        key: "physical_object_fixture",
+        title: "03 PHYSICAL OBJECT / URBAN FIXTURE",
+        promptDesc: "An ultra-specific, tangible real-world physical object, urban street fixture, public utility artifact, or roadside element with strong visual presence (e.g., Japanese rural bus stop signpost, weathered NYC cast-iron fire hydrant, curbside stainless steel payphone booth, reflective orange traffic safety cone, subway turnstile gate, railroad crossing flashing bell signal, Tokyo automated vending machine, vintage Sony ICF-5900W radio, red British telephone kiosk). 2 to 6 words in English. Must be an unmistakable physical object or street fixture."
       }
     ];
 
     /* Dynamic Domain Rotations to inject maximum contrast and prevent convergence */
     const DIVERSITY_DOMAINS = [
+      "Urban streetscapes, roadside municipal infrastructure & public transit fixtures",
       "Deep-sea marine biology & abyssal oceanic organisms",
       "Heavy industrial excavation & open-pit mining machinery",
       "Paleontology, fossil excavations & prehistoric fauna",
@@ -433,7 +434,7 @@
       "Microbiology laboratory optics & sterilized cleanroom instruments",
       "1980s analog audio synthesis & vintage magnetic tape hardware",
       "Vintage horology, tourbillons & precision mechanical timepieces",
-      "Municipal infrastructure, high-voltage substations & railway switches",
+      "Civil architecture, high-voltage substations & railway switches",
       "Nocturnal wildlife photography & remote field expedition fixtures",
       "Maritime lighthouse optics & offshore meteorological beacons"
     ];
@@ -978,10 +979,11 @@ STRICT MANDATES:
 1. OUTPUT LANGUAGE: ALL OUTPUT MUST BE IN ENGLISH ONLY. NO OTHER LANGUAGE.
 2. CONCRETE & TANGIBLE ONLY: Every generated item must be tangible and visually recognizable in the physical world (no abstract concepts like "infinite energy", "memory crystal", "ethereal aura").
 3. SECOND SLOT SPECIFICATION (CREATURE / ORGANISM / FIGURE): It does NOT have to be human. It can be ANY living creature, animal, marine organism, deep-sea beast, bird, reptile, amphibian, insect, extinct organism, or iconic archetype/mascot. Prioritize vivid, unexpected fauna and living organisms as well as figures.
-4. ABSOLUTE ZERO REPETITION:
+4. THIRD SLOT SPECIFICATION (PHYSICAL OBJECT / URBAN FIXTURE): Broaden beyond manufactured electronic gadgets. Include tangible urban street furniture, public utility fixtures, roadside infrastructure, everyday utilitarian artifacts, and architectural objects (e.g. Japanese bus stop sign, NYC cast-iron fire hydrant, roadside traffic cone, curbside public telephone kiosk, railroad crossing signal, mechanical parking meter, stainless subway turnstile, neon diner sign, as well as vintage hardware and branded products).
+5. ABSOLUTE ZERO REPETITION:
    - Within this generation: Each slot must draw from wildly contrasting human, biological, and physical domains. Never output synonymous or themed duplicates in the same round.
    - Across generations: STRICTLY AVOID repeating any words from the negative exclusion list below.${avoidListStr}
-5. DIVERSITY VECTOR REFERENCE: Use these contrasting domain seeds as creative impetus to break clichés: [${activeDomainSeeds}].
+6. DIVERSITY VECTOR REFERENCE: Use these contrasting domain seeds as creative impetus to break clichés: [${activeDomainSeeds}].
 
 Target slot requirements:
 ${descriptions.join("\n")}
